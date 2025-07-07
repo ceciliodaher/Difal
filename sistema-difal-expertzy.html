@@ -858,6 +858,14 @@
             if (aliquotaInternaInput) {
                 aliquotaInternaInput.addEventListener('blur', atualizarBeneficio);
             }
+            
+            // Auto-configurar FCP e método baseado no estado de destino
+            const estadoDestinoSelect = document.getElementById('estado-destino');
+            if (estadoDestinoSelect) {
+                estadoDestinoSelect.addEventListener('change', function() {
+                    autoConfigurarPorEstado(this.value);
+                });
+            }
         });
 
         function switchTab(tab) {
@@ -900,15 +908,6 @@
                 document.getElementById('metodo-calculo').value = estadosConfig[estado].metodoPadrao;
             }
         }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const estadoDestinoSelect = document.getElementById('estado-destino');
-            if (estadoDestinoSelect) {
-                estadoDestinoSelect.addEventListener('change', function() {
-                    autoConfigurarPorEstado(this.value);
-                });
-            }
-        });
 
         function calcularBaseCalculo() {
             const valorOperacao = converterParaNumero(document.getElementById('valor-operacao').value);
@@ -1144,9 +1143,6 @@
                 }
                 
                 // Obter parâmetros adicionais
-                const beneficioDestino = document.getElementById('beneficio-destino').value;
-                const aliquotaDestinoEfetiva = converterParaNumero(document.getElementById('aliquota-destino-efetiva').value);
-                const aliquotaFCP = converterParaNumero(document.getElementById('fcp-aliquota').value);
                 const metodoCalculo = document.getElementById('metodo-calculo').value;
                 const destinacao = document.getElementById('destinacao').value;
                 const ncm = document.getElementById('ncm').value;
