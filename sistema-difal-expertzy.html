@@ -893,15 +893,19 @@
         }
 
         // Auto-configurar FCP e método baseado no estado de destino
+        function autoConfigurarPorEstado(estado) {
+            if (estado && estadosConfig[estado]) {
+                // Manter FCP como zero por default (conforme solicitado)
+                document.getElementById('fcp-aliquota').value = '0,00';
+                document.getElementById('metodo-calculo').value = estadosConfig[estado].metodoPadrao;
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const estadoDestinoSelect = document.getElementById('estado-destino');
             if (estadoDestinoSelect) {
                 estadoDestinoSelect.addEventListener('change', function() {
-                    const estado = this.value;
-                    if (estado && estadosConfig[estado]) {
-                        document.getElementById('fcp-aliquota').value = formatarPorcentagem(estadosConfig[estado].fcp);
-                        document.getElementById('metodo-calculo').value = estadosConfig[estado].metodoPadrao;
-                    }
+                    autoConfigurarPorEstado(this.value);
                 });
             }
         });
@@ -966,10 +970,16 @@
             // Passo 3: Base de Cálculo 1 (Exclusão do ICMS Interestadual)
             const baseCalculo1 = valorComBeneficioOrigem - icmsInterestadual;
             
-            // Passo 4: Nova Base de Cálculo (Reintrodução do ICMS - Valor/(1-Alíquota Interna))
-            const novaBase = baseCalculo1 / (1 - aliquotaInterna / 100);
+            // Passo 4: Determinar alíquota para Nova Base (considerando benefício no destino)
+            let aliquotaParaNovaBase = aliquotaInterna;
+            if (beneficioDestino === 'reducao-aliquota') {
+                aliquotaParaNovaBase = aliquotaDestinoEfetiva;
+            }
             
-            // Passo 5: Aplicar benefício no DESTINO (afeta o cálculo do ICMS interno)
+            // Passo 5: Nova Base de Cálculo (Reintrodução do ICMS - Valor/(1-Alíquota Efetiva))
+            const novaBase = baseCalculo1 / (1 - aliquotaParaNovaBase / 100);
+            
+            // Passo 6: Aplicar benefício no DESTINO (afeta o cálculo do ICMS interno)
             let baseCalculo2 = novaBase;
             let aliquotaFinal = aliquotaInterna;
             
@@ -981,10 +991,10 @@
                 aliquotaFinal = aliquotaInterna;
             }
             
-            // Passo 6: ICMS Interno
+            // Passo 7: ICMS Interno
             const icmsInterno = baseCalculo2 * (aliquotaFinal / 100);
             
-            // Passo 7: DIFAL
+            // Passo 8: DIFAL
             const difal = icmsInterno - icmsInterestadual;
             
             return {
@@ -1021,29 +1031,119 @@
             }
         }
 
+        function validarDadosCalculo(dados) {
+            const erros = [];
+            
+            // Validações básicas obrigatórias
+            if (!dados.valorOperacao || dados.valorOperacao <= 0) {
+                erros.push('Valor da operação deve ser maior que zero');
+            }
+            
+            if (!dados.estadoOrigem) {
+                erros.push('Estado de origem é obrigatório');
+            }
+            
+            if (!dados.estadoDestino) {
+                erros.push('Estado de destino é obrigatório');
+            }
+            
+            if (dados.estadoOrigem === dados.estadoDestino) {
+                erros.push('Estado de origem e destino não podem ser iguais');
+            }
+            
+            if (!dados.aliquotaInterestadual || dados.aliquotaInterestadual <= 0) {
+                erros.push('Alíquota interestadual deve ser maior que zero');
+            }
+            
+            if (!dados.aliquotaInterna || dados.aliquotaInterna <= 0) {
+                erros.push('Alíquota interna deve ser maior que zero');
+            }
+            
+            // Validações de conformidade fiscal
+            if (dados.aliquotaInterestadual > 12) {
+                erros.push('Alíquota interestadual não pode ser superior a 12%');
+            }
+            
+            if (dados.aliquotaInterna > 25) {
+                erros.push('Alíquota interna não pode ser superior a 25%');
+            }
+            
+            if (dados.aliquotaInterestadual >= dados.aliquotaInterna) {
+                erros.push('Alíquota interestadual deve ser menor que a alíquota interna');
+            }
+            
+            // Validações de benefícios fiscais
+            if (dados.beneficioOrigem === 'reducao-aliquota') {
+                if (!dados.aliquotaOrigemEfetiva || dados.aliquotaOrigemEfetiva < 0) {
+                    erros.push('Alíquota origem efetiva deve ser informada quando há redução de alíquota na origem');
+                }
+                if (dados.aliquotaOrigemEfetiva > dados.aliquotaInterestadual) {
+                    erros.push('Alíquota origem efetiva não pode ser maior que a alíquota interestadual nominal');
+                }
+            }
+            
+            if (dados.beneficioDestino === 'reducao-aliquota') {
+                if (!dados.aliquotaDestinoEfetiva || dados.aliquotaDestinoEfetiva < 0) {
+                    erros.push('Alíquota destino efetiva deve ser informada quando há redução de alíquota no destino');
+                }
+                if (dados.aliquotaDestinoEfetiva > dados.aliquotaInterna) {
+                    erros.push('Alíquota destino efetiva não pode ser maior que a alíquota interna nominal');
+                }
+            }
+            
+            // Validações de FCP
+            if (dados.aliquotaFCP && dados.aliquotaFCP > 4) {
+                erros.push('Alíquota FCP não pode ser superior a 4%');
+            }
+            
+            // Validações de valores monetários
+            if (dados.baseCalculo <= 0) {
+                erros.push('Base de cálculo deve ser maior que zero');
+            }
+            
+            if (dados.valorOperacao > 1000000000) {
+                erros.push('Valor da operação muito elevado (limite: R$ 1 bilhão)');
+            }
+            
+            return erros;
+        }
+
         function calcularDifal() {
             try {
-                // Validar campos obrigatórios
+                // Obter dados dos campos
                 const valorOperacao = converterParaNumero(document.getElementById('valor-operacao').value);
                 const estadoOrigem = document.getElementById('estado-origem').value;
                 const estadoDestino = document.getElementById('estado-destino').value;
                 const aliquotaInterestadual = converterParaNumero(document.getElementById('aliquota-interestadual').value);
                 const aliquotaInterna = converterParaNumero(document.getElementById('aliquota-interna').value);
-                
-                if (!valorOperacao || !estadoOrigem || !estadoDestino || !aliquotaInterestadual || !aliquotaInterna) {
-                    throw new Error('Preencha todos os campos obrigatórios');
-                }
-                
-                if (estadoOrigem === estadoDestino) {
-                    throw new Error('Estado de origem e destino não podem ser iguais');
-                }
-                
-                // Calcular base de cálculo
-                const baseCalculo = calcularBaseCalculo();
-                
-                // Obter parâmetros
                 const beneficioOrigem = document.getElementById('beneficio-origem').value;
                 const aliquotaOrigemEfetiva = converterParaNumero(document.getElementById('aliquota-origem-efetiva').value);
+                const beneficioDestino = document.getElementById('beneficio-destino').value;
+                const aliquotaDestinoEfetiva = converterParaNumero(document.getElementById('aliquota-destino-efetiva').value);
+                const aliquotaFCP = converterParaNumero(document.getElementById('fcp-aliquota').value);
+                const baseCalculo = calcularBaseCalculo();
+                
+                // Validar dados
+                const dadosValidacao = {
+                    valorOperacao,
+                    estadoOrigem,
+                    estadoDestino,
+                    aliquotaInterestadual,
+                    aliquotaInterna,
+                    beneficioOrigem,
+                    aliquotaOrigemEfetiva,
+                    beneficioDestino,
+                    aliquotaDestinoEfetiva,
+                    aliquotaFCP,
+                    baseCalculo
+                };
+                
+                const erros = validarDadosCalculo(dadosValidacao);
+                if (erros.length > 0) {
+                    throw new Error(erros.join('\n• '));
+                }
+                
+                // Obter parâmetros adicionais
                 const beneficioDestino = document.getElementById('beneficio-destino').value;
                 const aliquotaDestinoEfetiva = converterParaNumero(document.getElementById('aliquota-destino-efetiva').value);
                 const aliquotaFCP = converterParaNumero(document.getElementById('fcp-aliquota').value);
@@ -1428,6 +1528,26 @@
                     const aliquotaFCP = converterParaNumero(item['Alíquota FCP']?.toString() || '0');
                     const metodoCalculo = item['Método Cálculo'] || 'base-dupla';
                     
+                    // Validar dados do item da planilha
+                    const dadosValidacao = {
+                        valorOperacao,
+                        estadoOrigem: item['Estado Origem'] || '',
+                        estadoDestino: item['Estado Destino'] || '',
+                        aliquotaInterestadual,
+                        aliquotaInterna,
+                        beneficioOrigem,
+                        aliquotaOrigemEfetiva,
+                        beneficioDestino,
+                        aliquotaDestinoEfetiva,
+                        aliquotaFCP,
+                        baseCalculo
+                    };
+                    
+                    const erros = validarDadosCalculo(dadosValidacao);
+                    if (erros.length > 0) {
+                        throw new Error(`Item ${index + 1}: ${erros.join('; ')}`);
+                    }
+                    
                     let difal, detalhesCalculo = null;
                     
                     if (metodoCalculo === 'base-unica') {
@@ -1581,6 +1701,79 @@
             document.getElementById('resultado-container').innerHTML = html;
         }
 
+        function gerarMemoriaCalculoPDF(dados) {
+            let memoria = '';
+            
+            // Base de cálculo
+            memoria += `1. Cálculo da Base de Cálculo:\n`;
+            memoria += `   Base = Valor da Operação + IPI + Frete + Outras Despesas - Desconto\n`;
+            memoria += `   Base = R$ ${formatarMoeda(dados.valorOperacao)} + Complementos = R$ ${formatarMoeda(dados.baseCalculo)}\n\n`;
+            
+            // Benefícios fiscais
+            let passoAtual = 2;
+            if (dados.beneficioOrigem !== 'nao') {
+                if (dados.beneficioOrigem === 'reducao-aliquota') {
+                    memoria += `${passoAtual}. Benefício Fiscal na Origem (Redução de Alíquota):\n`;
+                    memoria += `   Alíquota Interestadual Nominal: ${formatarPorcentagem(dados.aliquotaInterestadual)}%\n`;
+                    memoria += `   Alíquota Efetiva na Origem: ${formatarPorcentagem(dados.aliquotaOrigemEfetiva)}%\n`;
+                    memoria += `   Percentual de Redução: ${formatarPorcentagem(dados.percentualBeneficioOrigem)}%\n\n`;
+                } else if (dados.beneficioOrigem === 'reducao-base') {
+                    memoria += `${passoAtual}. Benefício Fiscal na Origem (Redução de Base):\n`;
+                    memoria += `   Base Original: R$ ${formatarMoeda(dados.baseCalculo)}\n`;
+                    memoria += `   Percentual de Redução: ${formatarPorcentagem(dados.percentualBeneficioOrigem)}%\n`;
+                    memoria += `   Valor com Benefício: R$ ${formatarMoeda(dados.detalhesCalculo?.valorComBeneficioOrigem || dados.baseCalculo)}\n\n`;
+                }
+                passoAtual++;
+            }
+            
+            if (dados.beneficioDestino !== 'nao') {
+                if (dados.beneficioDestino === 'reducao-aliquota') {
+                    memoria += `${passoAtual}. Benefício Fiscal no Destino (Redução de Alíquota):\n`;
+                    memoria += `   Alíquota Interna Nominal: ${formatarPorcentagem(dados.aliquotaInterna)}%\n`;
+                    memoria += `   Alíquota Efetiva no Destino: ${formatarPorcentagem(dados.aliquotaDestinoEfetiva)}%\n`;
+                    memoria += `   Percentual de Redução: ${formatarPorcentagem(dados.percentualBeneficioDestino)}%\n\n`;
+                } else if (dados.beneficioDestino === 'reducao-base') {
+                    memoria += `${passoAtual}. Benefício Fiscal no Destino (Redução de Base):\n`;
+                    memoria += `   Nova Base: R$ ${formatarMoeda(dados.detalhesCalculo?.novaBase || dados.baseCalculo)}\n`;
+                    memoria += `   Percentual de Redução: ${formatarPorcentagem(dados.percentualBeneficioDestino)}%\n`;
+                    memoria += `   Base Final: R$ ${formatarMoeda(dados.detalhesCalculo?.baseCalculo2 || dados.baseCalculo)}\n\n`;
+                }
+                passoAtual++;
+            }
+            
+            // Detalhes do cálculo baseado no método
+            if (dados.metodoCalculo === 'base-dupla' && dados.detalhesCalculo) {
+                memoria += `${passoAtual}. Método Base Dupla - Passos Detalhados:\n`;
+                memoria += `   ${passoAtual}.1. Valor c/ Benefício na Origem = R$ ${formatarMoeda(dados.detalhesCalculo.valorComBeneficioOrigem)}\n`;
+                memoria += `   ${passoAtual}.2. ICMS Interestadual = R$ ${formatarMoeda(dados.detalhesCalculo.icmsInterestadual)}\n`;
+                memoria += `   ${passoAtual}.3. Base Cálculo 1 = R$ ${formatarMoeda(dados.detalhesCalculo.baseCalculo1)}\n`;
+                memoria += `   ${passoAtual}.4. Nova Base (Reintrodução) = R$ ${formatarMoeda(dados.detalhesCalculo.novaBase)}\n`;
+                memoria += `   ${passoAtual}.5. ICMS Interno = R$ ${formatarMoeda(dados.detalhesCalculo.icmsInterno)}\n`;
+                memoria += `   ${passoAtual}.6. DIFAL = R$ ${formatarMoeda(dados.difal)}\n\n`;
+                passoAtual++;
+            } else {
+                memoria += `${passoAtual}. Cálculo do DIFAL:\n`;
+                memoria += `   DIFAL = (Alíquota Interna - Alíquota Interestadual) × Base de Cálculo\n`;
+                memoria += `   DIFAL = R$ ${formatarMoeda(dados.difal)}\n\n`;
+                passoAtual++;
+            }
+            
+            // FCP
+            if (dados.fcp > 0) {
+                memoria += `${passoAtual}. Cálculo do FCP:\n`;
+                memoria += `   FCP = Base Final × Alíquota FCP\n`;
+                memoria += `   FCP = R$ ${formatarMoeda(dados.fcp)}\n\n`;
+                passoAtual++;
+            }
+            
+            // Total
+            memoria += `${passoAtual}. Resultado Final:\n`;
+            memoria += `   Total = DIFAL + FCP\n`;
+            memoria += `   Total = R$ ${formatarMoeda(dados.difal)} + R$ ${formatarMoeda(dados.fcp)} = R$ ${formatarMoeda(dados.total)}\n`;
+            
+            return memoria;
+        }
+
         function gerarRelatorio() {
             if (!ultimoResultado) {
                 alert('Nenhum resultado para gerar relatório');
@@ -1666,6 +1859,29 @@
                     doc.text(linha[0], 20, yPosition);
                     doc.text(linha[1], 80, yPosition);
                     yPosition += 8;
+                });
+                
+                // Incluir memória de cálculo no PDF
+                yPosition += 15;
+                doc.setFontSize(14);
+                doc.setTextColor(52, 152, 219);
+                doc.text('MEMÓRIA DE CÁLCULO', 20, yPosition);
+                yPosition += 15;
+                
+                doc.setFontSize(10);
+                doc.setTextColor(0, 0, 0);
+                
+                // Gerar memória de cálculo em texto simples para PDF
+                const memoriaTexto = gerarMemoriaCalculoPDF(ultimoResultado);
+                const linhasMemoria = memoriaTexto.split('\n');
+                
+                linhasMemoria.forEach(linha => {
+                    if (yPosition > 270) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    doc.text(linha, 20, yPosition);
+                    yPosition += 5;
                 });
             }
             
@@ -1772,6 +1988,37 @@
                 
                 XLSX.utils.book_append_sheet(workbook, worksheet, 'Relatório DIFAL');
                 
+                // Adicionar aba com memória de cálculo para planilha
+                const memoriaWorksheetData = [
+                    ['MEMÓRIA DE CÁLCULO DETALHADA', ''],
+                    ['', ''],
+                    ['ITEM', 'CÁLCULO DETALHADO']
+                ];
+                
+                ultimoResultado.resultados.forEach((resultado, index) => {
+                    if (!resultado.erro) {
+                        memoriaWorksheetData.push(['', '']);
+                        memoriaWorksheetData.push([`Item ${index + 1} - ${resultado.ncm}`, '']);
+                        memoriaWorksheetData.push([resultado.descricao, '']);
+                        memoriaWorksheetData.push(['', '']);
+                        
+                        const memoriaTexto = gerarMemoriaCalculoPDF(resultado);
+                        const linhasMemoria = memoriaTexto.split('\n');
+                        
+                        linhasMemoria.forEach(linha => {
+                            memoriaWorksheetData.push([linha, '']);
+                        });
+                    }
+                });
+                
+                const memoriaWorksheet = XLSX.utils.aoa_to_sheet(memoriaWorksheetData);
+                memoriaWorksheet['!cols'] = [
+                    { wch: 50 },
+                    { wch: 30 }
+                ];
+                
+                XLSX.utils.book_append_sheet(workbook, memoriaWorksheet, 'Memória de Cálculo');
+                
             } else {
                 // Relatório individual detalhado
                 const worksheetData = [
@@ -1815,6 +2062,28 @@
                 ];
                 
                 XLSX.utils.book_append_sheet(workbook, worksheet, 'Resultado Individual');
+                
+                // Adicionar aba com memória de cálculo para relatório individual
+                const memoriaIndividualData = [
+                    ['MEMÓRIA DE CÁLCULO DETALHADA', ''],
+                    ['', ''],
+                    ['PASSO', 'CÁLCULO DETALHADO']
+                ];
+                
+                const memoriaTexto = gerarMemoriaCalculoPDF(ultimoResultado);
+                const linhasMemoria = memoriaTexto.split('\n');
+                
+                linhasMemoria.forEach(linha => {
+                    memoriaIndividualData.push([linha, '']);
+                });
+                
+                const memoriaIndividualWorksheet = XLSX.utils.aoa_to_sheet(memoriaIndividualData);
+                memoriaIndividualWorksheet['!cols'] = [
+                    { wch: 50 },
+                    { wch: 30 }
+                ];
+                
+                XLSX.utils.book_append_sheet(workbook, memoriaIndividualWorksheet, 'Memória de Cálculo');
             }
             
             const nomeArquivo = ultimoResultado.planilha ? 
