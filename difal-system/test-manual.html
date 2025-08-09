@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Manual - Sistema DIFAL</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #FF1744;
+        }
+        .success { border-left-color: #22c55e; background: #f0fdf4; }
+        .error { border-left-color: #ef4444; background: #fef2f2; }
+        .warning { border-left-color: #f59e0b; background: #fffbeb; }
+        pre { background: #1a1a1a; color: #fff; padding: 1rem; border-radius: 4px; overflow-x: auto; }
+        button {
+            background: #FF1744;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0.25rem;
+        }
+        button:hover { background: #E91E63; }
+        .result { margin-top: 1rem; padding: 1rem; background: #e5e7eb; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste Manual - Sistema DIFAL</h1>
+    
+    <div class="test-section">
+        <h2>1. Verificação de Dependências</h2>
+        <button onclick="testDependencies()">Testar Dependências</button>
+        <div id="deps-result" class="result" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Teste do Parser SPED</h2>
+        <button onclick="testSpedParser()">Testar Parser</button>
+        <div id="parser-result" class="result" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Teste da Calculadora DIFAL</h2>
+        <button onclick="testDifalCalculator()">Testar Calculadora</button>
+        <div id="calc-result" class="result" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Teste dos Estados</h2>
+        <button onclick="testEstados()">Testar Estados</button>
+        <div id="estados-result" class="result" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. Teste de Utilitários</h2>
+        <button onclick="testUtils()">Testar Utils</button>
+        <div id="utils-result" class="result" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>6. Simulação de Dados SPED</h2>
+        <button onclick="simulateSpedData()">Simular Dados</button>
+        <div id="simulate-result" class="result" style="display: none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>🎯 Teste do Sistema Completo</h2>
+        <p>Para testar com arquivo real, <a href="index.html" target="_blank">abra o sistema principal</a> e use o arquivo:</p>
+        <code>/Users/ceciliodaher/Documents/git/difal/documentos/13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt</code>
+    </div>
+
+    <!-- Carregar scripts -->
+    <script src="data/estados-brasil.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/sped-parser.js"></script>
+    <script src="js/difal-calculator.js"></script>
+
+    <script>
+        function showResult(elementId, content, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = content;
+            element.style.display = 'block';
+            element.className = `result ${type}`;
+        }
+
+        function testDependencies() {
+            const deps = {
+                'SpedParser': !!window.SpedParser,
+                'DifalCalculator': !!window.DifalCalculator,
+                'Utils': !!window.Utils,
+                'EstadosUtil': !!window.EstadosUtil,
+                'ESTADOS_BRASIL': !!window.ESTADOS_BRASIL
+            };
+            
+            const results = Object.entries(deps).map(([name, exists]) => 
+                `${exists ? '✅' : '❌'} ${name}: ${exists ? 'OK' : 'FALHOU'}`
+            ).join('<br>');
+            
+            const allOk = Object.values(deps).every(v => v);
+            showResult('deps-result', results, allOk ? 'success' : 'error');
+        }
+
+        function testSpedParser() {
+            try {
+                const parser = new SpedParser();
+                
+                // Teste de validação de linha
+                const linhaValida = parser.isLinhaValida('|C170|001|ITEM001|DESCRICAO|1,00|UN|100,00|0,00|0|000|2556|01|100,00|18,00|18,00|0,00|0,00|0,00|0|999|999|0,00|0,00|0,00|070|0,00|0,00|0,00|0,00|000|0,00|0,00|0,00|0,00|0,00||');
+                const linhaInvalida = parser.isLinhaValida('linha inválida');
+                
+                // Teste de layout
+                const layoutC170 = parser.obterLayoutRegistro('C170');
+                const layoutInexistente = parser.obterLayoutRegistro('XXXX');
+                
+                const results = [
+                    `✅ Instanciação: OK`,
+                    `${linhaValida ? '✅' : '❌'} Linha válida: ${linhaValida}`,
+                    `${!linhaInvalida ? '✅' : '❌'} Linha inválida: ${!linhaInvalida}`,
+                    `${layoutC170 ? '✅' : '❌'} Layout C170: ${layoutC170 ? layoutC170.length + ' campos' : 'FALHOU'}`,
+                    `${!layoutInexistente ? '✅' : '❌'} Layout inexistente: ${!layoutInexistente}`
+                ].join('<br>');
+                
+                showResult('parser-result', results, 'success');
+                
+            } catch (error) {
+                showResult('parser-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        function testDifalCalculator() {
+            try {
+                const calculator = new DifalCalculator();
+                
+                // Configurar UFs
+                calculator.configurarUFs('SP', 'RJ');
+                
+                // Dados de teste
+                const itemTeste = {
+                    codItem: 'TESTE001',
+                    descrCompl: 'Item de teste',
+                    cfop: '2556',
+                    destinacao: 'uso-consumo',
+                    vlItem: 1000,
+                    vlDesc: 0,
+                    vlIpi: 100,
+                    baseCalculoDifal: 1100,
+                    ncm: '84713000'
+                };
+                
+                calculator.carregarItens([itemTeste]);
+                const resultados = calculator.calcularTodos();
+                const totalizadores = calculator.obterTotalizadores();
+                
+                const results = [
+                    `✅ Instanciação: OK`,
+                    `✅ Configuração UFs: SP → RJ`,
+                    `✅ Item carregado: ${itemTeste.codItem}`,
+                    `✅ Cálculo executado: ${resultados.length} resultado`,
+                    `✅ DIFAL calculado: R$ ${resultados[0]?.difal?.toFixed(2) || '0,00'}`,
+                    `✅ FCP calculado: R$ ${resultados[0]?.fcp?.toFixed(2) || '0,00'}`,
+                    `✅ Total a recolher: R$ ${totalizadores.totalRecolher?.toFixed(2) || '0,00'}`
+                ].join('<br>');
+                
+                showResult('calc-result', results, 'success');
+                
+            } catch (error) {
+                showResult('calc-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        function testEstados() {
+            try {
+                const estadoSP = EstadosUtil.obterPorUF('SP');
+                const estadoRJ = EstadosUtil.obterPorUF('RJ');
+                const aliqInterestadual = EstadosUtil.obterAliquotaInterestadual('SP', 'RJ');
+                const cfopDifal = EstadosUtil.isCFOPDifal('2556');
+                const cfopNormal = EstadosUtil.isCFOPDifal('5101');
+                const destinacao = EstadosUtil.obterDestinacaoCFOP('2556');
+                
+                const results = [
+                    `✅ Estado SP: ${estadoSP.nome} - ${estadoSP.aliqInterna}%`,
+                    `✅ Estado RJ: ${estadoRJ.nome} - ${estadoRJ.aliqInterna}%`,
+                    `✅ Alíquota interestadual SP→RJ: ${aliqInterestadual}%`,
+                    `${cfopDifal ? '✅' : '❌'} CFOP 2556 é DIFAL: ${cfopDifal}`,
+                    `${!cfopNormal ? '✅' : '❌'} CFOP 5101 não é DIFAL: ${!cfopNormal}`,
+                    `✅ Destinação 2556: ${destinacao}`
+                ].join('<br>');
+                
+                showResult('estados-result', results, 'success');
+                
+            } catch (error) {
+                showResult('estados-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        function testUtils() {
+            try {
+                const moeda = Utils.formatarMoeda(1234.56);
+                const numero = Utils.formatarNumero(1234567, 2);
+                const porcentagem = Utils.formatarPorcentagem(18.5);
+                const cnpj = Utils.formatarCNPJ('13158698000110');
+                const texto = Utils.truncarTexto('Este é um texto muito longo para ser exibido', 20);
+                
+                const results = [
+                    `✅ Moeda: ${moeda}`,
+                    `✅ Número: ${numero}`,
+                    `✅ Porcentagem: ${porcentagem}`,
+                    `✅ CNPJ: ${cnpj}`,
+                    `✅ Texto truncado: ${texto}`
+                ].join('<br>');
+                
+                showResult('utils-result', results, 'success');
+                
+            } catch (error) {
+                showResult('utils-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        function simulateSpedData() {
+            try {
+                // Simular dados SPED básicos para teste
+                const dadosSimulados = {
+                    fileName: 'teste-sped.txt',
+                    headerInfo: {
+                        nomeEmpresa: 'THE FIBER PROVEDORA DE INTERNET LTDA',
+                        cnpj: '13158698000110',
+                        uf: 'SP',
+                        periodo: '01/04/2025'
+                    },
+                    itensDifal: [
+                        {
+                            codItem: 'ITEM001',
+                            descrCompl: 'EQUIPAMENTO PARA USO E CONSUMO',
+                            cfop: '2556',
+                            destinacao: 'uso-consumo',
+                            ncm: '84713000',
+                            vlItem: 1000,
+                            vlDesc: 0,
+                            vlIpi: 0,
+                            baseCalculoDifal: 1000,
+                            statusVinculacao: 'ENCONTRADO'
+                        },
+                        {
+                            codItem: 'ITEM002', 
+                            descrCompl: 'EQUIPAMENTO ATIVO IMOBILIZADO',
+                            cfop: '2551',
+                            destinacao: 'ativo-imobilizado',
+                            ncm: '85176290',
+                            vlItem: 2000,
+                            vlDesc: 100,
+                            vlIpi: 200,
+                            baseCalculoDifal: 2100,
+                            statusVinculacao: 'ENCONTRADO'
+                        }
+                    ],
+                    estatisticasDifal: {
+                        totalItens: 2,
+                        distribuicaoDestinacao: {
+                            'uso-consumo': 1,
+                            'ativo-imobilizado': 1
+                        },
+                        estatisticasValores: {
+                            totalItems: 2,
+                            totalBase: 3100,
+                            totalIcms: 0,
+                            totalIpi: 200,
+                            totalValorItem: 3000
+                        }
+                    }
+                };
+                
+                // Testar cálculo com dados simulados
+                const calculator = new DifalCalculator();
+                calculator.configurarUFs('SP', 'RJ');
+                calculator.carregarItens(dadosSimulados.itensDifal);
+                const resultados = calculator.calcularTodos();
+                const totalizadores = calculator.obterTotalizadores();
+                
+                const results = [
+                    `✅ Dados simulados criados`,
+                    `✅ Empresa: ${dadosSimulados.headerInfo.nomeEmpresa}`,
+                    `✅ Itens DIFAL: ${dadosSimulados.itensDifal.length}`,
+                    `✅ Total base simulada: ${Utils.formatarMoeda(dadosSimulados.estatisticasDifal.estatisticasValores.totalBase)}`,
+                    `✅ Cálculo executado: ${resultados.length} resultados`,
+                    `✅ DIFAL total: ${Utils.formatarMoeda(totalizadores.totalDifal)}`,
+                    `✅ FCP total: ${Utils.formatarMoeda(totalizadores.totalFcp)}`,
+                    `✅ Total a recolher: ${Utils.formatarMoeda(totalizadores.totalRecolher)}`
+                ].join('<br>');
+                
+                showResult('simulate-result', results, 'success');
+                
+            } catch (error) {
+                showResult('simulate-result', `❌ Erro: ${error.message}`, 'error');
+            }
+        }
+
+        // Executar teste inicial automaticamente
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testDependencies();
+            }, 500);
+        });
+    </script>
+</body>
+</html>
