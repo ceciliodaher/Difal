@@ -1,0 +1,499 @@
+📋 DIFAL Constants loaded successfully constants.js:263:9
+🚀 Iniciando Sistema DIFAL Modular... sistema.html:470:21
+🚀 DIFAL App Modular criada app-modular.js:22:17
+🔧 Inicializando Sistema DIFAL Modular... app-modular.js:30:21
+✅ Dependências modulares verificadas app-modular.js:94:17
+🏪 StateManager initialized state-manager.js:69:17
+✅ StateManager ready state-manager.js:80:17
+⚙️ Configuration Manager initialized configuration-manager.js:18:17
+📂 Carregando todas as configurações do localStorage... configuration-manager.js:449:21
+📂 Configuração carregada do localStorage: difal_config_1 
+Object { beneficio: "reducao-base", cargaEfetivaDesejada: 10 }
+configuration-manager.js:435:25
+✅ 1 configurações carregadas do localStorage configuration-manager.js:469:25
+🔄 Configurações carregadas do localStorage: 
+Object { 1: {…} }
+configuration-manager.js:40:17
+📄 SPED Parser Modular initialized sped-parser.js:18:17
+🧮 DIFAL Calculator Modular initialized difal-calculator.js:22:17
+✅ Sistema DIFAL Modular inicializado com sucesso! app-modular.js:67:21
+✅ Sistema DIFAL Modular pronto! sistema.html:481:25
+📂 Processando arquivo: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt app-modular.js:244:21
+📂 Processando arquivo SPED: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt sped-parser.js:28:21
+🎯 UFs configuradas: undefined → undefined difal-calculator.js:44:17
+📦 0 itens carregados para cálculo difal-calculator.js:52:17
+🚀 Iniciando cálculos DIFAL... difal-calculator.js:59:17
+❌ Erro no cálculo: Error: Nenhum item disponível para cálculo
+    calcularTodos file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:62
+    executeCalculation file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:389
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:33
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:108
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:104
+    processarArquivo file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/parsing/sped-parser.js:31
+    processFile file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:250
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:141
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:135
+    initializeUIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:102
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:55
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:480
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:469
+difal-calculator.js:398:21
+📊 Parsing concluído: 
+Object { fileName: "13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt", fileSize: 54795 }
+app-modular.js:334:17
+📊 642 linhas encontradas no arquivo sped-parser.js:40:21
+🔄 Iniciando processamento das linhas... sped-parser.js:92:17
+🔍 DEBUG 0000 - Campos recebidos: 
+Array(12) [ "0000", "019", "1", "01012025", "31012025", "THE FIBER PROVEDORA DE INTERNET LTDA", "13158698000110", "", "GO", "106379704", … ]
+sped-parser.js:217:21
+🏢 Empresa identificada: 
+Object { razaoSocial: "THE FIBER PROVEDORA DE INTERNET LTDA", cnpj: "13158698000110", uf: "GO", ie: "106379704", dtInicio: "01012025", dtFim: "31012025", debug_campo_0: "0000", debug_campo_1: "019", debug_campo_2: "1", debug_campo_3: "01012025", … }
+sped-parser.js:240:21
+🔍 DEBUG C170 - Linha 209 - Campos: 
+Array(15) [ "C170", "1", "200.0052", "", "66", "65", "1718,64", "0", "0", "000", … ]
+sped-parser.js:262:21
+📦 Item 1: 
+Object { codigo: "200.0052", ncm: "200.0052", cfop: "1949", valor: 1718, linha: 209 }
+sped-parser.js:316:25
+🔍 DEBUG C170 - Linha 210 - Campos: 
+Array(15) [ "C170", "2", "100.0700", "", "80", "42", "1911,2", "0", "0", "000", … ]
+sped-parser.js:262:21
+📦 Item 2: 
+Object { codigo: "100.0700", ncm: "100.0700", cfop: "1949", valor: 1911, linha: 210 }
+sped-parser.js:316:25
+🔍 DEBUG C170 - Linha 216 - Campos: 
+Array(15) [ "C170", "1", "2267", "", "1", "65", "3,9", "0", "0", "102", … ]
+sped-parser.js:262:21
+📦 Item 3: 
+Object { codigo: "2267", ncm: "2267", cfop: "1556", valor: 3, linha: 216 }
+sped-parser.js:316:25
+🔍 DEBUG C170 - Linha 217 - Campos: 
+Array(15) [ "C170", "2", "150038", "", "5", "65", "29,5", "0", "0", "102", … ]
+sped-parser.js:262:21
+📦 Item 4: 
+Object { codigo: "150038", ncm: "150038", cfop: "1556", valor: 29, linha: 217 }
+sped-parser.js:316:25
+🔍 DEBUG C170 - Linha 218 - Campos: 
+Array(15) [ "C170", "3", "161086", "", "6", "65", "17,4", "0", "0", "102", … ]
+sped-parser.js:262:21
+📦 Item 5: 
+Object { codigo: "161086", ncm: "161086", cfop: "1556", valor: 17, linha: 218 }
+sped-parser.js:316:25
+🔍 DEBUG C170 - Linha 219 - Campos: 
+Array(15) [ "C170", "4", "157398", "", "5", "65", "49,5", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 220 - Campos: 
+Array(15) [ "C170", "5", "6211", "", "25", "65", "222,5", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 221 - Campos: 
+Array(15) [ "C170", "6", "157975", "", "2", "65", "35,8", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 222 - Campos: 
+Array(15) [ "C170", "7", "160875", "", "5", "65", "29,5", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 223 - Campos: 
+Array(15) [ "C170", "8", "140669", "", "3", "65", "74,7", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 224 - Campos: 
+Array(15) [ "C170", "9", "151652", "", "100", "65", "50", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 225 - Campos: 
+Array(15) [ "C170", "10", "70483", "", "2", "65", "17,8", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 226 - Campos: 
+Array(15) [ "C170", "11", "74080", "", "4", "65", "15,6", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 229 - Campos: 
+Array(15) [ "C170", "1", "ZT866", "", "10", "114", "2362,2", "0", "0", "500", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 232 - Campos: 
+Array(15) [ "C170", "1", "2203", "", "500", "1", "114990", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 236 - Campos: 
+Array(15) [ "C170", "1", "35505001", "", "100", "10", "2041,74", "0", "0", "100", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 239 - Campos: 
+Array(15) [ "C170", "1", "400-BLLG", "", "1", "1", "2046,3", "0", "0", "600", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 244 - Campos: 
+Array(15) [ "C170", "1", "1879", "", "8014", "64", "19788,57", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 245 - Campos: 
+Array(15) [ "C170", "2", "713", "", "6029", "64", "17578,88", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 246 - Campos: 
+Array(15) [ "C170", "3", "1623", "", "12061", "64", "51101,25", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 247 - Campos: 
+Array(15) [ "C170", "4", "A144SMSASC0811051C", "", "1042", "64", "9285,43", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 250 - Campos: 
+Array(15) [ "C170", "1", "4752", "", "1", "61", "240", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 254 - Campos: 
+Array(15) [ "C170", "1", "4752", "", "1", "61", "240", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 258 - Campos: 
+Array(15) [ "C170", "1", "2160", "", "1", "61", "3260", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 262 - Campos: 
+Array(15) [ "C170", "1", "6297", "", "2", "61", "758", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 263 - Campos: 
+Array(15) [ "C170", "2", "6747", "", "1", "1", "129", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 267 - Campos: 
+Array(15) [ "C170", "1", "6299", "", "1", "61", "4496", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 272 - Campos: 
+Array(15) [ "C170", "1", "87899028801349", "", "100", "1", "975", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 273 - Campos: 
+Array(15) [ "C170", "2", "10740", "", "1", "1", "1876,62", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 276 - Campos: 
+Array(15) [ "C170", "1", "987", "", "21,658", "17", "139,47", "0", "0", "061", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 280 - Campos: 
+Array(15) [ "C170", "1", "987", "", "46,868", "17", "301,82", "0", "0", "061", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 281 - Campos: 
+Array(15) [ "C170", "2", "991", "", "336,3568", "17", "1527,06", "0", "0", "060", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 286 - Campos: 
+Array(15) [ "C170", "1", "987", "", "85,9922", "17", "553,79", "0", "0", "061", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 287 - Campos: 
+Array(15) [ "C170", "2", "991", "", "342,5881", "17", "1555,35", "0", "0", "060", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 292 - Campos: 
+Array(15) [ "C170", "1", "991", "", "43,381", "17", "196,94", "0", "0", "060", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 296 - Campos: 
+Array(15) [ "C170", "1", "987", "", "62,9425", "17", "405,35", "0", "0", "061", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 297 - Campos: 
+Array(15) [ "C170", "2", "991", "", "255,1894", "17", "1158,56", "0", "0", "060", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 302 - Campos: 
+Array(15) [ "C170", "1", "980", "", "41,35", "17", "266,29", "0", "0", "061", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 306 - Campos: 
+Array(15) [ "C170", "1", "980", "", "41,754", "17", "268,89", "0", "0", "061", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 310 - Campos: 
+Array(15) [ "C170", "1", "980", "", "332,6553", "17", "2142,3", "0", "0", "061", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 314 - Campos: 
+Array(15) [ "C170", "1", "1450", "", "1", "1", "30", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 315 - Campos: 
+Array(15) [ "C170", "2", "87899028801312", "", "1", "1", "270", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 316 - Campos: 
+Array(15) [ "C170", "3", "37897534831623", "", "2", "1", "80", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 319 - Campos: 
+Array(15) [ "C170", "1", "37897534831623", "", "1", "1", "40", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 320 - Campos: 
+Array(15) [ "C170", "2", "1451", "", "1", "1", "35", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 323 - Campos: 
+Array(15) [ "C170", "1", "78989184006260", "", "1", "1", "35", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 324 - Campos: 
+Array(15) [ "C170", "2", "1089", "", "1", "1", "35", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 325 - Campos: 
+Array(15) [ "C170", "3", "37897534831623", "", "1", "1", "40", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 328 - Campos: 
+Array(15) [ "C170", "1", "78989184006272", "", "1", "1", "20", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 329 - Campos: 
+Array(15) [ "C170", "2", "1089", "", "1", "1", "35", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 330 - Campos: 
+Array(15) [ "C170", "3", "1451", "", "1", "1", "35", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 333 - Campos: 
+Array(15) [ "C170", "1", "17898940671329", "", "22", "1", "3850", "0", "0", "220", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 336 - Campos: 
+Array(15) [ "C170", "1", "509273", "", "5", "61", "675", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 339 - Campos: 
+Array(15) [ "C170", "1", "1662", "", "150000", "64", "56700", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 342 - Campos: 
+Array(15) [ "C170", "1", "1662", "", "1325", "64", "500,85", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 345 - Campos: 
+Array(15) [ "C170", "1", "12000045774", "", "2", "1", "168,2", "0", "0", "220", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 348 - Campos: 
+Array(15) [ "C170", "1", "ACCE203-20", "", "1000", "10", "1930,3", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 352 - Campos: 
+Array(15) [ "C170", "1", "20031521", "", "1", "10", "53,72", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 353 - Campos: 
+Array(15) [ "C170", "2", "20027131", "", "1", "10", "35,62", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 356 - Campos: 
+Array(15) [ "C170", "1", "7897203427924", "", "13", "10", "96,46", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 357 - Campos: 
+Array(15) [ "C170", "2", "7898094331871", "", "3", "10", "22,53", "0", "0", "200", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 358 - Campos: 
+Array(15) [ "C170", "3", "22852631", "", "100", "14", "138", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 362 - Campos: 
+Array(15) [ "C170", "1", "5696", "", "2", "10", "570", "0", "0", "020", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 363 - Campos: 
+Array(15) [ "C170", "2", "4913", "", "2", "10", "321,11", "0", "0", "020", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 364 - Campos: 
+Array(15) [ "C170", "3", "2777", "", "5", "74", "85", "0", "0", "020", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 365 - Campos: 
+Array(15) [ "C170", "4", "2739", "", "5", "74", "12,85", "0", "0", "220", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 370 - Campos: 
+Array(15) [ "C170", "1", "7891065000165", "", "1", "1", "23,9", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 371 - Campos: 
+Array(15) [ "C170", "2", "25092", "", "1", "14", "6,9", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 372 - Campos: 
+Array(15) [ "C170", "3", "21813", "", "1", "1", "19,9", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 376 - Campos: 
+Array(15) [ "C170", "1", "37897534831743", "", "72", "1", "299,9", "0", "0", "103", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 380 - Campos: 
+Array(15) [ "C170", "1", "CB20002", "", "400", "140", "2292", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 381 - Campos: 
+Array(15) [ "C170", "2", "AGG0001", "", "6000", "140", "3000", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 382 - Campos: 
+Array(15) [ "C170", "3", "FA0001", "", "60", "61", "1410", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 386 - Campos: 
+Array(15) [ "C170", "1", "SOG0001", "", "1500", "2", "4500", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 389 - Campos: 
+Array(15) [ "C170", "1", "87899028801341", "", "1", "10", "435", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 392 - Campos: 
+Array(15) [ "C170", "1", "78YT780", "", "2", "131", "2000", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 393 - Campos: 
+Array(15) [ "C170", "2", "986542", "", "1", "131", "1500", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 396 - Campos: 
+Array(15) [ "C170", "1", "87899028801288", "", "40", "1", "2240", "205,33", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 397 - Campos: 
+Array(15) [ "C170", "2", "87899028801289", "", "10", "8", "160", "14,67", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 400 - Campos: 
+Array(15) [ "C170", "1", "11950-ADR", "", "216", "1", "837", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 403 - Campos: 
+Array(15) [ "C170", "1", "11950-ADR", "", "216", "1", "837", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 406 - Campos: 
+Array(15) [ "C170", "1", "EAFV19", "", "3", "1", "1995", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 407 - Campos: 
+Array(15) [ "C170", "2", "EAFV23", "", "2", "1", "1740", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 408 - Campos: 
+Array(15) [ "C170", "3", "TEAF6X10", "", "3", "1", "1590", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 411 - Campos: 
+Array(15) [ "C170", "1", "EAFP19", "", "3", "1", "1995", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 412 - Campos: 
+Array(15) [ "C170", "2", "EAFP23", "", "2", "1", "1740", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 413 - Campos: 
+Array(15) [ "C170", "3", "TEAFP6X10", "", "3", "1", "1590", "0", "0", "000", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 417 - Campos: 
+Array(15) [ "C170", "1", "87899028801308", "", "500", "1", "250", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 418 - Campos: 
+Array(15) [ "C170", "2", "87899028801308", "", "150", "1", "75", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 422 - Campos: 
+Array(15) [ "C170", "1", "123", "", "2", "65", "139,8", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 425 - Campos: 
+Array(15) [ "C170", "1", "M34", "", "1", "1", "3300", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 428 - Campos: 
+Array(15) [ "C170", "1", "87899028801310", "", "100", "1", "3200", "0", "0", "400", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 431 - Campos: 
+Array(15) [ "C170", "1", "87899028801344", "", "3", "5", "451,5", "0", "0", "020", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 432 - Campos: 
+Array(15) [ "C170", "2", "2100", "", "5", "5", "655", "0", "0", "020", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 433 - Campos: 
+Array(15) [ "C170", "3", "87899028801343", "", "3", "5", "373,8", "0", "0", "020", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 436 - Campos: 
+Array(15) [ "C170", "1", "87899028801343", "", "3", "5", "374,4", "0", "0", "020", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 437 - Campos: 
+Array(15) [ "C170", "2", "87899028801344", "", "3", "5", "451,5", "0", "0", "020", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 440 - Campos: 
+Array(15) [ "C170", "1", "ARMTZ-BRINDE", "", "1000", "151", "1500", "0", "0", "040", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 444 - Campos: 
+Array(15) [ "C170", "1", "79", "", "20", "1", "40", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 448 - Campos: 
+Array(15) [ "C170", "1", "87899028801342", "", "500", "165", "7169,04", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 451 - Campos: 
+Array(15) [ "C170", "1", "87899028801345", "", "1", "1", "79", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 452 - Campos: 
+Array(15) [ "C170", "2", "87899028801346", "", "1", "1", "98", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 455 - Campos: 
+Array(15) [ "C170", "1", "87899028801347", "", "1", "1", "3500", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 458 - Campos: 
+Array(15) [ "C170", "1", "87899028801347", "", "1", "1", "3500", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 463 - Campos: 
+Array(15) [ "C170", "1", "87899028801348", "", "1", "1", "850", "0", "0", "101", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 466 - Campos: 
+Array(15) [ "C170", "1", "2886", "", "1", "1", "773,85", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 469 - Campos: 
+Array(15) [ "C170", "1", "7899660105148", "", "2", "8", "42", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 472 - Campos: 
+Array(15) [ "C170", "1", "87899028801350", "", "100", "1", "280", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 475 - Campos: 
+Array(15) [ "C170", "1", "87899028801351", "", "12", "1", "12850,08", "0,08", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 478 - Campos: 
+Array(15) [ "C170", "1", "TC001", "", "100", "1", "269", "0", "0", "102", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 482 - Campos: 
+Array(15) [ "C170", "1", "265056", "", "1", "1", "1924,51", "0", "0", "220", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 483 - Campos: 
+Array(15) [ "C170", "2", "265166", "", "2", "1", "6375", "0", "0", "720", … ]
+sped-parser.js:262:21
+🔍 DEBUG C170 - Linha 484 - Campos: 
+Array(15) [ "C170", "3", "265208", "", "2", "1", "1610,62", "0", "0", "220", … ]
+sped-parser.js:262:21
+✅ Processamento concluído: 604 processadas, 10 ignoradas sped-parser.js:133:17
+📚 Criando catálogo de produtos do registro 0200... sped-parser.js:335:17
+📦 Processando 94 registros 0200 sped-parser.js:339:17
+✅ Catálogo criado: 94 produtos sped-parser.js:373:17
+🔗 Enriquecendo itens C170 com dados do catálogo... sped-parser.js:380:17
+✅ 113 itens enriquecidos com dados do catálogo sped-parser.js:404:17
+🎯 Processando itens para cálculo DIFAL... sped-parser.js:420:17
+🔍 Filtro DIFAL - CFOP 1949: DIFAL=false, Valor=true, CST=true 2 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 11 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true 8 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1949: DIFAL=false, Valor=true, CST=true 2 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1908: DIFAL=false, Valor=true, CST=true sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1949: DIFAL=false, Valor=true, CST=true 2 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1908: DIFAL=false, Valor=true, CST=true sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 26 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 14 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true 3 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 6 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true 11 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 6 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 7 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 4 sped-parser.js:442:25
+🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true 3 sped-parser.js:442:25
+✅ Itens DIFAL processados: 113 → 24 (filtrados) sped-parser.js:465:17
+📊 NCMs únicos encontrados (12): 
+Array(10) [ "85176299", "SEM NCM", "85176259", "84717010", "85447010", "85447090", "48114110", "76169900", "48239099", "39269090" ]
+sped-parser.js:469:17
+🎯 UFs configuradas: undefined → undefined difal-calculator.js:44:17
+📦 0 itens carregados para cálculo difal-calculator.js:52:17
+🚀 Iniciando cálculos DIFAL... difal-calculator.js:59:17
+❌ Erro no cálculo: Error: Nenhum item disponível para cálculo
+    calcularTodos file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:62
+    executeCalculation file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:389
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:33
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:108
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:104
+    processarArquivo file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/parsing/sped-parser.js:46
+    processFile file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:250
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:141
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:135
+    initializeUIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:102
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:55
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:480
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:469
+difal-calculator.js:398:21
+📊 Parsing concluído: 
+Object { totalLinhas: 642, totalRegistros: 50, itensDifal: 24 }
+app-modular.js:334:17
+🎯 UFs configuradas: undefined → undefined difal-calculator.js:44:17
+📦 0 itens carregados para cálculo difal-calculator.js:52:17
+🚀 Iniciando cálculos DIFAL... difal-calculator.js:59:17
+❌ Erro no cálculo: Error: Nenhum item disponível para cálculo
+    calcularTodos file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:62
+    executeCalculation file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:389
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:33
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:108
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:104
+    setSpedData file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/state-manager.js:185
+    processFile file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:253
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:141
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:135
+    initializeUIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:102
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:55
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:480
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:469
+difal-calculator.js:398:21
+📊 Parsing concluído: 
+Object { nomeArquivo: "sped_processado.txt", dadosEmpresa: {…}, registros: {…}, itensDifal: (24) […], estatisticas: {…} }
+app-modular.js:334:17
+📊 SPED Data stored in StateManager: 
+Object { nomeArquivo: "sped_processado.txt", dadosEmpresa: {…}, registros: {…}, itensDifal: (24) […], estatisticas: {…} }
+state-manager.js:186:17
+✅ Arquivo processado com sucesso: 
+Object { nomeArquivo: "sped_processado.txt", dadosEmpresa: {…}, registros: {…}, itensDifal: (24) […], estatisticas: {…} }
+app-modular.js:265:21
+🎯 Tentando abrir modal de configuração sistema.html:396:21
+✅ Modal de configuração aberto sistema.html:400:25
+🎯 Tentando abrir configuração de itens 35140 sistema.html:414:21
+Uncaught InternalError: too much recursion
+    prosseguirParaConfiguracaoItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:414
+    prosseguirParaConfiguracaoItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:416
+    prosseguirParaConfiguracaoItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:416
+    prosseguirParaConfiguracaoItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:416
+    prosseguirParaConfiguracaoItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:416
+    prosseguirParaConfiguracaoItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:416
+    prosseguirParaConfiguracaoItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:416
+    prosseguirParaConfiguracaoItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:416
+sistema.html:414:13

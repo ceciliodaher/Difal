@@ -411,18 +411,23 @@
         }
 
         function prosseguirParaConfiguracaoItens() {
-            console.log('🎯 Tentando abrir configuração de itens');
-            if (window.prosseguirParaConfiguracaoItens) {
-                window.prosseguirParaConfiguracaoItens();
-            } else {
-                // Fallback caso a função não esteja carregada
-                console.log('⚠️ Usando fallback para abrir modal de itens');
-                const modal = document.getElementById('item-config-modal');
-                if (modal) {
-                    modal.classList.remove('hidden');
-                    console.log('✅ Modal de configuração de itens aberto');
+            console.log('🎯 Abrindo configuração de itens');
+            
+            // Fechar modal de configuração geral
+            closeConfigModal();
+            
+            // Abrir modal de configuração de itens
+            const modal = document.getElementById('item-config-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                console.log('✅ Modal de configuração de itens aberto');
+                
+                // Carregar itens na tabela se ConfigurationManager estiver disponível
+                if (window.configurationManager && window.configurationManager.renderItemConfigTable) {
+                    window.configurationManager.renderItemConfigTable();
                 }
-                closeConfigModal();
+            } else {
+                console.error('❌ Modal item-config-modal não encontrado');
             }
         }
 
@@ -482,6 +487,8 @@
                 
                 // Configurar funções globais compatíveis
                 window.calcularSemConfiguracaoItens = function() {
+                    console.log('🎯 Iniciando cálculo sem configuração individual...');
+                    
                     const configGeral = {
                         metodologia: document.querySelector('input[name="metodologia"]:checked')?.value || 'auto',
                         cargaEfetiva: parseFloat(document.getElementById('carga-efetiva')?.value) || null,
@@ -489,8 +496,19 @@
                         aliqDestinoEfetiva: parseFloat(document.getElementById('aliq-destino-efetiva')?.value) || null
                     };
                     
+                    // Debug - verificar se há dados disponíveis
+                    if (window.difalApp.currentData && window.difalApp.currentData.itensDifal) {
+                        console.log(`📊 Dados disponíveis: ${window.difalApp.currentData.itensDifal.length} itens DIFAL`);
+                    } else {
+                        console.error('❌ Nenhum dado DIFAL disponível');
+                        alert('Erro: Nenhum item DIFAL disponível para cálculo');
+                        return;
+                    }
+                    
                     window.difalApp.calculateDifal(configGeral)
-                        .then(() => {
+                        .then((resultado) => {
+                            console.log('✅ Cálculo concluído:', resultado);
+                            
                             // Fechar modal
                             if (window.closeConfigModal) {
                                 window.closeConfigModal();

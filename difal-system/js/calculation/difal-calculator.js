@@ -29,9 +29,11 @@ class DifalCalculatorModular {
             this.onConfigurationChanged(data);
         });
         
-        this.eventBus?.on(window.DIFAL_CONSTANTS?.EVENTS?.CALCULATION_REQUESTED, (data) => {
-            this.executeCalculation(data);
-        });
+        // *** REMOVIDO AUTO-CÁLCULO ***
+        // O cálculo deve ser chamado explicitamente pelo usuário, não automaticamente
+        // this.eventBus?.on(window.DIFAL_CONSTANTS?.EVENTS?.CALCULATION_REQUESTED, (data) => {
+        //     this.executeCalculation(data);
+        // });
     }
 
     /**
