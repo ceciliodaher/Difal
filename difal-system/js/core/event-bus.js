@@ -220,6 +220,11 @@ class EventBus {
 // Criar instância global
 window.eventBus = new EventBus();
 
+// Expor globalmente para uso no browser
+if (typeof window !== 'undefined') {
+    window.EventBus = EventBus;
+}
+
 // Exportar classe para uso se necessário
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = EventBus;

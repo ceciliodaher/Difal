@@ -756,6 +756,11 @@ class ConfigurationManager {
     }
 }
 
+// Expor globalmente para uso no browser
+if (typeof window !== 'undefined') {
+    window.ConfigurationManager = ConfigurationManager;
+}
+
 // Exportar classe para uso se necessário
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = ConfigurationManager;

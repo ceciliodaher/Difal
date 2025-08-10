@@ -590,6 +590,11 @@ class StateManager {
     }
 }
 
+// Expor globalmente para uso no browser
+if (typeof window !== 'undefined') {
+    window.StateManager = StateManager;
+}
+
 // Exportar classe para uso se necessário
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = StateManager;

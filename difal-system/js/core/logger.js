@@ -273,7 +273,7 @@ window.logStats = () => {
     return stats;
 };
 
-// Exportar para uso global
+// Expor globalmente para uso no browser
 if (typeof window !== 'undefined') {
     window.Logger = Logger;
     window.logger = logger;
