@@ -429,7 +429,7 @@ class SpedParser {
                     
                     // Verificar se é CFOP DIFAL
                     if (window.EstadosUtil && window.EstadosUtil.isCFOPDifal(cfop)) {
-                    const codigoItem = linha[3] || "";
+                    const codigoItem = linha[2] || "";
                     const destinacao = window.EstadosUtil.obterDestinacaoCFOP(cfop);
                     
                     // Extrair valores do C170

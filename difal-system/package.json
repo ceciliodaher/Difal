@@ -12,11 +12,17 @@
     "install-browsers": "playwright install firefox chromium webkit",
     "install-firefox": "playwright install firefox"
   },
-  "keywords": ["difal", "icms", "sped", "fiscal", "tributario"],
+  "keywords": [
+    "difal",
+    "icms",
+    "sped",
+    "fiscal",
+    "tributario"
+  ],
   "author": "Expertzy",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.48.0"
+    "@playwright/test": "^1.54.2"
   },
   "engines": {
     "node": ">=18"

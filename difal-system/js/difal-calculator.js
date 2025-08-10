@@ -114,9 +114,14 @@ class DifalCalculator {
      * Aplica redução de base de cálculo
      */
     aplicarReducaoBase(calculo, cargaEfetivaDesejada) {
+        console.log(`🎯 aplicarReducaoBase: cargaEfetivaDesejada=${cargaEfetivaDesejada}`);
+        
         if (!cargaEfetivaDesejada || cargaEfetivaDesejada <= 0) {
+            console.log(`🚫 Redução de base rejeitada: valor inválido (${cargaEfetivaDesejada})`);
             return calculo;
         }
+        
+        console.log(`✅ Aplicando redução de base com carga efetiva: ${cargaEfetivaDesejada}%`);
         
         const calculoReduzido = { ...calculo };
         
@@ -134,6 +139,12 @@ class DifalCalculator {
                 calculoReduzido.icmsOrigem = (calculoReduzido.base * calculo.aliqOrigem) / 100;
                 calculoReduzido.icmsDestino = (calculoReduzido.base * calculo.aliqDestino) / 100;
                 calculoReduzido.difal = Math.max(0, calculoReduzido.icmsDestino - calculoReduzido.icmsOrigem);
+                
+                // Recalcular FCP com base reduzida
+                calculoReduzido.fcp = (calculoReduzido.base * calculo.aliqFcp) / 100;
+                
+                // Recalcular total a recolher
+                calculoReduzido.totalRecolher = Math.max(0, calculoReduzido.difal) + calculoReduzido.fcp;
             }
         } else {
             // Para Base Dupla: aplicar redução diretamente
@@ -147,6 +158,12 @@ class DifalCalculator {
                 
                 // Recalcular DIFAL com base reduzida
                 calculoReduzido.difal = (calculoReduzido.base * calculo.diferencaAliq * calculo.percentualDestinatario) / 10000;
+                
+                // Recalcular FCP com base reduzida
+                calculoReduzido.fcp = (calculoReduzido.base * calculo.aliqFcp * calculo.percentualDestinatario) / 10000;
+                
+                // Recalcular total a recolher
+                calculoReduzido.totalRecolher = Math.max(0, calculoReduzido.difal) + calculoReduzido.fcp;
             }
         }
         
@@ -157,9 +174,14 @@ class DifalCalculator {
      * Aplica redução de alíquota na origem
      */
     aplicarReducaoAliquotaOrigem(calculo, aliqOrigemEfetiva) {
+        console.log(`🎯 aplicarReducaoAliquotaOrigem: aliqOrigemEfetiva=${aliqOrigemEfetiva}`);
+        
         if (!aliqOrigemEfetiva || aliqOrigemEfetiva < 0) {
+            console.log(`🚫 Redução de alíquota origem rejeitada: valor inválido (${aliqOrigemEfetiva})`);
             return calculo;
         }
+        
+        console.log(`✅ Aplicando redução de alíquota origem: ${aliqOrigemEfetiva}%`);
         
         const calculoReduzido = { ...calculo };
         
@@ -182,9 +204,14 @@ class DifalCalculator {
      * Aplica redução de alíquota no destino
      */
     aplicarReducaoAliquotaDestino(calculo, aliqDestinoEfetiva) {
+        console.log(`🎯 aplicarReducaoAliquotaDestino: aliqDestinoEfetiva=${aliqDestinoEfetiva}`);
+        
         if (!aliqDestinoEfetiva || aliqDestinoEfetiva < 0) {
+            console.log(`🚫 Redução de alíquota destino rejeitada: valor inválido (${aliqDestinoEfetiva})`);
             return calculo;
         }
+        
+        console.log(`✅ Aplicando redução de alíquota destino: ${aliqDestinoEfetiva}%`);
         
         const calculoReduzido = { ...calculo };
         
@@ -211,10 +238,15 @@ class DifalCalculator {
      * Aplica isenção (zera DIFAL)
      */
     aplicarIsencao(calculo) {
+        console.log(`🎯 aplicarIsencao: aplicando isenção total do DIFAL`);
+        console.log(`✅ DIFAL antes da isenção: R$ ${calculo.difal.toFixed(2)}`);
+        
         const calculoIsento = { ...calculo };
         calculoIsento.difalOriginal = calculo.difal;
         calculoIsento.difal = 0;
         calculoIsento.isento = true;
+        
+        console.log(`✅ Isenção aplicada: DIFAL zerado (economia de R$ ${calculoIsento.difalOriginal.toFixed(2)})`);
         
         return calculoIsento;
     }
@@ -565,7 +597,21 @@ class DifalCalculator {
         
         if (config && (config.beneficio || config.fcpManual !== undefined)) {
             memoria.push('');
-            memoria.push(`=== BENEFÍCIOS FISCAIS APLICADOS ===`);
+            memoria.push(`=== BENEFÍCIOS FISCAIS ===`);
+            
+            // Verificar se benefício foi configurado mas rejeitado
+            const beneficioRejeitado = this.verificarBeneficioRejeitado(config, calculo);
+            
+            if (beneficioRejeitado) {
+                memoria.push('');
+                memoria.push(`⚠️ BENEFÍCIO REJEITADO:`);
+                memoria.push(`Tipo configurado: ${this.formatarTipoBeneficio(config.beneficio)}`);
+                memoria.push(`Motivo da rejeição: ${beneficioRejeitado.motivo}`);
+                memoria.push(`Valor informado: ${beneficioRejeitado.valor}`);
+                memoria.push(`Status: ❌ NÃO APLICADO`);
+            } else {
+                memoria.push(`Status: ✅ APLICADO COM SUCESSO`);
+            }
             
             if (config.beneficio) {
                 memoria.push(`Tipo: ${this.formatarTipoBeneficio(config.beneficio)}`);
@@ -911,6 +957,74 @@ class DifalCalculator {
             fcp: null
         };
         console.log('Calculadora DIFAL limpa');
+    }
+
+    /**
+     * Verifica se um benefício foi configurado mas rejeitado durante o cálculo
+     */
+    verificarBeneficioRejeitado(config, calculo) {
+        if (!config.beneficio) {
+            return null;
+        }
+
+        switch (config.beneficio) {
+            case 'reducao-base':
+                // Se foi configurado mas há problemas na configuração
+                if (config.cargaEfetivaDesejada === undefined || config.cargaEfetivaDesejada === null || config.cargaEfetivaDesejada <= 0) {
+                    return {
+                        motivo: 'Carga efetiva não informada ou inválida (deve ser > 0)',
+                        valor: config.cargaEfetivaDesejada || 'vazio'
+                    };
+                }
+                // Se foi configurado corretamente mas não aplicado no cálculo
+                if (config.cargaEfetivaDesejada > 0 && !calculo.percentualReducaoBase) {
+                    return {
+                        motivo: 'Erro no processamento - benefício válido não foi aplicado',
+                        valor: config.cargaEfetivaDesejada
+                    };
+                }
+                break;
+                
+            case 'reducao-aliquota-origem':
+                // Se foi configurado mas há problemas na configuração
+                if (config.aliqOrigemEfetiva === undefined || config.aliqOrigemEfetiva === null || config.aliqOrigemEfetiva < 0) {
+                    return {
+                        motivo: 'Alíquota origem não informada ou inválida (deve ser >= 0)',
+                        valor: config.aliqOrigemEfetiva || 'vazio'
+                    };
+                }
+                // Se foi configurado corretamente mas não aplicado
+                if (config.aliqOrigemEfetiva >= 0 && !calculo.aliqOrigemOriginal) {
+                    return {
+                        motivo: 'Erro no processamento - benefício válido não foi aplicado',
+                        valor: config.aliqOrigemEfetiva
+                    };
+                }
+                break;
+                
+            case 'reducao-aliquota-destino':
+                // Se foi configurado mas há problemas na configuração
+                if (config.aliqDestinoEfetiva === undefined || config.aliqDestinoEfetiva === null || config.aliqDestinoEfetiva < 0) {
+                    return {
+                        motivo: 'Alíquota destino não informada ou inválida (deve ser >= 0)',
+                        valor: config.aliqDestinoEfetiva || 'vazio'
+                    };
+                }
+                // Se foi configurado corretamente mas não aplicado
+                if (config.aliqDestinoEfetiva >= 0 && !calculo.aliqDestinoOriginal) {
+                    return {
+                        motivo: 'Erro no processamento - benefício válido não foi aplicado',
+                        valor: config.aliqDestinoEfetiva
+                    };
+                }
+                break;
+                
+            case 'isencao':
+                // Isenção sempre é aplicada se configurada (não precisa verificar)
+                break;
+        }
+        
+        return null;
     }
 }
 

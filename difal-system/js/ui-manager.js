@@ -37,10 +37,26 @@ class UIManager {
             proceedBtn.addEventListener('click', () => this.proceedToCalculation());
         }
 
-        // Calculate DIFAL
+        // Calculate DIFAL - abre modal de configuração primeiro
         const calculateBtn = document.getElementById('calculate-difal');
         if (calculateBtn) {
-            calculateBtn.addEventListener('click', () => this.calculateDifal());
+            calculateBtn.addEventListener('click', () => {
+                if (typeof openConfigModal === 'function') {
+                    openConfigModal();
+                } else {
+                    this.calculateDifal();
+                }
+            });
+        }
+
+        // Botão Prosseguir para Cálculo - navega sem calcular
+        const proceedToCalcBtn = document.getElementById('proceed-to-calculation');
+        if (proceedToCalcBtn) {
+            proceedToCalcBtn.addEventListener('click', () => {
+                this.showSection('calculation-section');
+                this.updateCompanyInfo();
+                console.log('📍 Navegado para seção de cálculo sem executar cálculo');
+            });
         }
 
         // Export buttons
@@ -187,6 +203,9 @@ class UIManager {
             // Mostrar análise
             this.showSpedAnalysis(resultado);
             this.showSection('analysis-section');
+            
+            // Atualizar informações da empresa
+            this.updateCompanyInfo();
             
         } catch (error) {
             console.error('Erro ao processar arquivo:', error);
@@ -386,9 +405,89 @@ class UIManager {
     }
 
     /**
-     * Executa cálculo DIFAL
+     * Aplica benefícios globais aplicáveis a todos os itens
+     * @param {Object} beneficiosGlobais - Configurações de benefícios
      */
-    async calculateDifal() {
+    aplicarBeneficiosGlobais(beneficiosGlobais) {
+        if (!window.spedData || !window.spedData.itensDifal) return;
+        if (!beneficiosGlobais) return;
+        
+        const { cargaEfetiva, aliqOrigemEfetiva, aliqDestinoEfetiva } = beneficiosGlobais;
+        
+        console.log('📝 Estado ANTES de aplicar benefícios globais:', JSON.stringify(window.difalConfiguracoesItens || {}));
+        
+        // Se não há benefícios definidos, não remover configurações individuais existentes
+        if (!cargaEfetiva && !aliqOrigemEfetiva && !aliqDestinoEfetiva) {
+            console.log('🧹 Nenhum benefício global definido - mantendo configurações individuais');
+            return;
+        }
+        
+        // Garantir que estrutura existe, mas NÃO sobrescrever configurações existentes
+        if (!window.difalConfiguracoesItens) {
+            window.difalConfiguracoesItens = {};
+        }
+        
+        let itensAfetadosGlobalmente = 0;
+        
+        window.spedData.itensDifal.forEach(item => {
+            const itemId = item.codItem;
+            
+            // ✅ PRIORIDADE: Se já tem configuração individual, NÃO sobrescrever
+            if (window.difalConfiguracoesItens[itemId] && 
+                (window.difalConfiguracoesItens[itemId].beneficio || 
+                 window.difalConfiguracoesItens[itemId].fcpManual !== undefined)) {
+                console.log(`⏭️ Item ${itemId} já tem configuração individual - mantendo`);
+                return; // Pula este item, mantém configuração individual
+            }
+            
+            // Aplicar benefício global apenas se não tem configuração individual
+            const configGlobal = {};
+            
+            // Redução de base via carga efetiva
+            if (cargaEfetiva) {
+                configGlobal.beneficio = 'reducao-base';
+                configGlobal.cargaEfetivaDesejada = cargaEfetiva;
+                configGlobal.origemGlobal = true; // Marcar como configuração global
+            }
+            // Redução de alíquota origem
+            else if (aliqOrigemEfetiva) {
+                configGlobal.beneficio = 'reducao-aliquota-origem';
+                configGlobal.aliqOrigemEfetiva = aliqOrigemEfetiva;
+                configGlobal.origemGlobal = true;
+            }
+            // Redução de alíquota destino
+            else if (aliqDestinoEfetiva) {
+                configGlobal.beneficio = 'reducao-aliquota-destino';
+                configGlobal.aliqDestinoEfetiva = aliqDestinoEfetiva;
+                configGlobal.origemGlobal = true;
+            }
+            
+            if (Object.keys(configGlobal).length > 0) {
+                // Mesclar com configuração existente (se houver) preservando configurações individuais
+                window.difalConfiguracoesItens[itemId] = {
+                    ...window.difalConfiguracoesItens[itemId], // Preserva configurações existentes
+                    ...configGlobal // Adiciona configurações globais
+                };
+                itensAfetadosGlobalmente++;
+            }
+        });
+        
+        console.log('💰 Benefícios globais aplicados:', {
+            itensAfetadosGlobalmente,
+            totalItensConfigurados: Object.keys(window.difalConfiguracoesItens).length,
+            cargaEfetiva,
+            aliqOrigemEfetiva,
+            aliqDestinoEfetiva
+        });
+        
+        console.log('📝 Estado DEPOIS de aplicar benefícios globais:', JSON.stringify(window.difalConfiguracoesItens));
+    }
+
+    /**
+     * Executa cálculo DIFAL
+     * @param {Object} config - Configurações do modal (opcional)
+     */
+    async calculateDifal(config = {}) {
         if (!window.spedData || !window.spedData.itensDifal) {
             this.showError('Dados SPED não disponíveis');
             return;
@@ -401,6 +500,7 @@ class UIManager {
 
         const ufDestino = window.spedData.headerInfo.uf; // UF da empresa
         console.log(`Calculando DIFAL para empresa em ${ufDestino}`);
+        console.log('Configurações recebidas para cálculo:', config);
         
         this.showProgress('Calculando DIFAL...', 20);
         
@@ -413,6 +513,20 @@ class UIManager {
             const calculator = new window.DifalCalculator();
             // Para CFOPs interestaduais (2551, 2556), usamos uma UF origem genérica
             calculator.configurarUFs('OUT', ufDestino); // OUT = origem interestadual
+            
+            // Aplicar configurações do modal
+            if (config.metodologia && config.metodologia !== 'auto') {
+                calculator.configuracao.metodologiaForcada = config.metodologia;
+                console.log('🎯 Metodologia forçada:', config.metodologia);
+            }
+            
+            if (config.percentualDestinatario !== undefined) {
+                calculator.configuracao.percentualDestinatario = config.percentualDestinatario;
+                console.log('📊 Percentual destinatário:', config.percentualDestinatario);
+            }
+            
+            // Configurar benefícios globais se definidos
+            this.configurarBeneficiosGlobais(config.beneficiosGlobais, window.spedData.itensDifal);
             
             // Configurar benefícios se existirem
             if (window.difalConfiguracoes) {
@@ -529,8 +643,10 @@ class UIManager {
                     <th>Base</th>
                     <th>Metodologia</th>
                     <th>DIFAL</th>
-                    <th>FCP</th>
+                    <th>FCP (%)</th>
                     <th>Total</th>
+                    <th>Benefícios</th>
+                    <th>Memória</th>
                 </tr>
             </thead>
             <tbody>
@@ -548,8 +664,19 @@ class UIManager {
                             </span>
                         </td>
                         <td class="text-right">${Utils.formatarMoeda(resultado.difal)}</td>
-                        <td class="text-right">${Utils.formatarMoeda(resultado.fcp)}</td>
+                        <td class="text-center">
+                            <span class="badge badge-gray">${resultado.aliqFcp || 0}%</span>
+                            <div class="text-xs text-gray-600">${Utils.formatarMoeda(resultado.fcp)}</div>
+                        </td>
                         <td class="text-right font-bold">${Utils.formatarMoeda(resultado.totalRecolher)}</td>
+                        <td class="text-center">
+                            ${this.formatarBeneficios(resultado)}
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline" onclick="mostrarMemoriaCalculo('${resultado.item.codItem}')">
+                                📋 Memória
+                            </button>
+                        </td>
                     </tr>
                 `).join('')}
             </tbody>
@@ -735,7 +862,10 @@ class UIManager {
             // Fechar modal atual
             window.closeConfigModal();
             
-            // Se não deve configurar benefícios, calcular diretamente
+            // Aplicar benefícios globais se configurados
+            self.aplicarBeneficiosGlobais(configuracaoGeral.beneficiosGlobais);
+            
+            // Se não deve configurar benefícios por item, calcular diretamente
             if (!configuracaoGeral.configurarBeneficios) {
                 self.calculateDifalComConfiguracao(configuracaoGeral);
                 return;
@@ -752,6 +882,9 @@ class UIManager {
             configuracaoGeral.fcpManual = false;
             
             console.log('📊 Calculando com configuração simples:', configuracaoGeral);
+            
+            // Aplicar benefícios globais se configurados
+            self.aplicarBeneficiosGlobais(configuracaoGeral.beneficiosGlobais);
             
             // Armazenar configuração
             window.difalConfiguracaoGeral = configuracaoGeral;
@@ -784,12 +917,21 @@ class UIManager {
         
         // Função para configurar benefício de um item
         window.configurarBeneficioItem = function(itemId, beneficio) {
+            console.log(`🎯 configurarBeneficioItem: itemId=${itemId}, beneficio="${beneficio}"`);
+            
             if (!window.difalConfiguracoesItens[itemId]) {
                 window.difalConfiguracoesItens[itemId] = {};
             }
             
             if (beneficio) {
                 window.difalConfiguracoesItens[itemId].beneficio = beneficio;
+                
+                // Validar se o benefício tem os campos obrigatórios preenchidos
+                const validacao = self.validarBeneficioConfiguracao(itemId, beneficio, window.difalConfiguracoesItens[itemId]);
+                if (!validacao.valido) {
+                    console.log(`⚠️ Benefício configurado mas incompleto: ${validacao.mensagem}`);
+                    // Benefício será salvo mesmo incompleto para permitir configuração posterior
+                }
             } else {
                 delete window.difalConfiguracoesItens[itemId].beneficio;
                 delete window.difalConfiguracoesItens[itemId].cargaEfetivaDesejada;
@@ -815,26 +957,77 @@ class UIManager {
         
         // Função para configurar carga efetiva
         window.configurarCargaEfetiva = function(itemId, valor) {
+            console.log(`🎯 configurarCargaEfetiva: itemId=${itemId}, valor="${valor}"`);
+            
             if (!window.difalConfiguracoesItens[itemId]) {
                 window.difalConfiguracoesItens[itemId] = {};
             }
-            window.difalConfiguracoesItens[itemId].cargaEfetivaDesejada = parseFloat(valor) || null;
+            
+            // Validação adequada: só salva se for número válido > 0, senão remove a propriedade
+            if (valor && !isNaN(parseFloat(valor)) && parseFloat(valor) > 0) {
+                const valorNumerico = parseFloat(valor);
+                window.difalConfiguracoesItens[itemId].cargaEfetivaDesejada = valorNumerico;
+                console.log(`✅ Carga efetiva configurada: ${valorNumerico}%`);
+            } else {
+                // Remove a propriedade se valor é inválido ou vazio
+                delete window.difalConfiguracoesItens[itemId].cargaEfetivaDesejada;
+                console.log(`🚫 Carga efetiva removida (valor inválido: "${valor}")`);
+            }
+            
+            // Salvar no localStorage
+            if (window.uiManager && window.uiManager.salvarConfiguracaoLocalStorage) {
+                window.uiManager.salvarConfiguracaoLocalStorage(itemId);
+            }
         };
         
         // Função para configurar alíquota origem
         window.configurarAliqOrigem = function(itemId, valor) {
+            console.log(`🎯 configurarAliqOrigem: itemId=${itemId}, valor="${valor}"`);
+            
             if (!window.difalConfiguracoesItens[itemId]) {
                 window.difalConfiguracoesItens[itemId] = {};
             }
-            window.difalConfiguracoesItens[itemId].aliqOrigemEfetiva = parseFloat(valor) || null;
+            
+            // Validação adequada: só salva se for número válido >= 0, senão remove a propriedade
+            if (valor !== "" && !isNaN(parseFloat(valor)) && parseFloat(valor) >= 0) {
+                const valorNumerico = parseFloat(valor);
+                window.difalConfiguracoesItens[itemId].aliqOrigemEfetiva = valorNumerico;
+                console.log(`✅ Alíquota origem configurada: ${valorNumerico}%`);
+            } else {
+                // Remove a propriedade se valor é inválido ou vazio
+                delete window.difalConfiguracoesItens[itemId].aliqOrigemEfetiva;
+                console.log(`🚫 Alíquota origem removida (valor inválido: "${valor}")`);
+            }
+            
+            // Salvar no localStorage
+            if (window.uiManager && window.uiManager.salvarConfiguracaoLocalStorage) {
+                window.uiManager.salvarConfiguracaoLocalStorage(itemId);
+            }
         };
         
         // Função para configurar alíquota destino
         window.configurarAliqDestino = function(itemId, valor) {
+            console.log(`🎯 configurarAliqDestino: itemId=${itemId}, valor="${valor}"`);
+            
             if (!window.difalConfiguracoesItens[itemId]) {
                 window.difalConfiguracoesItens[itemId] = {};
             }
-            window.difalConfiguracoesItens[itemId].aliqDestinoEfetiva = parseFloat(valor) || null;
+            
+            // Validação adequada: só salva se for número válido >= 0, senão remove a propriedade
+            if (valor !== "" && !isNaN(parseFloat(valor)) && parseFloat(valor) >= 0) {
+                const valorNumerico = parseFloat(valor);
+                window.difalConfiguracoesItens[itemId].aliqDestinoEfetiva = valorNumerico;
+                console.log(`✅ Alíquota destino configurada: ${valorNumerico}%`);
+            } else {
+                // Remove a propriedade se valor é inválido ou vazio
+                delete window.difalConfiguracoesItens[itemId].aliqDestinoEfetiva;
+                console.log(`🚫 Alíquota destino removida (valor inválido: "${valor}")`);
+            }
+            
+            // Salvar no localStorage
+            if (window.uiManager && window.uiManager.salvarConfiguracaoLocalStorage) {
+                window.uiManager.salvarConfiguracaoLocalStorage(itemId);
+            }
         };
         
         // Função para configurar FCP manual
@@ -929,6 +1122,36 @@ class UIManager {
             alert(`${count} configuração(ões) de item salva(s) com sucesso!`);
         };
         
+        // Função para limpar todas as configurações
+        window.limparTodasConfiguracoes = function() {
+            const count = Object.keys(window.difalConfiguracoesItens).length;
+            
+            if (count === 0) {
+                alert('Não há configurações para limpar');
+                return;
+            }
+            
+            const confirmacao = confirm(`Tem certeza que deseja limpar todas as ${count} configuração(ões)?\n\nEsta ação não pode ser desfeita.`);
+            
+            if (confirmacao) {
+                // Limpar configurações na memória
+                window.difalConfiguracoesItens = {};
+                
+                // Limpar localStorage
+                if (window.uiManager && window.uiManager.limparConfiguracoesLocalStorage) {
+                    window.uiManager.limparConfiguracoesLocalStorage();
+                }
+                
+                // Recarregar a tabela para refletir as mudanças
+                if (self.renderItemConfigTable) {
+                    self.renderItemConfigTable();
+                }
+                
+                console.log('🧹 Todas as configurações foram limpas');
+                alert('Todas as configurações foram removidas com sucesso!');
+            }
+        };
+        
         // Função para calcular com configurações de itens
         window.calcularComConfiguracoesItens = function() {
             const configCount = Object.keys(window.difalConfiguracoesItens).length;
@@ -948,11 +1171,21 @@ class UIManager {
      * Coleta configuração geral do modal
      */
     coletarConfiguracaoGeralModal() {
+        const cargaEfetiva = document.getElementById('carga-efetiva')?.value;
+        const aliqOrigemEfetiva = document.getElementById('aliq-origem-efetiva')?.value;
+        const aliqDestinoEfetiva = document.getElementById('aliq-destino-efetiva')?.value;
+        
         return {
             metodologia: document.querySelector('input[name="metodologia"]:checked')?.value || 'auto',
-            configurarBeneficios: document.getElementById('configurar-beneficios')?.checked || false,
+            configurarBeneficios: document.getElementById('configurar-beneficios')?.checked ?? true, // Padrão true (checkbox marcado)
             fcpManual: document.getElementById('configurar-fcp-manual')?.checked || false,
-            percentualDestinatario: parseFloat(document.getElementById('percentual-destinatario')?.value) || 100
+            percentualDestinatario: parseFloat(document.getElementById('percentual-destinatario')?.value) || 100,
+            // Benefícios globais adicionados
+            beneficiosGlobais: {
+                cargaEfetiva: cargaEfetiva ? parseFloat(cargaEfetiva) : null,
+                aliqOrigemEfetiva: aliqOrigemEfetiva ? parseFloat(aliqOrigemEfetiva) : null,
+                aliqDestinoEfetiva: aliqDestinoEfetiva ? parseFloat(aliqDestinoEfetiva) : null
+            }
         };
     }
     
@@ -1062,6 +1295,9 @@ class UIManager {
         if (!window.difalConfiguracoesItens) {
             window.difalConfiguracoesItens = {};
         }
+        
+        // Carregar configurações salvas do localStorage
+        this.initializeItemConfigWithLocalStorage();
         
         this.currentPage = 1;
         this.itemsPerPage = 20;
@@ -1185,8 +1421,8 @@ class UIManager {
         return `
             <tr class="item-row ${config.beneficio ? 'with-benefit' : ''} ${config.fcpManual ? 'with-fcp' : ''}" data-item="${itemId}">
                 <td class="font-mono">${item.codItem}</td>
-                <td class="descricao-cell" title="${this.formatarDescricaoCompleta(item)}">${this.formatarDescricaoExibicao(item, 30)}</td>
                 <td class="font-mono">${item.ncm || 'N/A'}</td>
+                <td class="descricao-cell" title="${this.formatarDescricaoCompleta(item)}">${this.formatarDescricaoExibicao(item, 30)}</td>
                 <td class="font-mono">${item.cfop}</td>
                 <td class="text-right">${Utils.formatarMoeda(item.baseCalculoDifal)}</td>
                 <td>
@@ -1197,17 +1433,20 @@ class UIManager {
                         <option value="reducao-aliquota-destino" ${config.beneficio === 'reducao-aliquota-destino' ? 'selected' : ''}>Redução Alíq. Destino</option>
                         <option value="isencao" ${config.beneficio === 'isencao' ? 'selected' : ''}>Isenção</option>
                     </select>
+                </td>
+                <td>
                     <div id="beneficio-fields-${itemId}" class="beneficio-fields-inline ${config.beneficio ? 'show' : ''}">
                         ${this.createBeneficioFields(itemId, config)}
                     </div>
                 </td>
-                <td>
+                <td class="text-center">
                     ${fcpManualEnabled ? `
                         <input type="number" min="0" max="4" step="0.1" 
                                value="${config.fcpManual || ''}" 
-                               placeholder="Auto"
-                               onchange="configurarFcpItem('${itemId}', this.value)">
-                    ` : '<span class="text-gray-500">Auto</span>'}
+                               placeholder="${this.obterFcpPadrao()}"
+                               onchange="configurarFcpItem('${itemId}', this.value)"
+                               style="width: 60px;">
+                    ` : `<span class="badge badge-blue">${this.obterFcpPadrao()}%</span>`}
                 </td>
                 <td>
                     <div class="action-buttons">
@@ -1357,7 +1596,309 @@ class UIManager {
         return descricaoTruncada;
     }
 
+    /**
+     * Obtém FCP padrão baseado na UF de destino
+     */
+    obterFcpPadrao() {
+        if (!window.spedData || !window.spedData.headerInfo || !window.spedData.headerInfo.uf) {
+            return '0';
+        }
+        
+        const ufDestino = window.spedData.headerInfo.uf;
+        
+        if (!window.EstadosUtil) {
+            return '0';
+        }
+        
+        const estadoDestino = window.EstadosUtil.obterPorUF(ufDestino);
+        if (!estadoDestino) {
+            return '0';
+        }
+        
+        return estadoDestino.fcp || 0;
+    }
+
+    /**
+     * Formata benefícios aplicados para exibição na tabela de resultados
+     */
+    formatarBeneficios(resultado) {
+        const itemId = resultado.item?.codItem;
+        const config = window.difalConfiguracoesItens?.[itemId];
+        
+        if (!config || !config.beneficio) {
+            return '<span class="text-gray-500">-</span>';
+        }
+        
+        // Mapeamento de tipos de benefício
+        const tipos = {
+            'reducao-base': 'Redução Base',
+            'reducao-aliquota-origem': 'Red. Alíq. Origem',
+            'reducao-aliquota-destino': 'Red. Alíq. Destino',
+            'isencao': 'Isenção'
+        };
+        
+        let detalhes = tipos[config.beneficio] || config.beneficio;
+        let badgeClass = 'badge-success';
+        
+        // Adicionar detalhes específicos
+        switch (config.beneficio) {
+            case 'reducao-base':
+                if (config.cargaEfetivaDesejada) {
+                    detalhes += ` (${config.cargaEfetivaDesejada}%)`;
+                }
+                break;
+            case 'reducao-aliquota-origem':
+                if (config.aliqOrigemEfetiva) {
+                    detalhes += ` (${config.aliqOrigemEfetiva}%)`;
+                }
+                break;
+            case 'reducao-aliquota-destino':
+                if (config.aliqDestinoEfetiva) {
+                    detalhes += ` (${config.aliqDestinoEfetiva}%)`;
+                }
+                break;
+            case 'isencao':
+                badgeClass = 'badge-warning';
+                break;
+        }
+        
+        return `<span class="badge ${badgeClass}">${detalhes}</span>`;
+    }
+
+    // Funções para localStorage
+    salvarConfiguracaoLocalStorage(itemId) {
+        try {
+            const chave = `difal_config_${itemId}`;
+            const config = window.difalConfiguracoesItens[itemId] || {};
+            localStorage.setItem(chave, JSON.stringify(config));
+            console.log(`💾 Configuração salva no localStorage: ${chave}`, config);
+        } catch (error) {
+            console.error('❌ Erro ao salvar configuração no localStorage:', error);
+        }
+    }
+
+    carregarConfiguracaoLocalStorage(itemId) {
+        try {
+            const chave = `difal_config_${itemId}`;
+            const configSalva = localStorage.getItem(chave);
+            if (configSalva) {
+                const config = JSON.parse(configSalva);
+                console.log(`📂 Configuração carregada do localStorage: ${chave}`, config);
+                return config;
+            }
+        } catch (error) {
+            console.error('❌ Erro ao carregar configuração do localStorage:', error);
+        }
+        return null;
+    }
+
+    carregarTodasConfiguracaoLocalStorage() {
+        try {
+            console.log('📂 Carregando todas as configurações do localStorage...');
+            let configuracoesCarregadas = 0;
+            
+            // Percorrer todas as chaves do localStorage procurando por configurações DIFAL
+            for (let i = 0; i < localStorage.length; i++) {
+                const chave = localStorage.key(i);
+                if (chave && chave.startsWith('difal_config_')) {
+                    const itemId = chave.replace('difal_config_', '');
+                    const config = this.carregarConfiguracaoLocalStorage(itemId);
+                    if (config && Object.keys(config).length > 0) {
+                        if (!window.difalConfiguracoesItens[itemId]) {
+                            window.difalConfiguracoesItens[itemId] = {};
+                        }
+                        Object.assign(window.difalConfiguracoesItens[itemId], config);
+                        configuracoesCarregadas++;
+                    }
+                }
+            }
+            
+            if (configuracoesCarregadas > 0) {
+                console.log(`✅ ${configuracoesCarregadas} configurações carregadas do localStorage`);
+            } else {
+                console.log('ℹ️ Nenhuma configuração encontrada no localStorage');
+            }
+        } catch (error) {
+            console.error('❌ Erro ao carregar configurações do localStorage:', error);
+        }
+    }
+
+    limparConfiguracoesLocalStorage() {
+        try {
+            console.log('🧹 Limpando configurações do localStorage...');
+            const chavesRemover = [];
+            
+            // Coletar chaves que começam com 'difal_config_'
+            for (let i = 0; i < localStorage.length; i++) {
+                const chave = localStorage.key(i);
+                if (chave && chave.startsWith('difal_config_')) {
+                    chavesRemover.push(chave);
+                }
+            }
+            
+            // Remover as chaves
+            chavesRemover.forEach(chave => {
+                localStorage.removeItem(chave);
+                console.log(`🗑️ Removida configuração: ${chave}`);
+            });
+            
+            console.log(`✅ ${chavesRemover.length} configurações removidas do localStorage`);
+        } catch (error) {
+            console.error('❌ Erro ao limpar configurações do localStorage:', error);
+        }
+    }
+
+    /**
+     * Valida se um benefício está configurado corretamente
+     */
+    validarBeneficioConfiguracao(itemId, tipoBeneficio, config) {
+        switch (tipoBeneficio) {
+            case 'reducao-base':
+                if (!config.cargaEfetivaDesejada || config.cargaEfetivaDesejada <= 0) {
+                    return {
+                        valido: false,
+                        mensagem: 'Carga efetiva deve ser informada e maior que 0'
+                    };
+                }
+                break;
+                
+            case 'reducao-aliquota-origem':
+                if (config.aliqOrigemEfetiva === undefined || config.aliqOrigemEfetiva < 0) {
+                    return {
+                        valido: false,
+                        mensagem: 'Alíquota origem efetiva deve ser informada e >= 0'
+                    };
+                }
+                break;
+                
+            case 'reducao-aliquota-destino':
+                if (config.aliqDestinoEfetiva === undefined || config.aliqDestinoEfetiva < 0) {
+                    return {
+                        valido: false,
+                        mensagem: 'Alíquota destino efetiva deve ser informada e >= 0'
+                    };
+                }
+                break;
+                
+            case 'isencao':
+                // Isenção não precisa de valores adicionais
+                return { valido: true };
+                
+            default:
+                return {
+                    valido: false,
+                    mensagem: 'Tipo de benefício desconhecido'
+                };
+        }
+        
+        return { valido: true };
+    }
+
+    /**
+     * Carrega configurações do localStorage ao inicializar a tabela de configuração
+     */
+    initializeItemConfigWithLocalStorage() {
+        if (!window.difalConfiguracoesItens) {
+            window.difalConfiguracoesItens = {};
+        }
+        
+        // Carregar configurações salvas
+        this.carregarTodasConfiguracaoLocalStorage();
+        
+        console.log('🔄 Configurações carregadas do localStorage:', window.difalConfiguracoesItens);
+    }
+
 }
+
+// Função global para mostrar memória de cálculo
+window.mostrarMemoriaCalculo = function(itemId) {
+    if (!window.difalResults) {
+        alert('Resultados de cálculo não disponíveis');
+        return;
+    }
+    
+    const resultado = window.difalResults.resultados.find(r => r.item.codItem === itemId);
+    if (!resultado || !resultado.memoriaCalculo) {
+        alert('Memória de cálculo não disponível para este item');
+        return;
+    }
+    
+    // Criar modal para exibir memória de cálculo
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2>📋 Memória de Cálculo - Item ${itemId}</h2>
+                    <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="memoria-calculo">
+                        <pre style="white-space: pre-wrap; font-family: monospace; font-size: 14px; line-height: 1.5; background: #f8f9fa; padding: 20px; border-radius: 8px; overflow-x: auto;">${resultado.memoriaCalculo.join('\n')}</pre>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Fechar</button>
+                    <button class="btn btn-primary" onclick="copiarMemoriaCalculo('${itemId}')">📋 Copiar</button>
+                    <button class="btn btn-info" onclick="exportarMemoriaCalculo('${itemId}')">💾 Exportar</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Fechar modal ao clicar no overlay
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            modal.remove();
+        }
+    });
+};
+
+// Função para copiar memória de cálculo
+window.copiarMemoriaCalculo = function(itemId) {
+    const resultado = window.difalResults?.resultados.find(r => r.item.codItem === itemId);
+    if (!resultado || !resultado.memoriaCalculo) {
+        alert('Memória de cálculo não disponível');
+        return;
+    }
+    
+    const texto = resultado.memoriaCalculo.join('\n');
+    navigator.clipboard.writeText(texto).then(() => {
+        alert('Memória de cálculo copiada para a área de transferência!');
+    }).catch(() => {
+        // Fallback para navegadores mais antigos
+        const textarea = document.createElement('textarea');
+        textarea.value = texto;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        alert('Memória de cálculo copiada para a área de transferência!');
+    });
+};
+
+// Função para exportar memória de cálculo
+window.exportarMemoriaCalculo = function(itemId) {
+    const resultado = window.difalResults?.resultados.find(r => r.item.codItem === itemId);
+    if (!resultado || !resultado.memoriaCalculo) {
+        alert('Memória de cálculo não disponível');
+        return;
+    }
+    
+    const texto = resultado.memoriaCalculo.join('\n');
+    const blob = new Blob([texto], { type: 'text/plain;charset=utf-8' });
+    const link = document.createElement('a');
+    
+    link.href = URL.createObjectURL(blob);
+    link.download = `memoria_calculo_${itemId}_${new Date().getTime()}.txt`;
+    link.click();
+    
+    URL.revokeObjectURL(link.href);
+};
 
 // Exportar classe para uso global
 if (typeof window !== 'undefined') {

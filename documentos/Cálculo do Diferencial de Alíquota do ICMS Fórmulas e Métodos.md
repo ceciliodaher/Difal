@@ -34,7 +34,7 @@ Considerando uma operação de R$ 1.000,00 de São Paulo (SP) para Minas Gerais 
 
 - Alíquota interna MG: 18%
 
-**DIFAL = R$ 1.000,00 × (18% - 12%) = R$ 1.000,00 × 6% = R$ 60,00**[9](https://ajuda.contaazul.com/hc/pt-br/articles/9853206174221-C%C3%A1lculo-DIFAL-por-fora-ou-base-%C3%BAnica-o-que-%C3%A9)
+**DIFAL = R$ 1.000,00 × (18% - 12%) = R\$ 1.000,00 × 6% = R$ 60,00**[9](https://ajuda.contaazul.com/hc/pt-br/articles/9853206174221-C%C3%A1lculo-DIFAL-por-fora-ou-base-%C3%BAnica-o-que-%C3%A9)
 
 ## **2. Base Dupla (Por Dentro)**
 
@@ -78,15 +78,15 @@ text
 
 Utilizando os mesmos dados do exemplo anterior (R$ 1.000,00, SP para MG)[6](https://ajuda.contaazul.com/hc/pt-br/articles/9853453405581-C%C3%A1lculo-DIFAL-por-dentro-ou-base-dupla-o-que-%C3%A9)[10](https://noticias.iob.com.br/difal-do-icms-sp-adota-base-dupla-para-contribuinte/):
 
-1. **ICMS Interestadual**: R$ 1.000,00 × 12% = **R$ 120,00**
+1. **ICMS Interestadual**: R$ 1.000,00 × 12% = **R\$ 120,00**
 
-2. **Base de Cálculo 1**: R$ 1.000,00 - R$ 120,00 = **R$ 880,00**
+2. **Base de Cálculo 1**: R$ 1.000,00 - R\$ 120,00 = **R$ 880,00**
 
-3. **Base de Cálculo 2**: R$ 880,00 ÷ (1 - 0,18) = R$ 880,00 ÷ 0,82 = **R$ 1.073,17**
+3. **Base de Cálculo 2**: R$ 880,00 ÷ (1 - 0,18) = R\$ 880,00 ÷ 0,82 = **R$ 1.073,17**
 
-4. **ICMS Interno**: R$ 1.073,17 × 18% = **R$ 193,17**
+4. **ICMS Interno**: R$ 1.073,17 × 18% = **R\$ 193,17**
 
-5. **DIFAL**: R$ 193,17 - R$ 120,00 = **R$ 73,17**
+5. **DIFAL**: R$ 193,17 - R\$ 120,00 = **R$ 73,17**
 
 ## **Composição da Base de Cálculo**
 
@@ -174,7 +174,7 @@ Considerando uma operação de R$ 1.000,00 com redução de 70% na alíquota int
 
 - Alíquota interna efetiva: 18% × (1 - 0,70) = 5,4%
 
-**DIFAL = R$ 1.000,00 × (5,4% - 12%) = R$ 1.000,00 × (-6,6%)**
+**DIFAL = R$ 1.000,00 × (5,4% - 12%) = R\$ 1.000,00 × (-6,6%)**
 
 *Neste caso, não há DIFAL a recolher, pois a alíquota efetiva do destino é menor que a interestadual.*
 
@@ -242,9 +242,9 @@ Operação de R$ 1.000,00 com redução de 33,33% na base de cálculo[3](http://
 
 **Método 1 - Base Reduzida:**
 
-1. Base Reduzida: R$ 1.000,00 × 33,33% = **R$ 333,30**
+1. Base Reduzida: R$ 1.000,00 × 33,33% = **R\$ 333,30**
 
-2. DIFAL: R$ 333,30 × (18% - 12%) = R$ 333,30 × 6% = **R$ 19,98**
+2. DIFAL: R$ 333,30 × (18% - 12%) = R\$ 333,30 × 6% = **R$ 19,98**
 
 ## **Fundo de Combate à Pobreza (FCP)**
 
@@ -298,19 +298,19 @@ Operação: R$ 1.000,00 de SP para RJ
 
 **Cálculo Base Dupla:**
 
-1. ICMS Interestadual: R$ 1.000,00 × 12% = **R$ 120,00**
+1. ICMS Interestadual: R$ 1.000,00 × 12% = **R\$ 120,00**
 
-2. Base de Cálculo 1: R$ 1.000,00 - R$ 120,00 = **R$ 880,00**
+2. Base de Cálculo 1: R$ 1.000,00 - R\$ 120,00 = **R$ 880,00**
 
-3. Base de Cálculo 2: R$ 880,00 ÷ (1 - 0,09) = R$ 880,00 ÷ 0,91 = **R$ 967,03**
+3. Base de Cálculo 2: R$ 880,00 ÷ (1 - 0,09) = R\$ 880,00 ÷ 0,91 = **R$ 967,03**
 
-4. ICMS Interno: R$ 967,03 × 9% = **R$ 87,03**
+4. ICMS Interno: R$ 967,03 × 9% = **R\$ 87,03**
 
-5. DIFAL: R$ 87,03 - R$ 120,00 = **-R$ 32,97** (não há DIFAL)
+5. DIFAL: R$ 87,03 - R\$ 120,00 = **-R$ 32,97** (não há DIFAL)
 
-6. FCP: R$ 967,03 × 4% = **R$ 38,68**
+6. FCP: R$ 967,03 × 4% = **R\$ 38,68**
 
-7. Valor Total: R$ 0,00 + R$ 38,68 = **R$ 38,68**
+7. Valor Total: R$ 0,00 + R\$ 38,68 = **R$ 38,68**
 
 ## **Situações Especiais**
 
@@ -333,6 +333,46 @@ Alguns estados possuem interpretações particulares para aplicação dos benef�
 - **Pernambuco**: Utiliza fórmula específica considerando percentual de redução da alíquota[9](https://tdn.totvs.com/plugins/viewsource/viewpagesrc.action?pageId=527372030)
 
 - **Goiás**: Considera equivalência de carga tributária entre origem e destino[4](https://www.legisweb.com.br/legislacao/?id=465966)[10](https://appasp.economia.go.gov.br/pareceres/arquivos/DIFAL%20-%20Uso%20e%20Consumo%20e%20Ativo%20Imobilizado/C%C3%A1lculo/P_250_2024_SEI.docx)
+
+### Alíquotas de ICMS e FCP por UF para Cálculo do DIFAL
+
+As alíquotas de ICMS e FCP (Fundo de Combate à Pobreza) para o cálculo do DIFAL (Diferencial de Alíquotas) na aquisição de mercadorias para uso e consumo e imobilizado por contribuinte variam por Unidade Federativa. Abaixo está a tabela completa atualizada para 2025:
+
+## Tabela de Alíquotas por UF
+
+| UF  | Estado              | Alíquota ICMS Interna | FCP           | Observações                              |
+| --- | ------------------- | --------------------- | ------------- | ---------------------------------------- |
+| AC  | Acre                | 19,00%                | Não possui    |                                          |
+| AL  | Alagoas             | 20,00%                | 1,00% a 2,00% | 19% + 1% FECOEP                          |
+| AP  | Amapá               | 18,00%                | Não possui    |                                          |
+| AM  | Amazonas            | 20,00%                | 1,50% a 2,00% |                                          |
+| BA  | Bahia               | 20,50%                | 2,00%         |                                          |
+| CE  | Ceará               | 20,00%                | 2,00%         |                                          |
+| DF  | Distrito Federal    | 20,00%                | 2,00%         |                                          |
+| ES  | Espírito Santo      | 17,00%                | 2,00%         |                                          |
+| GO  | Goiás               | 19,00%                | Até 2,00%     | Atualmente a alíquota é zero             |
+| MA  | Maranhão            | 23,00%                | 2,00%         | **Nova alíquota a partir de 23/02/2025** |
+| MT  | Mato Grosso         | 17,00%                | Até 2,00%     |                                          |
+| MS  | Mato Grosso do Sul  | 17,00%                | Até 2,00%     |                                          |
+| MG  | Minas Gerais        | 18,00%                | 2,00%         |                                          |
+| PA  | Pará                | 19,00%                | Não possui    |                                          |
+| PB  | Paraíba             | 20,00%                | 2,00%         |                                          |
+| PR  | Paraná              | 19,50%                | 2,00%         |                                          |
+| PE  | Pernambuco          | 20,50%                | 2,00%         |                                          |
+| PI  | Piauí               | 22,50%                | 2,00%         | **Nova alíquota a partir de 01/04/2025** |
+| RJ  | Rio de Janeiro      | 22,00%                | Até 4,00%     | 20% + 2% FECP                            |
+| RN  | Rio Grande do Norte | 20,00%                | 2,00%         | **Nova alíquota a partir de 20/03/2025** |
+| RS  | Rio Grande do Sul   | 17,00%                | 2,00%         |                                          |
+| RO  | Rondônia            | 19,50%                | 2,00%         |                                          |
+| RR  | Roraima             | 20,00%                | Até 2,00%     |                                          |
+| SC  | Santa Catarina      | 17,00%                | Não possui    |                                          |
+| SP  | São Paulo           | 18,00%                | 2,00%         |                                          |
+| SE  | Sergipe             | 20,00%                | 1,00% a 2,00% | 19% + 1% FECOEP                          |
+| TO  | Tocantins           | 20,00%                | 2,00%         |                                          |
+
+![Alíquotas internas de ICMS por UF  2025](https://ppl-ai-code-interpreter-files.s3.amazonaws.com/web/direct-files/061dd48c849e21a57893c91f994f63cc/12e44f5d-3236-493a-88d9-977711360b27/01b74634.png)
+
+Alíquotas internas de ICMS por UF - 2025
 
 ## **Pontos de Atenção**
 

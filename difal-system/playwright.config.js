@@ -1,53 +1,79 @@
-import { defineConfig, devices } from '@playwright/test';
-
 /**
- * @see https://playwright.dev/docs/test-configuration
+ * Configuração do Playwright para testes do Sistema DIFAL
  */
-export default defineConfig({
-  testDir: './tests',
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
-  
-  use: {
-    baseURL: 'http://localhost:8080',
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure'
-  },
 
-  projects: [
-    {
-      name: 'firefox',
-      use: { 
-        ...devices['Desktop Firefox'],
-        // Firefox specific settings
-        launchOptions: {
-          firefoxUserPrefs: {
-            'dom.file.createInChild': true,
-            'security.fileuri.strict_origin_policy': false
-          }
-        }
-      },
+const { defineConfig, devices } = require('@playwright/test');
+
+module.exports = defineConfig({
+    testDir: './tests',
+    
+    // Tempo máximo para cada teste
+    timeout: 30 * 1000,
+    
+    // Configuração de expectativas
+    expect: {
+        timeout: 5000
     },
-
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+    
+    // Falhar o build se deixar test.only no código
+    forbidOnly: !!process.env.CI,
+    
+    // Retry em caso de falha
+    retries: process.env.CI ? 2 : 0,
+    
+    // Número de workers paralelos
+    workers: process.env.CI ? 1 : undefined,
+    
+    // Reporter
+    reporter: 'html',
+    
+    // Configurações compartilhadas
+    use: {
+        // Capturar screenshot em caso de falha
+        screenshot: 'only-on-failure',
+        
+        // Gravar vídeo em caso de falha
+        video: 'retain-on-failure',
+        
+        // Trace para debug
+        trace: 'on-first-retry',
+        
+        // Base URL para os testes
+        baseURL: 'file://' + __dirname,
+        
+        // Timeout para ações
+        actionTimeout: 10000,
     },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    }
-  ],
-
-  webServer: {
-    command: 'python -m http.server 8080',
-    port: 8080,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+    
+    // Configurar projetos para diferentes navegadores
+    projects: [
+        {
+            name: 'chromium',
+            use: { ...devices['Desktop Chrome'] },
+        },
+        
+        {
+            name: 'firefox',
+            use: { ...devices['Desktop Firefox'] },
+        },
+        
+        {
+            name: 'webkit',
+            use: { ...devices['Desktop Safari'] },
+        },
+        
+        // Testes mobile
+        {
+            name: 'Mobile Chrome',
+            use: { ...devices['Pixel 5'] },
+        },
+        
+        {
+            name: 'Mobile Safari',
+            use: { ...devices['iPhone 12'] },
+        },
+    ],
+    
+    // Servidor web local (não necessário para file://)
+    webServer: null,
 });

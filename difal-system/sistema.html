@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema DIFAL - Expertzy</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- CSS Modular -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Bibliotecas Externas -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-populate@1.21.0/browser/xlsx-populate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <!-- Container Principal -->
+    <div class="app-container">
+        
+        <!-- Header -->
+        <header class="app-header">
+            <div class="expertzy-logo">
+                <img src="assets/logo-expertzy.png" alt="Expertzy Logo" onerror="this.style.display='none'">
+                <span class="brand-text">EXPERTZY</span>
+            </div>
+            <h1 class="app-title">Sistema de Cálculo DIFAL</h1>
+            <p class="app-subtitle">Diferencial de Alíquota do ICMS - Operações Interestaduais</p>
+        </header>
+
+        <!-- Navegação -->
+        <nav class="nav-container">
+            <button class="nav-btn active" data-section="upload-section">
+                <span class="nav-icon">📁</span>
+                <span class="nav-label">Upload</span>
+            </button>
+            <button class="nav-btn" data-section="analysis-section">
+                <span class="nav-icon">🔍</span>
+                <span class="nav-label">Análise</span>
+            </button>
+            <button class="nav-btn" data-section="calculation-section">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">Cálculo</span>
+            </button>
+        </nav>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            
+            <!-- Seção 1: Upload de Arquivo -->
+            <section id="upload-section" class="section active">
+                <div class="section-card">
+                    <h2 class="section-title">📁 Upload do Arquivo SPED</h2>
+                    
+                    <!-- Drop Zone -->
+                    <div id="drop-zone" class="drop-zone">
+                        <div class="drop-zone-content">
+                            <svg class="drop-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <p class="drop-text">Arraste o arquivo SPED aqui ou clique para selecionar</p>
+                            <p class="drop-hint">Arquivo TXT do SPED Fiscal</p>
+                            <input type="file" id="file-input" accept=".txt" style="display: none;">
+                        </div>
+                    </div>
+
+                    <!-- Informações do Arquivo -->
+                    <div id="file-info" class="file-info hidden">
+                        <h3>Informações do Arquivo</h3>
+                        <div id="file-details" class="file-details">
+                            <!-- Dados serão inseridos via JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Resumo SPED -->
+                    <div id="sped-summary" class="sped-summary hidden">
+                        <h3>Resumo dos Dados SPED</h3>
+                        <div class="summary-grid">
+                            <!-- Dados serão inseridos via JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Botão Prosseguir -->
+                    <div class="action-buttons">
+                        <button id="proceed-calculation" class="btn btn-primary btn-large hidden">
+                            Prosseguir para Análise →
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 2: Análise dos Dados -->
+            <section id="analysis-section" class="section">
+                <div class="section-card">
+                    <h2 class="section-title">🔍 Análise dos Itens DIFAL</h2>
+                    
+                    <!-- Informações da Empresa -->
+                    <div class="company-info">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Empresa:</span>
+                                <span id="company-name" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">UF:</span>
+                                <span id="company-uf" class="info-value">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Itens DIFAL -->
+                    <div id="difal-items-table" class="table-container">
+                        <!-- Tabela será inserida via JavaScript -->
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="action-buttons">
+                        <button id="calculate-difal" class="btn btn-primary btn-large">
+                            🎯 Configurar e Calcular DIFAL
+                        </button>
+                        <button id="proceed-to-calculation" class="btn btn-info">
+                            Prosseguir para Cálculo →
+                        </button>
+                        <button class="btn btn-secondary nav-btn" data-section="upload-section">
+                            ← Voltar para Upload
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 3: Configuração e Cálculo -->
+            <section id="calculation-section" class="section">
+                <div class="section-card">
+                    <h2 class="section-title">⚙️ Configuração e Cálculo</h2>
+                    
+                    <!-- Progress Section -->
+                    <div id="progress-section" class="progress-section hidden">
+                        <div class="progress-container">
+                            <div id="progress-bar" class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p id="status-message" class="status-message">Processando...</p>
+                        </div>
+                    </div>
+
+                    <!-- Resultados do Cálculo -->
+                    <div id="calculation-results" class="calculation-results hidden">
+                        <div id="results-summary" class="results-summary">
+                            <!-- Resumo será inserido via JavaScript -->
+                        </div>
+                        
+                        <div id="results-detail" class="results-detail">
+                            <!-- Detalhes serão inseridos via JavaScript -->
+                        </div>
+
+                        <!-- Botões de Exportação -->
+                        <div class="export-buttons">
+                            <button id="export-excel" class="btn btn-success">
+                                📥 Exportar para Excel
+                            </button>
+                            <button id="export-pdf" class="btn btn-info">
+                                📄 Exportar para PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>© 2025 Expertzy - Sistema de Cálculo DIFAL v3.0</p>
+            <p class="footer-info">Cálculo conforme legislação vigente - EC 87/2015</p>
+        </footer>
+    </div>
+
+    <!-- Modal de Configuração Geral -->
+    <div id="config-modal" class="modal hidden">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>⚙️ Configuração Geral do DIFAL</h2>
+                    <button class="modal-close" onclick="closeConfigModal()">×</button>
+                </div>
+                
+                <div class="modal-body">
+                    <!-- Seleção de Metodologia -->
+                    <div class="form-section">
+                        <h3>📐 Metodologia de Cálculo</h3>
+                        <p class="form-description">Escolha a metodologia de cálculo a ser aplicada para todos os itens</p>
+                        
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="metodologia" value="auto" checked>
+                                <span class="radio-label">
+                                    <strong>Automática</strong>
+                                    <small>Sistema define baseado no estado de destino</small>
+                                </span>
+                            </label>
+                            
+                            <label class="radio-option">
+                                <input type="radio" name="metodologia" value="base-unica">
+                                <span class="radio-label">
+                                    <strong>Base Única</strong>
+                                    <small>Cálculo simplificado</small>
+                                </span>
+                            </label>
+                            
+                            <label class="radio-option">
+                                <input type="radio" name="metodologia" value="base-dupla">
+                                <span class="radio-label">
+                                    <strong>Base Dupla</strong>
+                                    <small>Cálculo com IPI incluso</small>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Benefícios Fiscais Globais -->
+                    <div class="form-section">
+                        <h3>💰 Benefícios Fiscais Globais</h3>
+                        <p class="form-description">Configure benefícios aplicáveis a todos os itens</p>
+                        
+                        <div class="form-group">
+                            <label for="carga-efetiva">Carga Tributária Efetiva (%):</label>
+                            <input type="number" id="carga-efetiva" value="" min="0" max="100" step="0.01" placeholder="Ex: 4.00">
+                            <small class="form-hint">Deixe vazio para não aplicar redução de base. Sistema calculará automaticamente o percentual de redução necessário.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="aliq-origem-efetiva">Alíquota Origem Efetiva (%):</label>
+                            <input type="number" id="aliq-origem-efetiva" value="" min="0" max="100" step="0.01" placeholder="Ex: 10.00">
+                            <small class="form-hint">Deixe vazio para usar alíquota nominal. Aplicável apenas para Base Única.</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="aliq-destino-efetiva">Alíquota Destino Efetiva (%):</label>
+                            <input type="number" id="aliq-destino-efetiva" value="" min="0" max="100" step="0.01" placeholder="Ex: 17.00">
+                            <small class="form-hint">Deixe vazio para usar alíquota nominal.</small>
+                        </div>
+                    </div>
+
+                    <!-- Configurações Avançadas -->
+                    <div class="form-section">
+                        <h3>🔧 Configurações Avançadas</h3>
+                        
+                        <div class="checkbox-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="configurar-beneficios" checked>
+                                <span>Configurar benefícios fiscais por item</span>
+                            </label>
+                            
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="configurar-fcp-manual">
+                                <span>Definir FCP manualmente por item</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Percentual do Destinatário -->
+                    <div class="form-section">
+                        <h3>📊 Partilha do DIFAL</h3>
+                        <div class="form-group">
+                            <label for="percentual-destinatario">Percentual para o Estado de Destino:</label>
+                            <input type="number" id="percentual-destinatario" value="100" min="0" max="100" readonly>
+                            <small class="form-hint">Para 2025: 100% para o estado de destino</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeConfigModal()">Cancelar</button>
+                    <button class="btn btn-warning" onclick="prosseguirParaConfiguracaoItens()">
+                        ⚙️ Configurar Itens Individualmente
+                    </button>
+                    <button class="btn btn-primary" onclick="calcularSemConfiguracaoItens()">
+                        🚀 Calcular Sem Configuração Individual
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Configuração Por Item -->
+    <div id="item-config-modal" class="modal hidden">
+        <div class="modal-overlay">
+            <div class="modal-content modal-large">
+                <div class="modal-header">
+                    <h2>📋 Configuração Individual por Item</h2>
+                    <button class="modal-close" onclick="closeItemConfigModal()">×</button>
+                </div>
+                
+                <div class="modal-body">
+                    <!-- Filtros -->
+                    <div class="filters-section">
+                        <div class="filters-grid">
+                            <div class="filter-item">
+                                <label for="filtro-cfop">CFOP:</label>
+                                <select id="filtro-cfop">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                            <div class="filter-item">
+                                <label for="filtro-ncm">NCM:</label>
+                                <select id="filtro-ncm">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                            <div class="filter-item">
+                                <label for="filtro-valor-min">Valor Mínimo:</label>
+                                <input type="number" id="filtro-valor-min" placeholder="0.00" min="0" step="0.01">
+                            </div>
+                            <div class="filter-item">
+                                <label for="busca-item">Buscar:</label>
+                                <input type="text" id="busca-item" placeholder="Código ou descrição...">
+                            </div>
+                        </div>
+                        <div class="filter-buttons">
+                            <button class="btn btn-secondary btn-sm" onclick="aplicarFiltros()">Aplicar Filtros</button>
+                            <button class="btn btn-outline btn-sm" onclick="limparFiltros()">Limpar</button>
+                        </div>
+                    </div>
+
+                    <!-- Resumo -->
+                    <div class="config-summary">
+                        <div class="summary-stats">
+                            <span>Total de Itens: <strong id="total-itens-config">0</strong></span>
+                            <span>Com Benefício: <strong id="itens-com-beneficio">0</strong></span>
+                            <span>Valor Total Base: <strong id="valor-total-base">R$ 0,00</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Configuração -->
+                    <div class="config-table-container">
+                        <table id="tabela-configuracao-itens" class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>NCM</th>
+                                    <th>Descrição</th>
+                                    <th>CFOP</th>
+                                    <th>Valor Base</th>
+                                    <th>Benefício</th>
+                                    <th>Configuração</th>
+                                    <th>FCP (%)</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Linhas serão inseridas via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Paginação -->
+                    <div id="paginacao-config" class="pagination">
+                        <button class="btn btn-sm btn-secondary" onclick="paginaAnterior()">← Anterior</button>
+                        <span id="info-pagina" class="page-info">Página 1 de 1</span>
+                        <button class="btn btn-sm btn-secondary" onclick="proximaPagina()">Próximo →</button>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeItemConfigModal()">Cancelar</button>
+                    <button class="btn btn-warning" onclick="limparTodasConfiguracoes()">🧹 Limpar Todas</button>
+                    <button class="btn btn-info" onclick="salvarConfiguracoesItens()">💾 Salvar Configurações</button>
+                    <button class="btn btn-primary" onclick="calcularComConfiguracoesItens()">
+                        🎯 Calcular com Configurações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // ⚠️ IMPORTANTE: Funções globais DEVEM estar ANTES dos outros scripts
+        // para estarem disponíveis quando os event listeners forem criados
+        
+        // Funções globais para os modais (esperadas pelos JS modules)
+        function openConfigModal() {
+            console.log('🎯 Tentando abrir modal de configuração');
+            const modal = document.getElementById('config-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                console.log('✅ Modal de configuração aberto');
+            } else {
+                console.error('❌ Modal config-modal não encontrado');
+            }
+        }
+
+        function closeConfigModal() {
+            const modal = document.getElementById('config-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function prosseguirParaConfiguracaoItens() {
+            console.log('🎯 Tentando abrir configuração de itens');
+            if (window.prosseguirParaConfiguracaoItens) {
+                window.prosseguirParaConfiguracaoItens();
+            } else {
+                // Fallback caso a função não esteja carregada
+                console.log('⚠️ Usando fallback para abrir modal de itens');
+                const modal = document.getElementById('item-config-modal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    console.log('✅ Modal de configuração de itens aberto');
+                }
+                closeConfigModal();
+            }
+        }
+
+        // Esta função agora será delegada para o ui-manager.js
+        function calcularSemConfiguracaoItens() {
+            if (window.calcularSemConfiguracaoItens) {
+                window.calcularSemConfiguracaoItens();
+            } else {
+                console.error('❌ Função calcularSemConfiguracaoItens não encontrada no ui-manager.js');
+            }
+        }
+
+        function closeItemConfigModal() {
+            const modal = document.getElementById('item-config-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
+        }
+
+        // Placeholder functions para funções esperadas pelo JS
+        function aplicarFiltros() { console.log('aplicarFiltros called'); }
+        function limparFiltros() { console.log('limparFiltros called'); }
+        function salvarConfiguracoesPorItem() { console.log('salvarConfiguracoesPorItem called'); }
+    </script>
+    
+    <script src="data/estados-brasil.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/sped-parser.js"></script>
+    <script src="js/difal-calculator.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        // Inicialização da aplicação
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Iniciando Sistema DIFAL...');
+            
+            // Verificar dependências
+            if (typeof DifalApp === 'undefined') {
+                console.error('❌ DifalApp não encontrado!');
+                return;
+            }
+            
+            // Criar e inicializar aplicação
+            window.difalApp = new DifalApp();
+            window.difalApp.init().then(() => {
+                console.log('✅ Sistema DIFAL pronto!');
+            }).catch(error => {
+                console.error('❌ Erro ao inicializar:', error);
+            });
+        });
+    </script>
+</body>
+</html>

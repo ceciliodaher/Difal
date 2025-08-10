@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor SPED para Excel Moderno</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Consider adding a link to a font library if allowed, e.g., Google Fonts -->
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet"> -->
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1><span class="title-icon">✨</span> Conversor SPED para Excel <span class="title-version">Moderno</span></h1>
+        </header>
+
+        <main class="main-content">
+            <div id="converterPanel" class="converter-panel">
+                
+                <div id="dropZone" class="drop-zone">
+                    <span class="drop-zone-icon">📁</span>
+                    <p class="drop-zone-text">Arraste e solte o arquivo SPED aqui</p>
+                    <p class="drop-zone-or">- ou -</p>
+                    <label for="spedFile" class="btn-style btn-select-file">Selecionar Arquivo SPED</label>
+                    <input type="file" id="spedFile" accept=".txt" style="display: none;">
+                </div>
+                
+                <p id="selectedSpedFile" class="selected-file-text">Nenhum arquivo selecionado</p>
+
+                <!-- **** START NEW LOG WINDOW HTML **** -->
+                <div id="logContainer" class="log-container">
+                    <h3 class="log-title">Log de Eventos</h3>
+                    <div id="logWindow" class="log-window">
+                        <!-- Log messages will be appended here by JavaScript -->
+                    </div>
+                </div>
+                <!-- **** END NEW LOG WINDOW HTML **** -->
+
+                <div class="output-section">
+                    <label for="excelFileName" class="label-excel-output">Nome do arquivo Excel de saída:</label>
+                    <input type="text" id="excelFileName" class="input-style input-excel-name" placeholder="NomeDoArquivoModerno.xlsx">
+                </div>
+
+                <div class="progress-section">
+                    <div id="progressBarContainer" class="progress-bar-container-style">
+                        <div id="progressBar" class="progress-bar-style" style="width: 0%;">0%</div>
+                    </div>
+                    <p id="statusMessage" class="status-message-text">Aguardando arquivo SPED...</p>
+                </div>
+
+                <button id="convertButton" class="btn-style btn-convert">
+                    <span class="btn-icon">🚀</span> Converter Agora
+                </button>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <p>Conversor SPED Moderno &copy; 2024</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-populate/browser/xlsx-populate.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

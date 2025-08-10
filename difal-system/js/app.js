@@ -32,6 +32,9 @@ class DifalApp {
             // Inicializar UI Manager
             this.uiManager = new UIManager();
             
+            // Expor uiManager globalmente para acesso pelas funções window.*
+            window.uiManager = this.uiManager;
+            
             // Configurar event listeners globais
             this.setupGlobalEventListeners();
             
