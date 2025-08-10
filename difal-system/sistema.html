@@ -457,31 +457,56 @@
     <!-- Módulos de Configuração -->
     <script src="js/config/configuration-manager.js"></script>
     
-    <!-- Módulos Principais -->
+    <!-- Módulos Modulares -->
     <script src="data/estados-brasil.js"></script>
     <script src="js/utils.js"></script>
-    <script src="js/sped-parser.js"></script>
-    <script src="js/difal-calculator.js"></script>
-    <script src="js/ui-manager.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/parsing/sped-parser.js"></script>
+    <script src="js/calculation/difal-calculator.js"></script>
+    <script src="js/app-modular.js"></script>
     
     <script>
-        // Inicialização da aplicação
+        // Inicialização da aplicação modular
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Iniciando Sistema DIFAL...');
+            console.log('🚀 Iniciando Sistema DIFAL Modular...');
             
-            // Verificar dependências
-            if (typeof DifalApp === 'undefined') {
-                console.error('❌ DifalApp não encontrado!');
+            // Verificar dependências modulares
+            if (typeof DifalAppModular === 'undefined') {
+                console.error('❌ DifalAppModular não encontrado!');
                 return;
             }
             
-            // Criar e inicializar aplicação
-            window.difalApp = new DifalApp();
+            // Criar e inicializar aplicação modular
+            window.difalApp = new DifalAppModular();
             window.difalApp.init().then(() => {
-                console.log('✅ Sistema DIFAL pronto!');
+                console.log('✅ Sistema DIFAL Modular pronto!');
+                
+                // Configurar funções globais compatíveis
+                window.calcularSemConfiguracaoItens = function() {
+                    const configGeral = {
+                        metodologia: document.querySelector('input[name="metodologia"]:checked')?.value || 'auto',
+                        cargaEfetiva: parseFloat(document.getElementById('carga-efetiva')?.value) || null,
+                        aliqOrigemEfetiva: parseFloat(document.getElementById('aliq-origem-efetiva')?.value) || null,
+                        aliqDestinoEfetiva: parseFloat(document.getElementById('aliq-destino-efetiva')?.value) || null
+                    };
+                    
+                    window.difalApp.calculateDifal(configGeral)
+                        .then(() => {
+                            // Fechar modal
+                            if (window.closeConfigModal) {
+                                window.closeConfigModal();
+                            }
+                            
+                            // Ir para seção de resultados
+                            window.difalApp.showCalculationSection();
+                        })
+                        .catch(error => {
+                            console.error('❌ Erro no cálculo:', error);
+                            alert('Erro no cálculo: ' + error.message);
+                        });
+                };
+                
             }).catch(error => {
-                console.error('❌ Erro ao inicializar:', error);
+                console.error('❌ Erro ao inicializar aplicação modular:', error);
             });
         });
     </script>
