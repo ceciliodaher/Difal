@@ -1124,14 +1124,15 @@ class UIManager {
         
         // Função para limpar todas as configurações
         window.limparTodasConfiguracoes = function() {
-            const count = Object.keys(window.difalConfiguracoesItens).length;
+            const memoryCount = Object.keys(window.difalConfiguracoesItens).length;
+            const storageCount = self.countLocalStorageConfigs();
             
-            if (count === 0) {
+            if (memoryCount === 0 && storageCount === 0) {
                 alert('Não há configurações para limpar');
                 return;
             }
             
-            const confirmacao = confirm(`Tem certeza que deseja limpar todas as ${count} configuração(ões)?\n\nEsta ação não pode ser desfeita.`);
+            const confirmacao = confirm(`Tem certeza que deseja limpar todas as configurações?\n\nNa memória: ${memoryCount} item(ns)\nNo localStorage: ${storageCount} item(ns)\n\nEsta ação não pode ser desfeita.`);
             
             if (confirmacao) {
                 // Limpar configurações na memória
@@ -1147,8 +1148,11 @@ class UIManager {
                     self.renderItemConfigTable();
                 }
                 
+                // Atualizar estatísticas na interface
+                self.updateStorageStats();
+                
                 console.log('🧹 Todas as configurações foram limpas');
-                alert('Todas as configurações foram removidas com sucesso!');
+                alert(`Configurações limpas com sucesso!\n${memoryCount + storageCount} item(ns) removido(s)`);
             }
         };
         
@@ -1408,6 +1412,7 @@ class UIManager {
         
         this.updatePagination();
         this.updateSummary();
+        this.updateStorageStats();
     }
     
     /**
@@ -1806,6 +1811,53 @@ class UIManager {
         this.carregarTodasConfiguracaoLocalStorage();
         
         console.log('🔄 Configurações carregadas do localStorage:', window.difalConfiguracoesItens);
+    }
+
+    /**
+     * Conta quantas configurações existem no localStorage
+     */
+    countLocalStorageConfigs() {
+        try {
+            let count = 0;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('difal_config_')) {
+                    count++;
+                }
+            }
+            return count;
+        } catch (error) {
+            console.error('❌ Erro ao contar configurações do localStorage:', error);
+            return 0;
+        }
+    }
+
+    /**
+     * Atualiza estatísticas de armazenamento na interface
+     */
+    updateStorageStats() {
+        try {
+            const storageCountEl = document.getElementById('configs-localstorage');
+            const statusEl = document.getElementById('storage-status');
+            
+            if (storageCountEl) {
+                const count = this.countLocalStorageConfigs();
+                storageCountEl.textContent = count;
+            }
+            
+            if (statusEl) {
+                const count = this.countLocalStorageConfigs();
+                const memoryCount = Object.keys(window.difalConfiguracoesItens || {}).length;
+                
+                if (count > 0) {
+                    statusEl.innerHTML = `<small>💾 ${count} config(s) salva(s) • ${memoryCount} na memória</small>`;
+                } else {
+                    statusEl.innerHTML = `<small>🆕 Nenhuma configuração salva • ${memoryCount} na memória</small>`;
+                }
+            }
+        } catch (error) {
+            console.error('❌ Erro ao atualizar estatísticas:', error);
+        }
     }
 
 }
