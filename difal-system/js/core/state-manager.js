@@ -168,6 +168,25 @@ class StateManager {
     }
 
     /**
+     * Define dados SPED (alias para loadSpedData)
+     * @param {Object} data - Dados processados
+     */
+    setSpedData(data) {
+        this.setState({
+            sped: {
+                file: data.nomeArquivo ? { name: data.nomeArquivo } : null,
+                data: data,
+                processed: true,
+                timestamp: Date.now()
+            }
+        });
+
+        // Emitir evento
+        this.eventBus?.emit(window.DIFAL_CONSTANTS?.EVENTS?.SPED_LOADED, data);
+        console.log('📊 SPED Data stored in StateManager:', data);
+    }
+
+    /**
      * Carrega arquivo SPED
      * @param {File} file - Arquivo SPED
      * @param {Object} data - Dados processados

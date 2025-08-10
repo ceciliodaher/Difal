@@ -13,6 +13,7 @@ class SpedParserModular {
         this.dadosEmpresa = null;
         this.registros = {};
         this.itensDifal = [];
+        this.catalogoProdutos = {}; // Catálogo de produtos do registro 0200
         
         console.log('📄 SPED Parser Modular initialized');
     }
@@ -131,6 +132,12 @@ class SpedParserModular {
 
         console.log(`✅ Processamento concluído: ${processadas} processadas, ${ignoradas} ignoradas`);
         
+        // Criar catálogo de produtos se houver registros 0200
+        if (this.registros['0200'] && this.registros['0200'].length > 0) {
+            await this.criarCatalogoProdutos();
+            this.enriquecerItensComCatalogo();
+        }
+        
         // Processar itens para DIFAL
         await this.processarItensDifal();
 
@@ -199,11 +206,35 @@ class SpedParserModular {
      */
     processarRegistro0000(campos) {
         if (campos.length >= 10) {
+            // Registro 0000: |REG|COD_VER|COD_FIN|DT_INI|DT_FIM|NOME|CNPJ|CPF|UF|IE|...
+            //                 0    1       2       3       4      5     6     7   8   9
+            
+            // *** CORREÇÃO CRÍTICA baseada no console log ***
+            // Console mostrava: cnpj: "1", razaoSocial: "01012025"
+            // Isso indica que as posições estavam corretas mas algo está errado
+            // Vou adicionar debug para ver o que está vindo:
+            
+            console.log('🔍 DEBUG 0000 - Campos recebidos:', campos.slice(0, 12));
+            
             this.dadosEmpresa = {
-                cnpj: campos[2] || '',
-                razaoSocial: campos[3] || '',
-                uf: campos[8] || '',
-                ie: campos[9] || ''
+                razaoSocial: campos[5] || '',    // Posição 5: NOME 
+                cnpj: campos[6] || '',           // Posição 6: CNPJ
+                uf: campos[8] || '',             // Posição 8: UF
+                ie: campos[9] || '',             // Posição 9: IE
+                dtInicio: campos[3] || '',       // Posição 3: DT_INI  
+                dtFim: campos[4] || '',          // Posição 4: DT_FIM
+                
+                // DEBUG - campos extras para ver o que está vindo
+                debug_campo_0: campos[0] || '',
+                debug_campo_1: campos[1] || '',
+                debug_campo_2: campos[2] || '',
+                debug_campo_3: campos[3] || '',
+                debug_campo_4: campos[4] || '',
+                debug_campo_5: campos[5] || '',
+                debug_campo_6: campos[6] || '',
+                debug_campo_7: campos[7] || '',
+                debug_campo_8: campos[8] || '',
+                debug_campo_9: campos[9] || ''
             };
             
             console.log('🏢 Empresa identificada:', this.dadosEmpresa);
@@ -221,27 +252,41 @@ class SpedParserModular {
                 return;
             }
 
-            // *** CORREÇÃO CRÍTICA DO NCM ***
-            // Campo 3 = COD_ITEM (código interno do item)
-            // Campo 2 = NCM (Nomenclatura Comum do Mercosul) <- POSIÇÃO CORRETA
-            const codigoItem = campos[3] || "";     // NUM_ITEM/COD_ITEM
-            const ncm = campos[2] || "N/A";         // NCM na posição correta
+            // *** CORREÇÃO CRÍTICA baseada na versão monolítica ***
+            // Layout C170: |REG|NUM_ITEM|COD_ITEM|DESCR_COMPL|QTD|UNID|VL_ITEM|VL_DESC|IND_MOV|CST_ICMS|CFOP|...
+            //               0    1        2        3           4   5    6        7       8       9        10
+            
+            // Versão monolítica usa: const cfop = linha[11] || ""; (posição 11)
+            // Mas console log mostra CFOP como "0", então vou adicionar debug
+            
+            console.log('🔍 DEBUG C170 - Linha', numeroLinha, '- Campos:', campos.slice(0, 15));
+            
+            const numItem = campos[1] || "";        // NUM_ITEM
+            const codigoItem = campos[2] || "";     // COD_ITEM
+            const descricao = campos[3] || "";      // DESCR_COMPL
+            const cfop = campos[10] || "";          // CFOP - TESTANDO posição 10 (monolítico usa 11)
+            
+            // Para NCM, usar o código do item por enquanto
+            // (na versão monolítica vem do catálogo 0200)
+            const ncm = codigoItem || "N/A";
             
             const item = {
                 tipoRegistro: 'C170',
                 linha: numeroLinha,
+                numItem: numItem,
                 codItem: codigoItem,
-                ncm: ncm,                           // NCM corrigido
-                cfop: campos[7] || "",
-                unidade: campos[4] || "",
-                quantidade: parseFloat(campos[5]) || 0,
-                valorItem: parseFloat(campos[6]) || 0,
-                desconto: parseFloat(campos[8]) || 0,
-                indMov: campos[9] || "",
-                cstIcms: campos[10] || "",
-                baseIcms: parseFloat(campos[12]) || 0,
-                aliqIcms: parseFloat(campos[13]) || 0,
-                valorIcms: parseFloat(campos[14]) || 0,
+                descricaoItem: descricao,
+                ncm: ncm,
+                cfop: cfop,                         // CFOP corrigido
+                unidade: campos[5] || "",           // UNID
+                quantidade: parseFloat(campos[4]) || 0,   // QTD
+                valorItem: parseFloat(campos[6]) || 0,    // VL_ITEM
+                desconto: parseFloat(campos[7]) || 0,     // VL_DESC
+                indMov: campos[8] || "",            // IND_MOV
+                cstIcms: campos[9] || "",           // CST_ICMS
+                baseIcms: parseFloat(campos[12]) || 0,    // VL_BC_ICMS
+                aliqIcms: parseFloat(campos[13]) || 0,    // ALIQ_ICMS
+                valorIcms: parseFloat(campos[14]) || 0,   // VL_ICMS
                 
                 // Campos calculados
                 valorLiquido: 0,
@@ -283,26 +328,89 @@ class SpedParserModular {
     }
 
     /**
-     * Processa registro 0200 (tabela de itens)
+     * Cria catálogo de produtos a partir dos registros 0200
+     * CRÍTICO para análise C170+NCM (baseado na versão monolítica)
      */
-    processarRegistro0200(campos) {
-        if (campos.length >= 8) {
-            const codigoItem = campos[1] || "";
-            const descricaoItem = campos[2] || "";
-            const ncm = campos[7] || "N/A";
-            
-            // Atualizar descrição nos itens DIFAL já processados
-            this.itensDifal.forEach(item => {
-                if (item.codItem === codigoItem) {
-                    item.descricaoItem = descricaoItem;
+    async criarCatalogoProdutos() {
+        console.log('📚 Criando catálogo de produtos do registro 0200...');
+        this.catalogoProdutos = {};
+        
+        const registros0200 = this.registros['0200'] || [];
+        console.log(`📦 Processando ${registros0200.length} registros 0200`);
+
+        for (let i = 0; i < registros0200.length; i++) {
+            const registro = registros0200[i];
+            try {
+                if (registro.campos && registro.campos.length >= 9) {
+                    const campos = registro.campos;
                     
-                    // Se o NCM não foi capturado no C170, usar o do 0200
-                    if (!item.ncm || item.ncm === 'N/A') {
-                        item.ncm = ncm;
+                    // Layout 0200: ['REG', 'COD_ITEM', 'DESCR_ITEM', 'COD_BARRA', 'COD_ANT_ITEM', 'UNID_INV', 'TIPO_ITEM', 'COD_NCM', 'EX_IPI']
+                    //                0     1           2            3            4              5          6           7         8
+                    const codigoItem = campos[1] || "";     // COD_ITEM
+                    const descricao = campos[2] || "";      // DESCR_ITEM
+                    const tipoItem = campos[6] || "";       // TIPO_ITEM  
+                    const ncm = campos[7] || "";            // COD_NCM
+
+                    if (codigoItem && codigoItem.trim()) {
+                        this.catalogoProdutos[codigoItem] = {
+                            ncm: ncm.trim() || "SEM NCM",
+                            descricao: descricao.trim() || "SEM DESCRICAO",
+                            tipo: tipoItem.trim() || "SEM TIPO"
+                        };
                     }
                 }
-            });
+            } catch (error) {
+                console.warn(`⚠️ Erro linha ${i} do 0200:`, error);
+                continue;
+            }
+
+            // Yield periodically para não travar a UI
+            if (i % 100 === 0 && i > 0) {
+                await new Promise(resolve => setTimeout(resolve, 1));
+            }
         }
+
+        console.log(`✅ Catálogo criado: ${Object.keys(this.catalogoProdutos).length} produtos`);
+    }
+
+    /**
+     * Enriquece itens C170 com dados do catálogo 0200
+     */
+    enriquecerItensComCatalogo() {
+        console.log('🔗 Enriquecendo itens C170 com dados do catálogo...');
+        
+        let enriquecidos = 0;
+        
+        this.itensDifal.forEach(item => {
+            const catalogoItem = this.catalogoProdutos[item.codItem];
+            if (catalogoItem) {
+                // Atualizar NCM com dados do catálogo
+                if (!item.ncm || item.ncm === 'N/A' || item.ncm === item.codItem) {
+                    item.ncm = catalogoItem.ncm;
+                }
+                
+                // Atualizar descrição se não tem ou está vazia
+                if (!item.descricaoItem || item.descricaoItem.trim() === '') {
+                    item.descricaoItem = catalogoItem.descricao;
+                }
+                
+                // Adicionar tipo do item
+                item.tipoItem = catalogoItem.tipo;
+                
+                enriquecidos++;
+            }
+        });
+        
+        console.log(`✅ ${enriquecidos} itens enriquecidos com dados do catálogo`);
+    }
+
+    /**
+     * Processa registro 0200 (tabela de itens) - versão simplificada
+     * O catálogo principal é criado em criarCatalogoProdutos()
+     */
+    processarRegistro0200(campos) {
+        // Registros 0200 são processados em lote no criarCatalogoProdutos()
+        // Mantendo este método para compatibilidade
     }
 
     /**
@@ -315,9 +423,13 @@ class SpedParserModular {
         
         // Filtrar apenas itens relevantes para DIFAL
         this.itensDifal = this.itensDifal.filter(item => {
-            // Filtrar por CFOP (interestaduais de entrada)
-            const cfop = parseInt(item.cfop);
-            const isInterestadualEntrada = cfop >= 1000 && cfop <= 1999;
+            // *** CORREÇÃO CRÍTICA: Usar filtro específico DIFAL como na versão monolítica ***
+            const cfop = item.cfop;
+            
+            // Verificar se é CFOP DIFAL usando EstadosUtil (como na versão monolítica)
+            const isCfopDifal = window.EstadosUtil && window.EstadosUtil.isCFOPDifal 
+                ? window.EstadosUtil.isCFOPDifal(cfop)
+                : false; // Fallback se EstadosUtil não disponível
             
             // Filtrar por valor mínimo
             const temValor = item.baseCalculoDifal > 0;
@@ -325,7 +437,12 @@ class SpedParserModular {
             // Filtrar por situação tributária (não isentos/suspensos)
             const cstValida = !['40', '41', '50', '51', '60', '90'].includes(item.cstIcms);
             
-            return isInterestadualEntrada && temValor && cstValida;
+            // Debug do filtro
+            if (item.baseCalculoDifal > 0) { // Só loggar itens com valor para reduzir spam
+                console.log(`🔍 Filtro DIFAL - CFOP ${cfop}: DIFAL=${isCfopDifal}, Valor=${temValor}, CST=${cstValida}`);
+            }
+            
+            return isCfopDifal && temValor && cstValida;
         });
         
         // Enriquecer itens com dados calculados

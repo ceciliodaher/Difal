@@ -1,0 +1,99 @@
+📋 DIFAL Constants loaded successfully constants.js:263:9
+🚀 Iniciando Sistema DIFAL Modular... sistema.html:470:21
+🚀 DIFAL App Modular criada app-modular.js:22:17
+🔧 Inicializando Sistema DIFAL Modular... app-modular.js:30:21
+✅ Dependências modulares verificadas app-modular.js:94:17
+🏪 StateManager initialized state-manager.js:69:17
+✅ StateManager ready state-manager.js:80:17
+⚙️ Configuration Manager initialized configuration-manager.js:18:17
+📂 Carregando todas as configurações do localStorage... configuration-manager.js:449:21
+📂 Configuração carregada do localStorage: difal_config_1 
+Object { beneficio: "reducao-base", cargaEfetivaDesejada: 10 }
+configuration-manager.js:435:25
+✅ 1 configurações carregadas do localStorage configuration-manager.js:469:25
+🔄 Configurações carregadas do localStorage: 
+Object { 1: {…} }
+configuration-manager.js:40:17
+📄 SPED Parser Modular initialized sped-parser.js:17:17
+🧮 DIFAL Calculator Modular initialized difal-calculator.js:22:17
+✅ Sistema DIFAL Modular inicializado com sucesso! app-modular.js:67:21
+✅ Sistema DIFAL Modular pronto! sistema.html:481:25
+📂 Processando arquivo: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt app-modular.js:244:21
+📂 Processando arquivo SPED: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt sped-parser.js:27:21
+🎯 UFs configuradas: undefined → undefined difal-calculator.js:44:17
+📦 0 itens carregados para cálculo difal-calculator.js:52:17
+🚀 Iniciando cálculos DIFAL... difal-calculator.js:59:17
+❌ Erro no cálculo: Error: Nenhum item disponível para cálculo
+    calcularTodos file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:62
+    executeCalculation file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:389
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:33
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:108
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:104
+    processarArquivo file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/parsing/sped-parser.js:30
+    processFile file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:250
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:141
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:135
+    initializeUIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:102
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:55
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:480
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:469
+difal-calculator.js:398:21
+📊 Parsing concluído: 
+Object { fileName: "13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt", fileSize: 54795 }
+app-modular.js:334:17
+📊 642 linhas encontradas no arquivo sped-parser.js:39:21
+🔄 Iniciando processamento das linhas... sped-parser.js:91:17
+🏢 Empresa identificada: 
+Object { cnpj: "1", razaoSocial: "01012025", uf: "GO", ie: "106379704" }
+sped-parser.js:209:21
+📦 Item 1: 
+Object { codigo: "", ncm: "200.0052", cfop: "0", valor: 1718, linha: 209 }
+sped-parser.js:271:25
+📦 Item 2: 
+Object { codigo: "", ncm: "100.0700", cfop: "0", valor: 1911, linha: 210 }
+sped-parser.js:271:25
+📦 Item 3: 
+Object { codigo: "", ncm: "2267", cfop: "0", valor: 3, linha: 216 }
+sped-parser.js:271:25
+📦 Item 4: 
+Object { codigo: "", ncm: "150038", cfop: "0", valor: 29, linha: 217 }
+sped-parser.js:271:25
+📦 Item 5: 
+Object { codigo: "", ncm: "161086", cfop: "0", valor: 17, linha: 218 }
+sped-parser.js:271:25
+✅ Processamento concluído: 604 processadas, 10 ignoradas sped-parser.js:132:17
+🎯 Processando itens para cálculo DIFAL... sped-parser.js:312:17
+✅ Itens DIFAL processados: 113 → 0 (filtrados) sped-parser.js:348:17
+📊 NCMs únicos encontrados (0): 
+Array []
+sped-parser.js:352:17
+🎯 UFs configuradas: undefined → undefined difal-calculator.js:44:17
+📦 0 itens carregados para cálculo difal-calculator.js:52:17
+🚀 Iniciando cálculos DIFAL... difal-calculator.js:59:17
+❌ Erro no cálculo: Error: Nenhum item disponível para cálculo
+    calcularTodos file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:62
+    executeCalculation file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:389
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator.js:33
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:108
+    emit file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/event-bus.js:104
+    processarArquivo file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/parsing/sped-parser.js:45
+    processFile file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:250
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:141
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:135
+    initializeUIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:102
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:55
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:480
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:469
+difal-calculator.js:398:21
+📊 Parsing concluído: 
+Object { totalLinhas: 642, totalRegistros: 50, itensDifal: 0 }
+app-modular.js:334:17
+❌ Erro ao processar arquivo: TypeError: this.stateManager.setSpedData is not a function
+    processFile file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:253
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:141
+    setupBasicUIHandlers file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:135
+    initializeUIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:102
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app-modular.js:55
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:480
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:469
+app-modular.js:269:21
