@@ -5,9 +5,16 @@
 
 class DifalApp {
     constructor() {
+        // Infraestrutura
+        this.eventBus = null;
+        this.stateManager = null;
+        
+        // Módulos principais
         this.uiManager = null;
         this.parser = null;
         this.calculator = null;
+        
+        // Estado
         this.currentData = null;
         this.isInitialized = false;
     }
@@ -29,11 +36,17 @@ class DifalApp {
                 });
             }
             
-            // Inicializar UI Manager
-            this.uiManager = new UIManager();
+            // Inicializar infraestrutura modular
+            this.eventBus = window.eventBus; // Já criado pelos scripts
+            this.stateManager = new StateManager(this.eventBus);
+            this.stateManager.init();
             
-            // Expor uiManager globalmente para acesso pelas funções window.*
+            // Inicializar UI Manager
+            this.uiManager = new UIManager(this.eventBus, this.stateManager);
+            
+            // Expor globalmente para compatibilidade
             window.uiManager = this.uiManager;
+            window.stateManager = this.stateManager;
             
             // Configurar event listeners globais
             this.setupGlobalEventListeners();
