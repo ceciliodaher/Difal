@@ -4,10 +4,15 @@
  */
 
 class UIManager {
-    constructor() {
+    constructor(eventBus, stateManager) {
+        this.eventBus = eventBus;
+        this.stateManager = stateManager;
         this.currentSection = 'upload-section';
         this.progressCallback = null;
         this.statusCallback = null;
+        
+        // Inicializar Configuration Manager
+        this.configManager = new ConfigurationManager(eventBus, stateManager);
         
         this.init();
     }
@@ -25,6 +30,9 @@ class UIManager {
         
         // Configurar modal e expor funções globais
         this.setupModalFunctions();
+        
+        // Integrar com Configuration Manager
+        this.integrateWithConfigManager();
     }
 
     /**
@@ -915,260 +923,27 @@ class UIManager {
             self.proximaPagina();
         };
         
-        // Função para configurar benefício de um item
-        window.configurarBeneficioItem = function(itemId, beneficio) {
-            console.log(`🎯 configurarBeneficioItem: itemId=${itemId}, beneficio="${beneficio}"`);
-            
-            if (!window.difalConfiguracoesItens[itemId]) {
-                window.difalConfiguracoesItens[itemId] = {};
-            }
-            
-            if (beneficio) {
-                window.difalConfiguracoesItens[itemId].beneficio = beneficio;
-                
-                // Validar se o benefício tem os campos obrigatórios preenchidos
-                const validacao = self.validarBeneficioConfiguracao(itemId, beneficio, window.difalConfiguracoesItens[itemId]);
-                if (!validacao.valido) {
-                    console.log(`⚠️ Benefício configurado mas incompleto: ${validacao.mensagem}`);
-                    // Benefício será salvo mesmo incompleto para permitir configuração posterior
-                }
-            } else {
-                delete window.difalConfiguracoesItens[itemId].beneficio;
-                delete window.difalConfiguracoesItens[itemId].cargaEfetivaDesejada;
-                delete window.difalConfiguracoesItens[itemId].aliqOrigemEfetiva;
-                delete window.difalConfiguracoesItens[itemId].aliqDestinoEfetiva;
-            }
-            
-            // Atualizar campos dinâmicos
-            const fieldsDiv = document.getElementById(`beneficio-fields-${itemId}`);
-            if (fieldsDiv) {
-                fieldsDiv.innerHTML = self.createBeneficioFields(itemId, window.difalConfiguracoesItens[itemId]);
-                fieldsDiv.className = `beneficio-fields-inline ${beneficio ? 'show' : ''}`;
-            }
-            
-            // Atualizar classe da linha
-            const row = document.querySelector(`tr[data-item="${itemId}"]`);
-            if (row) {
-                row.className = `item-row ${beneficio ? 'with-benefit' : ''} ${window.difalConfiguracoesItens[itemId].fcpManual ? 'with-fcp' : ''}`;
-            }
-            
-            self.updateSummary();
-        };
+        // Configurações delegadas para Configuration Manager
+    }
+    
+    /**
+     * Integra com Configuration Manager
+     */
+    integrateWithConfigManager() {
+        // Expor Configuration Manager globalmente para compatibilidade
+        window.configManager = this.configManager;
         
-        // Função para configurar carga efetiva
-        window.configurarCargaEfetiva = function(itemId, valor) {
-            console.log(`🎯 configurarCargaEfetiva: itemId=${itemId}, valor="${valor}"`);
-            
-            if (!window.difalConfiguracoesItens[itemId]) {
-                window.difalConfiguracoesItens[itemId] = {};
-            }
-            
-            // Validação adequada: só salva se for número válido > 0, senão remove a propriedade
-            if (valor && !isNaN(parseFloat(valor)) && parseFloat(valor) > 0) {
-                const valorNumerico = parseFloat(valor);
-                window.difalConfiguracoesItens[itemId].cargaEfetivaDesejada = valorNumerico;
-                console.log(`✅ Carga efetiva configurada: ${valorNumerico}%`);
-            } else {
-                // Remove a propriedade se valor é inválido ou vazio
-                delete window.difalConfiguracoesItens[itemId].cargaEfetivaDesejada;
-                console.log(`🚫 Carga efetiva removida (valor inválido: "${valor}")`);
-            }
-            
-            // Salvar no localStorage
-            if (window.uiManager && window.uiManager.salvarConfiguracaoLocalStorage) {
-                window.uiManager.salvarConfiguracaoLocalStorage(itemId);
-            }
-        };
+        // Delegar métodos de configuração para o Configuration Manager
+        this.salvarConfiguracaoLocalStorage = this.configManager.salvarConfiguracaoLocalStorage.bind(this.configManager);
+        this.carregarConfiguracaoLocalStorage = this.configManager.carregarConfiguracaoLocalStorage.bind(this.configManager);
+        this.limparConfiguracoesLocalStorage = this.configManager.limparConfiguracoesLocalStorage.bind(this.configManager);
+        this.countLocalStorageConfigs = this.configManager.countLocalStorageConfigs.bind(this.configManager);
+        this.updateStorageStats = this.configManager.updateStorageStats.bind(this.configManager);
+        this.validarBeneficioConfiguracao = this.configManager.validarBeneficioConfiguracao.bind(this.configManager);
+        this.createBeneficioFields = this.configManager.createBeneficioFields.bind(this.configManager);
+        this.updateSummary = this.configManager.updateSummary.bind(this.configManager);
         
-        // Função para configurar alíquota origem
-        window.configurarAliqOrigem = function(itemId, valor) {
-            console.log(`🎯 configurarAliqOrigem: itemId=${itemId}, valor="${valor}"`);
-            
-            if (!window.difalConfiguracoesItens[itemId]) {
-                window.difalConfiguracoesItens[itemId] = {};
-            }
-            
-            // Validação adequada: só salva se for número válido >= 0, senão remove a propriedade
-            if (valor !== "" && !isNaN(parseFloat(valor)) && parseFloat(valor) >= 0) {
-                const valorNumerico = parseFloat(valor);
-                window.difalConfiguracoesItens[itemId].aliqOrigemEfetiva = valorNumerico;
-                console.log(`✅ Alíquota origem configurada: ${valorNumerico}%`);
-            } else {
-                // Remove a propriedade se valor é inválido ou vazio
-                delete window.difalConfiguracoesItens[itemId].aliqOrigemEfetiva;
-                console.log(`🚫 Alíquota origem removida (valor inválido: "${valor}")`);
-            }
-            
-            // Salvar no localStorage
-            if (window.uiManager && window.uiManager.salvarConfiguracaoLocalStorage) {
-                window.uiManager.salvarConfiguracaoLocalStorage(itemId);
-            }
-        };
-        
-        // Função para configurar alíquota destino
-        window.configurarAliqDestino = function(itemId, valor) {
-            console.log(`🎯 configurarAliqDestino: itemId=${itemId}, valor="${valor}"`);
-            
-            if (!window.difalConfiguracoesItens[itemId]) {
-                window.difalConfiguracoesItens[itemId] = {};
-            }
-            
-            // Validação adequada: só salva se for número válido >= 0, senão remove a propriedade
-            if (valor !== "" && !isNaN(parseFloat(valor)) && parseFloat(valor) >= 0) {
-                const valorNumerico = parseFloat(valor);
-                window.difalConfiguracoesItens[itemId].aliqDestinoEfetiva = valorNumerico;
-                console.log(`✅ Alíquota destino configurada: ${valorNumerico}%`);
-            } else {
-                // Remove a propriedade se valor é inválido ou vazio
-                delete window.difalConfiguracoesItens[itemId].aliqDestinoEfetiva;
-                console.log(`🚫 Alíquota destino removida (valor inválido: "${valor}")`);
-            }
-            
-            // Salvar no localStorage
-            if (window.uiManager && window.uiManager.salvarConfiguracaoLocalStorage) {
-                window.uiManager.salvarConfiguracaoLocalStorage(itemId);
-            }
-        };
-        
-        // Função para configurar FCP manual
-        window.configurarFcpItem = function(itemId, valor) {
-            if (!window.difalConfiguracoesItens[itemId]) {
-                window.difalConfiguracoesItens[itemId] = {};
-            }
-            
-            if (valor) {
-                window.difalConfiguracoesItens[itemId].fcpManual = parseFloat(valor);
-            } else {
-                delete window.difalConfiguracoesItens[itemId].fcpManual;
-            }
-            
-            // Atualizar classe da linha
-            const row = document.querySelector(`tr[data-item="${itemId}"]`);
-            if (row) {
-                const hasBenefit = window.difalConfiguracoesItens[itemId].beneficio;
-                const hasFcp = window.difalConfiguracoesItens[itemId].fcpManual;
-                row.className = `item-row ${hasBenefit ? 'with-benefit' : ''} ${hasFcp ? 'with-fcp' : ''}`;
-            }
-            
-            self.updateSummary();
-        };
-        
-        // Função para aplicar configuração por NCM
-        window.aplicarPorNCM = function(ncm, itemIdOrigem) {
-            if (!ncm || ncm === 'N/A') {
-                alert('NCM não disponível para este item');
-                return;
-            }
-            
-            const configOrigem = window.difalConfiguracoesItens[itemIdOrigem] || {};
-            
-            if (!configOrigem.beneficio && !configOrigem.fcpManual) {
-                alert('Este item não possui configuração para aplicar');
-                return;
-            }
-            
-            const itensComMesmoNCM = window.spedData.itensDifal.filter(item => item.ncm === ncm);
-            const count = itensComMesmoNCM.length;
-            
-            if (confirm(`Aplicar configuração deste item para ${count} item(ns) com NCM ${ncm}?`)) {
-                itensComMesmoNCM.forEach(item => {
-                    const itemId = item.codItem;
-                    
-                    if (!window.difalConfiguracoesItens[itemId]) {
-                        window.difalConfiguracoesItens[itemId] = {};
-                    }
-                    
-                    // Copiar configuração
-                    Object.assign(window.difalConfiguracoesItens[itemId], configOrigem);
-                });
-                
-                // Re-renderizar tabela
-                self.renderItemConfigTable();
-                
-                alert(`Configuração aplicada para ${count} item(ns) com NCM ${ncm}`);
-            }
-        };
-        
-        // Função para limpar configuração de um item
-        window.limparConfigItem = function(itemId) {
-            if (window.difalConfiguracoesItens[itemId]) {
-                delete window.difalConfiguracoesItens[itemId];
-                
-                // Re-renderizar linha
-                const row = document.querySelector(`tr[data-item="${itemId}"]`);
-                if (row) {
-                    const item = window.spedData.itensDifal.find(i => i.codItem === itemId);
-                    if (item) {
-                        row.outerHTML = self.createItemConfigRow(item);
-                    }
-                }
-                
-                self.updateSummary();
-            }
-        };
-        
-        // Função para salvar configurações
-        window.salvarConfiguracoesItens = function() {
-            const count = Object.keys(window.difalConfiguracoesItens).length;
-            
-            if (count === 0) {
-                alert('Nenhuma configuração para salvar');
-                return;
-            }
-            
-            // Aqui poderia implementar salvamento em localStorage ou servidor
-            console.log('💾 Configurações salvas:', window.difalConfiguracoesItens);
-            
-            alert(`${count} configuração(ões) de item salva(s) com sucesso!`);
-        };
-        
-        // Função para limpar todas as configurações
-        window.limparTodasConfiguracoes = function() {
-            const memoryCount = Object.keys(window.difalConfiguracoesItens).length;
-            const storageCount = self.countLocalStorageConfigs();
-            
-            if (memoryCount === 0 && storageCount === 0) {
-                alert('Não há configurações para limpar');
-                return;
-            }
-            
-            const confirmacao = confirm(`Tem certeza que deseja limpar todas as configurações?\n\nNa memória: ${memoryCount} item(ns)\nNo localStorage: ${storageCount} item(ns)\n\nEsta ação não pode ser desfeita.`);
-            
-            if (confirmacao) {
-                // Limpar configurações na memória
-                window.difalConfiguracoesItens = {};
-                
-                // Limpar localStorage
-                if (window.uiManager && window.uiManager.limparConfiguracoesLocalStorage) {
-                    window.uiManager.limparConfiguracoesLocalStorage();
-                }
-                
-                // Recarregar a tabela para refletir as mudanças
-                if (self.renderItemConfigTable) {
-                    self.renderItemConfigTable();
-                }
-                
-                // Atualizar estatísticas na interface
-                self.updateStorageStats();
-                
-                console.log('🧹 Todas as configurações foram limpas');
-                alert(`Configurações limpas com sucesso!\n${memoryCount + storageCount} item(ns) removido(s)`);
-            }
-        };
-        
-        // Função para calcular com configurações de itens
-        window.calcularComConfiguracoesItens = function() {
-            const configCount = Object.keys(window.difalConfiguracoesItens).length;
-            const totalItems = window.spedData.itensDifal.length;
-            
-            console.log(`🧮 Calculando DIFAL com ${configCount} configuração(ões) de item`);
-            
-            // Fechar modal
-            self.closeItemConfigModal();
-            
-            // Calcular com configurações
-            self.calculateDifalComConfiguracao(window.difalConfiguracaoGeral);
-        };
+        console.log('🔗 UI Manager integrado com Configuration Manager');
     }
     
     /**
@@ -1409,6 +1184,9 @@ class UIManager {
         const pageItems = this.filteredItems.slice(startIndex, endIndex);
         
         tbody.innerHTML = pageItems.map(item => this.createItemConfigRow(item)).join('');
+        
+        // Atualizar filteredItems no Configuration Manager
+        this.configManager.setFilteredItems(this.filteredItems);
         
         this.updatePagination();
         this.updateSummary();
@@ -1670,194 +1448,16 @@ class UIManager {
         return `<span class="badge ${badgeClass}">${detalhes}</span>`;
     }
 
-    // Funções para localStorage
-    salvarConfiguracaoLocalStorage(itemId) {
-        try {
-            const chave = `difal_config_${itemId}`;
-            const config = window.difalConfiguracoesItens[itemId] || {};
-            localStorage.setItem(chave, JSON.stringify(config));
-            console.log(`💾 Configuração salva no localStorage: ${chave}`, config);
-        } catch (error) {
-            console.error('❌ Erro ao salvar configuração no localStorage:', error);
-        }
-    }
+    // Funções delegadas para Configuration Manager
 
-    carregarConfiguracaoLocalStorage(itemId) {
-        try {
-            const chave = `difal_config_${itemId}`;
-            const configSalva = localStorage.getItem(chave);
-            if (configSalva) {
-                const config = JSON.parse(configSalva);
-                console.log(`📂 Configuração carregada do localStorage: ${chave}`, config);
-                return config;
-            }
-        } catch (error) {
-            console.error('❌ Erro ao carregar configuração do localStorage:', error);
-        }
-        return null;
-    }
 
-    carregarTodasConfiguracaoLocalStorage() {
-        try {
-            console.log('📂 Carregando todas as configurações do localStorage...');
-            let configuracoesCarregadas = 0;
-            
-            // Percorrer todas as chaves do localStorage procurando por configurações DIFAL
-            for (let i = 0; i < localStorage.length; i++) {
-                const chave = localStorage.key(i);
-                if (chave && chave.startsWith('difal_config_')) {
-                    const itemId = chave.replace('difal_config_', '');
-                    const config = this.carregarConfiguracaoLocalStorage(itemId);
-                    if (config && Object.keys(config).length > 0) {
-                        if (!window.difalConfiguracoesItens[itemId]) {
-                            window.difalConfiguracoesItens[itemId] = {};
-                        }
-                        Object.assign(window.difalConfiguracoesItens[itemId], config);
-                        configuracoesCarregadas++;
-                    }
-                }
-            }
-            
-            if (configuracoesCarregadas > 0) {
-                console.log(`✅ ${configuracoesCarregadas} configurações carregadas do localStorage`);
-            } else {
-                console.log('ℹ️ Nenhuma configuração encontrada no localStorage');
-            }
-        } catch (error) {
-            console.error('❌ Erro ao carregar configurações do localStorage:', error);
-        }
-    }
-
-    limparConfiguracoesLocalStorage() {
-        try {
-            console.log('🧹 Limpando configurações do localStorage...');
-            const chavesRemover = [];
-            
-            // Coletar chaves que começam com 'difal_config_'
-            for (let i = 0; i < localStorage.length; i++) {
-                const chave = localStorage.key(i);
-                if (chave && chave.startsWith('difal_config_')) {
-                    chavesRemover.push(chave);
-                }
-            }
-            
-            // Remover as chaves
-            chavesRemover.forEach(chave => {
-                localStorage.removeItem(chave);
-                console.log(`🗑️ Removida configuração: ${chave}`);
-            });
-            
-            console.log(`✅ ${chavesRemover.length} configurações removidas do localStorage`);
-        } catch (error) {
-            console.error('❌ Erro ao limpar configurações do localStorage:', error);
-        }
-    }
-
+    
     /**
-     * Valida se um benefício está configurado corretamente
-     */
-    validarBeneficioConfiguracao(itemId, tipoBeneficio, config) {
-        switch (tipoBeneficio) {
-            case 'reducao-base':
-                if (!config.cargaEfetivaDesejada || config.cargaEfetivaDesejada <= 0) {
-                    return {
-                        valido: false,
-                        mensagem: 'Carga efetiva deve ser informada e maior que 0'
-                    };
-                }
-                break;
-                
-            case 'reducao-aliquota-origem':
-                if (config.aliqOrigemEfetiva === undefined || config.aliqOrigemEfetiva < 0) {
-                    return {
-                        valido: false,
-                        mensagem: 'Alíquota origem efetiva deve ser informada e >= 0'
-                    };
-                }
-                break;
-                
-            case 'reducao-aliquota-destino':
-                if (config.aliqDestinoEfetiva === undefined || config.aliqDestinoEfetiva < 0) {
-                    return {
-                        valido: false,
-                        mensagem: 'Alíquota destino efetiva deve ser informada e >= 0'
-                    };
-                }
-                break;
-                
-            case 'isencao':
-                // Isenção não precisa de valores adicionais
-                return { valido: true };
-                
-            default:
-                return {
-                    valido: false,
-                    mensagem: 'Tipo de benefício desconhecido'
-                };
-        }
-        
-        return { valido: true };
-    }
-
-    /**
-     * Carrega configurações do localStorage ao inicializar a tabela de configuração
+     * Inicializa configurações de item com localStorage (delegada para ConfigManager)  
      */
     initializeItemConfigWithLocalStorage() {
-        if (!window.difalConfiguracoesItens) {
-            window.difalConfiguracoesItens = {};
-        }
-        
-        // Carregar configurações salvas
-        this.carregarTodasConfiguracaoLocalStorage();
-        
-        console.log('🔄 Configurações carregadas do localStorage:', window.difalConfiguracoesItens);
-    }
-
-    /**
-     * Conta quantas configurações existem no localStorage
-     */
-    countLocalStorageConfigs() {
-        try {
-            let count = 0;
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                if (key && key.startsWith('difal_config_')) {
-                    count++;
-                }
-            }
-            return count;
-        } catch (error) {
-            console.error('❌ Erro ao contar configurações do localStorage:', error);
-            return 0;
-        }
-    }
-
-    /**
-     * Atualiza estatísticas de armazenamento na interface
-     */
-    updateStorageStats() {
-        try {
-            const storageCountEl = document.getElementById('configs-localstorage');
-            const statusEl = document.getElementById('storage-status');
-            
-            if (storageCountEl) {
-                const count = this.countLocalStorageConfigs();
-                storageCountEl.textContent = count;
-            }
-            
-            if (statusEl) {
-                const count = this.countLocalStorageConfigs();
-                const memoryCount = Object.keys(window.difalConfiguracoesItens || {}).length;
-                
-                if (count > 0) {
-                    statusEl.innerHTML = `<small>💾 ${count} config(s) salva(s) • ${memoryCount} na memória</small>`;
-                } else {
-                    statusEl.innerHTML = `<small>🆕 Nenhuma configuração salva • ${memoryCount} na memória</small>`;
-                }
-            }
-        } catch (error) {
-            console.error('❌ Erro ao atualizar estatísticas:', error);
-        }
+        this.configManager.initializeConfigurationSystem();
+        console.log('🔄 Configurações de item inicializadas via Configuration Manager');
     }
 
 }

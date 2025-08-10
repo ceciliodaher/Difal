@@ -1,0 +1,17 @@
+🚀 Inicializando Sistema DIFAL... app.js:27:21
+✅ Verificação de dependências concluída app.js:95:17
+❌ Erro ao inicializar aplicação: ReferenceError: StateManager is not defined
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:41
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:394
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:393
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:423
+app.js:64:21
+🚀 Iniciando Sistema DIFAL... sistema.html:468:21
+🚀 Inicializando Sistema DIFAL... app.js:27:21
+✅ Verificação de dependências concluída app.js:95:17
+❌ Erro ao inicializar aplicação: ReferenceError: StateManager is not defined
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:41
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:478
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:467
+app.js:64:21
+✅ Sistema DIFAL pronto! sistema.html:479:25
