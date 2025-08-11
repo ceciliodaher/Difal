@@ -331,7 +331,24 @@ class NavigationManager {
      */
     updateCompanyInfo() {
         try {
-            const spedData = this.stateManager?.getSpedData();
+            // Tentar StateManager primeiro (período único)
+            let spedData = this.stateManager?.getSpedData();
+            let isMultiPeriod = false;
+            
+            // Se não encontrou no StateManager, tentar no PeriodsManager (múltiplos períodos)
+            if (!spedData || !spedData.dadosEmpresa) {
+                const periodsState = this.stateManager?.getPeriodsState();
+                if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                    isMultiPeriod = true;
+                    // Usar dados da empresa consolidados
+                    spedData = {
+                        dadosEmpresa: periodsState.currentCompany || periodsState.periods[0].dados.dadosEmpresa,
+                        periodoApuracao: `${periodsState.totalPeriods} período(s)`
+                    };
+                    console.log('📅 Usando dados do PeriodsManager para atualização da empresa');
+                }
+            }
+            
             if (!spedData || !spedData.dadosEmpresa) {
                 console.log('📍 Dados SPED não disponíveis para atualização da empresa');
                 return;
@@ -558,8 +575,20 @@ class NavigationManager {
      * @returns {boolean}
      */
     hasSpedData() {
+        // Tentar StateManager primeiro (período único)
         const spedData = this.stateManager?.getSpedData();
-        return !!(spedData && spedData.dadosEmpresa);
+        if (spedData && spedData.dadosEmpresa) {
+            return true;
+        }
+        
+        // Tentar PeriodsManager (múltiplos períodos)
+        const periodsState = this.stateManager?.getPeriodsState();
+        if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+            const firstPeriod = periodsState.periods[0];
+            return !!(firstPeriod.dados && firstPeriod.dados.itensDifal);
+        }
+        
+        return false;
     }
 
     /**
@@ -568,8 +597,20 @@ class NavigationManager {
      * @returns {boolean}
      */
     hasDifalItems() {
+        // Tentar StateManager primeiro (período único)
         const spedData = this.stateManager?.getSpedData();
-        return !!(spedData && spedData.itensDifal && spedData.itensDifal.length > 0);
+        if (spedData && spedData.itensDifal && spedData.itensDifal.length > 0) {
+            return true;
+        }
+        
+        // Tentar PeriodsManager (múltiplos períodos)
+        const periodsState = this.stateManager?.getPeriodsState();
+        if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+            const firstPeriod = periodsState.periods[0];
+            return !!(firstPeriod.dados && firstPeriod.dados.itensDifal && firstPeriod.dados.itensDifal.length > 0);
+        }
+        
+        return false;
     }
 
     /**

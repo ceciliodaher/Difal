@@ -205,13 +205,32 @@ class FileUploadManager {
     // ========== UPLOAD E PROCESSAMENTO ==========
 
     /**
-     * Define PeriodsManager para modo multi-período
+     * Define PeriodsManager para modo multi-período (sem ativar automaticamente)
      * @param {PeriodsManager} periodsManager - Instância do PeriodsManager
      */
     setPeriodsManager(periodsManager) {
         this.periodsManager = periodsManager;
-        this.multiPeriodMode = !!periodsManager;
-        console.log('📅 PeriodsManager configurado - Modo multi-período:', this.multiPeriodMode);
+        // NÃO ativar automaticamente multiPeriodMode - deve ser controlado pelo usuário
+        console.log('📅 PeriodsManager configurado (modo controlado pelo usuário)');
+    }
+
+    /**
+     * Define modo de processamento baseado na seleção do usuário
+     * @param {string} mode - 'single' ou 'multiple'
+     */
+    setProcessingMode(mode) {
+        const isMultiple = mode === 'multiple';
+        this.multiPeriodMode = isMultiple;
+        console.log(`🔧 Modo de processamento definido: ${mode} (multiPeriodMode: ${this.multiPeriodMode})`);
+    }
+
+    /**
+     * Obtém modo selecionado pelo usuário na interface
+     * @returns {string} 'single' ou 'multiple'
+     */
+    getUserSelectedMode() {
+        const selectedRadio = document.querySelector('input[name="processing-mode"]:checked');
+        return selectedRadio ? selectedRadio.value : 'single';
     }
 
     /**
@@ -237,6 +256,10 @@ class FileUploadManager {
             return;
         }
 
+        // Configurar modo baseado na seleção do usuário
+        const userMode = this.getUserSelectedMode();
+        this.setProcessingMode(userMode);
+        
         // Marcar como processando APÓS validações iniciais
         this.uploadStartTime = now;
         this.isProcessing = true;

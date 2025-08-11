@@ -16,7 +16,7 @@ configuration-manager.js:40:17
 📁 Elementos de upload configurados file-upload-manager.js:106:17
 📋 Dependências do FileUploadManager: 
 Object { spedParser: true, utils: true, stateManager: true, eventBus: true }
-file-upload-manager.js:578:17
+file-upload-manager.js:601:17
 📂 FileUploadManager inicializado com sucesso file-upload-manager.js:70:17
 🏗️ FileUploadManager: Nova instância singleton criada file-upload-manager.js:59:17
 📊 Dependências de exportação: 
@@ -26,24 +26,37 @@ export-manager.js:121:17
 📄 PaginationManager inicializado com sucesso pagination-manager.js:38:17
 🎭 ModalManager inicializado com sucesso modal-manager.js:70:17
 📊 ResultsRenderer inicializado com sucesso results-renderer.js:68:21
-🎯 Módulos especializados inicializados com sucesso ui-manager.js:56:21
+📅 PeriodsManager inicializado periods-manager.js:37:17
+📊 AnalyticsManager inicializado analytics-manager.js:44:17
+📈 ParetoAnalyzer inicializado com thresholds: 
+Array(5) [ 70, 75, 80, 85, 90 ]
+pareto-analyzer.js:31:17
+📈 ChartsManager inicializado charts-manager.js:50:17
+📅 PeriodsManager configurado (modo controlado pelo usuário) file-upload-manager.js:214:17
+📊 Managers de análise configurados no ExportManager export-manager.js:80:17
+🎯 Módulos especializados inicializados com sucesso ui-manager.js:66:21
+🔧 Modo de processamento definido: single (multiPeriodMode: false) file-upload-manager.js:224:17
+🎯 Seletor de modo configurado - Modo inicial: single ui-manager.js:1515:17
 📍 7 botões de navegação configurados navigation-manager.js:117:21
-🧭 Navegando para: upload-section navigation-manager.js:184:21
-🎭 UI Manager Refatorado inicializado ui-manager.js:73:17
-🔗 UI Manager integrado com Configuration Manager ui-manager.js:713:17
+🧭 Validando navegação para: upload-section navigation-manager.js:526:17
+🧭 Navegando para: upload-section navigation-manager.js:185:21
+🎭 UI Manager Refatorado inicializado ui-manager.js:83:17
+🔗 UI Manager integrado com Configuration Manager ui-manager.js:735:17
 📄 SPED Parser Modular initialized sped-parser.js:18:17
 🧮 DIFAL Calculator Simple initialized difal-calculator-simple.js:19:17
 ✅ Sistema DIFAL Modular pronto! app.js:58:21
-📍 Dados SPED não disponíveis para atualização da empresa navigation-manager.js:335:25
-✅ Navegação para upload-section concluída navigation-manager.js:220:25
-📁 Iniciando upload do arquivo: 13158698000110-106379704-20240701-20240731-1-84D2359853C6CCBF4D06EAD523C9218C2B707975-SPED-EFD.txt file-upload-manager.js:246:21
+📍 Dados SPED não disponíveis para atualização da empresa navigation-manager.js:336:25
+✅ Navegação para upload-section concluída navigation-manager.js:221:25
+🔧 Modo selecionado pelo usuário: multiple ui-manager.js:1500:25
+🔧 Modo de processamento definido: multiple (multiPeriodMode: true) 2 file-upload-manager.js:224:17
+📁 Iniciando upload do arquivo: 13158698000110-106379704-20240701-20240731-1-84D2359853C6CCBF4D06EAD523C9218C2B707975-SPED-EFD.txt file-upload-manager.js:269:21
 ✅ Arquivo validado: 
 Object { name: "13158698000110-106379704-20240701-20240731-1-84D2359853C6CCBF4D06EAD523C9218C2B707975-SPED-EFD.txt", size: "65.82 KB", type: "text/plain" }
-file-upload-manager.js:353:17
-📋 Informações do arquivo exibidas file-upload-manager.js:441:17
-📊 Progresso: 5% - Iniciando processamento... file-upload-manager.js:479:17
+file-upload-manager.js:376:17
+📋 Informações do arquivo exibidas file-upload-manager.js:464:17
+📊 Progresso: 5% - Iniciando processamento... file-upload-manager.js:502:17
 📄 SPED Parser Modular initialized sped-parser.js:18:17
-📊 Progresso: 20% - Analisando registros SPED... file-upload-manager.js:479:17
+📊 Progresso: 20% - Analisando registros SPED... file-upload-manager.js:502:17
 📂 Processando arquivo SPED: 13158698000110-106379704-20240701-20240731-1-84D2359853C6CCBF4D06EAD523C9218C2B707975-SPED-EFD.txt sped-parser.js:28:21
 📊 Parsing concluído (evento coordenado): 
 Object { fileName: "13158698000110-106379704-20240701-20240731-1-84D2359853C6CCBF4D06EAD523C9218C2B707975-SPED-EFD.txt", fileSize: 67395 }
@@ -763,26 +776,100 @@ sped-parser.js:470:17
 📊 Parsing concluído (evento coordenado): 
 Object { totalLinhas: 763, totalRegistros: 44, itensDifal: 23 }
 app.js:197:17
-📊 Progresso: 80% - Extraindo itens DIFAL... file-upload-manager.js:479:17
+📊 Progresso: 80% - Extraindo itens DIFAL... file-upload-manager.js:502:17
+📅 Adicionando período: 13158698000110-106379704-20240701-20240731-1-84D2359853C6CCBF4D06EAD523C9218C2B707975-SPED-EFD.txt periods-manager.js:47:21
+🏢 Empresa definida: THE FIBER PROVEDORA DE INTERNET LTDA periods-manager.js:70:25
 📊 Parsing concluído (evento coordenado): 
-Object { nomeArquivo: "sped_processado.txt", dadosEmpresa: {…}, registros: {…}, itensDifal: (23) […], estatisticas: {…}, metadata: {…} }
+Object { currentCompany: {…}, periods: (1) […], totalPeriods: 1, consolidated: {…} }
 app.js:197:17
-📊 SPED Data stored in StateManager: 
-Object { nomeArquivo: "sped_processado.txt", dadosEmpresa: {…}, registros: {…}, itensDifal: (23) […], estatisticas: {…}, metadata: {…} }
-state-manager.js:195:17
-✅ Dados SPED armazenados no StateManager file-upload-manager.js:289:29
-📊 Progresso: 100% - Arquivo processado com sucesso! file-upload-manager.js:479:17
+📅 Periods state updated: 
+Object { currentCompany: {…}, periods: (1) […], totalPeriods: 1, consolidated: {…} }
+state-manager.js:740:17
+✅ Período 202407-202407 adicionado com sucesso periods-manager.js:133:21
+📅 Período adicionado ao PeriodsManager: 06/2024 a 07/2024 file-upload-manager.js:308:29
+📊 Progresso: 100% - Arquivo processado com sucesso! file-upload-manager.js:502:17
 ✅ Upload realizado com sucesso: 
-Object { fileName: "13158698000110-106379704-20240701-20240731-1-84D2359853C6CCBF4D06EAD523C9218C2B707975-SPED-EFD.txt", fileSize: 67395, totalItens: 23, empresa: "THE FIBER PROVEDORA DE INTERNET LTDA", processingTime: "0.04s" }
-file-upload-manager.js:499:17
+Object { fileName: "13158698000110-106379704-20240701-20240731-1-84D2359853C6CCBF4D06EAD523C9218C2B707975-SPED-EFD.txt", fileSize: 67395, totalItens: 23, empresa: "THE FIBER PROVEDORA DE INTERNET LTDA", processingTime: "0.03s" }
+file-upload-manager.js:522:17
 ✅ Arquivo "13158698000110-106379704-20240701-20240731-1-84D2359853C6CCBF4D06EAD523C9218C2B707975-SPED-EFD.txt" processado com sucesso! progress-manager.js:511:21
-✅ Upload concluído em 36ms: 
+✅ Upload concluído em 28ms: 
 Object { nomeArquivo: "sped_processado.txt", dadosEmpresa: {…}, registros: {…}, itensDifal: (23) […], estatisticas: {…}, metadata: {…} }
-file-upload-manager.js:301:21
-🔄 Flag isProcessing resetada para false file-upload-manager.js:314:21
-🧭 Navegando para: analysis-section navigation-manager.js:184:21
-✅ Informações da empresa atualizadas navigation-manager.js:374:21
-✅ Arquivo processado. Modal de configuração disponível via botão. ui-manager.js:172:25
-📊 Analysis section - summary content: 1468 chars navigation-manager.js:591:25
-✅ Informações da empresa atualizadas navigation-manager.js:374:21
-✅ Navegação para analysis-section concluída navigation-manager.js:220:25
+file-upload-manager.js:324:21
+🔄 Flag isProcessing resetada para false file-upload-manager.js:337:21
+🧭 Validando navegação para: analysis-section navigation-manager.js:526:17
+📊 Analysis section - hasSpedData: true navigation-manager.js:532:25
+🧭 Navegando para: analysis-section navigation-manager.js:185:21
+📍 Dados SPED não disponíveis para atualização da empresa navigation-manager.js:336:25
+✅ Arquivo processado. Modal de configuração disponível via botão. ui-manager.js:191:25
+📊 Analysis section - summary content: 1468 chars navigation-manager.js:631:25
+📍 Dados SPED não disponíveis para atualização da empresa navigation-manager.js:336:25
+✅ Navegação para analysis-section concluída navigation-manager.js:221:25
+⚙️ Modal de configuração aberto modal-manager.js:125:21
+⚙️ Configuração geral aplicada: 
+Object { metodologia: "auto", configurarBeneficios: true, fcpManual: false, percentualDestinatario: 100, beneficiosGlobais: {…} }
+ui-manager.js:686:21
+⚙️ Modal de configuração fechado modal-manager.js:154:21
+📅 Usando dados do PeriodsManager para modal de configuração modal-manager.js:235:33
+📂 Carregando todas as configurações do localStorage... configuration-manager.js:473:21
+ℹ️ Nenhuma configuração encontrada no localStorage configuration-manager.js:501:25
+🔄 Configurações carregadas do localStorage: 
+Object {  }
+configuration-manager.js:40:17
+🎯 Modal de configuração por item aberto modal-manager.js:263:21
+🧮 Calculando DIFAL com 0 configuração(ões) de item configuration-manager.js:403:17
+🎯 Modal de configuração por item fechado modal-manager.js:292:21
+Uncaught (in promise) Error: Nenhum dado SPED disponível para cálculo
+    calculateDifal file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:169
+    calcularComConfiguracoesItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/config/configuration-manager.js:413
+    calcularComConfiguracoesItens file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/config/configuration-manager.js:96
+    onclick file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html:1
+app.js:169:19
+🧭 Validando navegação para: calculation-section navigation-manager.js:526:17
+🧮 Calculation section - hasSpedData && hasDifalItems: true navigation-manager.js:540:25
+🧭 Navegando para: calculation-section navigation-manager.js:185:21
+📍 Dados SPED não disponíveis para atualização da empresa navigation-manager.js:336:25
+📍 Navegado para seção de cálculo sem executar cálculo ui-manager.js:132:25
+📍 Dados SPED não disponíveis para atualização da empresa navigation-manager.js:336:25
+✅ Navegação para calculation-section concluída navigation-manager.js:221:25
+🧭 Validando navegação para: analytics-section navigation-manager.js:526:17
+🧭 Navegando para: analytics-section navigation-manager.js:185:21
+🧭 Validando navegação para: analytics-section navigation-manager.js:526:17
+🧭 Navegando para: analytics-section navigation-manager.js:185:21
+📍 Dados SPED não disponíveis para atualização da empresa navigation-manager.js:336:25
+✅ Navegação para analytics-section concluída navigation-manager.js:221:25
+📍 Dados SPED não disponíveis para atualização da empresa navigation-manager.js:336:25
+✅ Navegação para analytics-section concluída navigation-manager.js:221:25
+📊 Progresso: 0% - Gerando análises estatísticas... 2 progress-manager.js:256:21
+🔄 Iniciando processamento analítico completo... analytics-manager.js:53:21
+📊 23 itens válidos para análise de 23 totais analytics-manager.js:68:21
+📊 Parsing concluído (evento coordenado): 
+Object { timestamp: "2025-08-11T16:09:20.398Z", totalItems: 23, totalValue: 180520, ncmAnalysis: {…}, paretoAnalysis: {…}, periodAnalysis: {…}, cfopAnalysis: {…}, concentrationStats: {…}, trendsAnalysis: {…} }
+app.js:197:17
+📊 Analytics updated: 
+Object { timestamp: "2025-08-11T16:09:20.398Z", totalItems: 23, totalValue: 180520, ncmAnalysis: {…}, paretoAnalysis: {…}, periodAnalysis: {…}, cfopAnalysis: {…}, concentrationStats: {…}, trendsAnalysis: {…} }
+state-manager.js:819:17
+✅ Análises completas geradas: 
+Object { totalItems: 23, totalValue: "R$ 180.520,00", uniqueNCMs: 15, paretoNCMs: 4 }
+analytics-manager.js:109:21
+📊 Progresso: 100% - Análises concluídas! 2 progress-manager.js:256:21
+🧭 Validando navegação para: analytics-section navigation-manager.js:526:17
+🧭 Navegando para: analytics-section navigation-manager.js:185:21
+❌ Erro ao gerar analytics: TypeError: analytics.ncmAnalysis.reduce is not a function
+    updateAnalyticsSummary file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1196
+    renderAnalyticsResults file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1120
+    generateAnalytics file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1106
+    refreshAnalytics file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1469
+    setupAnalyticsEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1069
+    setupAnalyticsEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1069
+    setupEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:106
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:78
+    UIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:33
+    initializeModules file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:92
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:49
+    async* file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:261
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:261
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:272
+ui-manager.js:1109:21
+❌ Erro: analytics.ncmAnalysis.reduce is not a function progress-manager.js:511:21
+📍 Dados SPED não disponíveis para atualização da empresa navigation-manager.js:336:25
+✅ Navegação para analytics-section concluída navigation-manager.js:221:25

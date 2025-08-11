@@ -96,11 +96,21 @@ class UIManager {
      * @private
      */
     setupEventListeners() {
+        // Seletor de modo de processamento
+        this.setupModeSelector();
+        
         // Múltiplos períodos - event listeners
         this.setupMultiPeriodsEventListeners();
         
         // Analytics - event listeners  
         this.setupAnalyticsEventListeners();
+        
+        // Listener para mudanças de seção
+        if (this.eventBus) {
+            this.eventBus.on('SECTION_CHANGED', (data) => {
+                this.onSectionChanged(data);
+            });
+        }
         
         // Proceed to calculation
         const proceedBtn = document.getElementById('proceed-calculation');
@@ -292,46 +302,118 @@ class UIManager {
         const tableDiv = document.getElementById('difal-items-table');
         
         if (summaryDiv) {
+            // Verificar se estamos em modo multi-período
+            let displayData = spedData;
+            let isMultiPeriod = false;
+            
+            // Se não há dados ou é multi-período, tentar obter do PeriodsManager
+            if (!spedData || !spedData.dadosEmpresa) {
+                const periodsState = this.stateManager?.getPeriodsState();
+                if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                    isMultiPeriod = true;
+                    const firstPeriod = periodsState.periods[0];
+                    displayData = firstPeriod.dados;
+                    console.log('📅 Usando dados do modo multi-período para análise');
+                }
+            }
+            
             // Remover classe hidden e mostrar o div
             summaryDiv.classList.remove('hidden');
             
-            const stats = spedData.estatisticasDifal || {};
-            summaryDiv.innerHTML = `
-                <div class="summary-item">
-                    <h3>Arquivo Processado</h3>
-                    <div class="summary-value">${spedData.fileName}</div>
-                    <div class="summary-label">Arquivo SPED</div>
-                </div>
-                <div class="summary-item">
-                    <h3>Empresa</h3>
-                    <div class="summary-value">${spedData.dadosEmpresa?.razaoSocial || 'N/A'}</div>
-                    <div class="summary-label">CNPJ: ${Utils.formatarCNPJ(spedData.dadosEmpresa?.cnpj || '')}</div>
-                </div>
-                <div class="summary-item">
-                    <h3>Período</h3>
-                    <div class="summary-value">${spedData.periodoApuracao || 'N/A'}</div>
-                    <div class="summary-label">UF: ${spedData.dadosEmpresa?.uf || 'N/A'}</div>
-                </div>
-                <div class="summary-item">
-                    <h3>Registros Totais</h3>
-                    <div class="summary-value">${Utils.formatarNumero(spedData.estatisticas?.totalRegistros || 0)}</div>
-                    <div class="summary-label">${Object.keys(spedData.registros || {}).length} tipos</div>
-                </div>
-                <div class="summary-item">
-                    <h3>Itens DIFAL</h3>
-                    <div class="summary-value">${Utils.formatarNumero(stats.totalItens || 0)}</div>
-                    <div class="summary-label">CFOPs DIFAL identificados</div>
-                </div>
-                <div class="summary-item">
-                    <h3>Valor Total</h3>
-                    <div class="summary-value">${Utils.formatarMoeda(stats.estatisticasValores?.totalValorItem || 0)}</div>
-                    <div class="summary-label">Base para cálculo DIFAL</div>
-                </div>
-            `;
+            const stats = displayData?.estatisticasDifal || {};
+            
+            if (isMultiPeriod) {
+                const periodsState = this.stateManager.getPeriodsState();
+                const consolidated = periodsState.consolidated || {};
+                
+                summaryDiv.innerHTML = `
+                    <div class="summary-item">
+                        <h3>Múltiplos Períodos</h3>
+                        <div class="summary-value">${periodsState.totalPeriods || 1} período(s)</div>
+                        <div class="summary-label">Modo Multi-Período</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Empresa</h3>
+                        <div class="summary-value">${periodsState.currentCompany?.razaoSocial || displayData?.dadosEmpresa?.razaoSocial || 'N/A'}</div>
+                        <div class="summary-label">CNPJ: ${Utils.formatarCNPJ(periodsState.currentCompany?.cnpj || displayData?.dadosEmpresa?.cnpj || '')}</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>UF</h3>
+                        <div class="summary-value">${periodsState.currentCompany?.uf || displayData?.dadosEmpresa?.uf || 'N/A'}</div>
+                        <div class="summary-label">Estado da empresa</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Registros Consolidados</h3>
+                        <div class="summary-value">${Utils.formatarNumero(consolidated.totalRegistros || 0)}</div>
+                        <div class="summary-label">Todos os períodos</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Itens DIFAL Totais</h3>
+                        <div class="summary-value">${Utils.formatarNumero(consolidated.totalItensDifal || 0)}</div>
+                        <div class="summary-label">Consolidado multi-período</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Valor Total</h3>
+                        <div class="summary-value">${Utils.formatarMoeda(consolidated.totalValorItens || 0)}</div>
+                        <div class="summary-label">Base para cálculo DIFAL</div>
+                    </div>
+                `;
+            } else {
+                summaryDiv.innerHTML = `
+                    <div class="summary-item">
+                        <h3>Arquivo Processado</h3>
+                        <div class="summary-value">${displayData.fileName || 'N/A'}</div>
+                        <div class="summary-label">Arquivo SPED</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Empresa</h3>
+                        <div class="summary-value">${displayData.dadosEmpresa?.razaoSocial || 'N/A'}</div>
+                        <div class="summary-label">CNPJ: ${Utils.formatarCNPJ(displayData.dadosEmpresa?.cnpj || '')}</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Período</h3>
+                        <div class="summary-value">${displayData.periodoApuracao || 'N/A'}</div>
+                        <div class="summary-label">UF: ${displayData.dadosEmpresa?.uf || 'N/A'}</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Registros Totais</h3>
+                        <div class="summary-value">${Utils.formatarNumero(displayData.estatisticas?.totalRegistros || 0)}</div>
+                        <div class="summary-label">${Object.keys(displayData.registros || {}).length} tipos</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Itens DIFAL</h3>
+                        <div class="summary-value">${Utils.formatarNumero(stats.totalItens || 0)}</div>
+                        <div class="summary-label">CFOPs DIFAL identificados</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Valor Total</h3>
+                        <div class="summary-value">${Utils.formatarMoeda(stats.estatisticasValores?.totalValorItem || 0)}</div>
+                        <div class="summary-label">Base para cálculo DIFAL</div>
+                    </div>
+                `;
+            }
         }
         
-        if (tableDiv && spedData.itensDifal && spedData.itensDifal.length > 0) {
-            this.createDifalTable(tableDiv, spedData.itensDifal.slice(0, 10)); // Mostrar apenas 10 primeiros
+        // Exibir tabela de itens
+        if (tableDiv) {
+            let itemsToShow = [];
+            
+            if (spedData && spedData.itensDifal && spedData.itensDifal.length > 0) {
+                itemsToShow = spedData.itensDifal.slice(0, 10);
+            } else {
+                // Tentar obter itens do primeiro período em modo multi-período
+                const periodsState = this.stateManager?.getPeriodsState();
+                if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                    const firstPeriod = periodsState.periods[0];
+                    if (firstPeriod.dados && firstPeriod.dados.itensDifal) {
+                        itemsToShow = firstPeriod.dados.itensDifal.slice(0, 10);
+                    }
+                }
+            }
+            
+            if (itemsToShow.length > 0) {
+                this.createDifalTable(tableDiv, itemsToShow);
+            }
         }
     }
 
@@ -1177,6 +1259,163 @@ class UIManager {
         }).format(value || 0);
     }
     
+    // ========== SECTION CHANGE HANDLERS ==========
+    
+    /**
+     * Manipula mudanças de seção
+     * @private
+     * @param {Object} data - Dados da mudança de seção
+     */
+    onSectionChanged(data) {
+        const { currentSection } = data;
+        
+        if (currentSection === 'calculation-section') {
+            this.initializeCalculationSection();
+        } else if (currentSection === 'analytics-section') {
+            this.initializeAnalyticsSection();
+        }
+    }
+    
+    /**
+     * Inicializa seção de cálculo com informações relevantes
+     * @private
+     */
+    initializeCalculationSection() {
+        const calculationResults = document.getElementById('calculation-results');
+        if (!calculationResults) return;
+        
+        // Verificar se há dados disponíveis (single ou multi-period)
+        let hasData = false;
+        let spedData = this.stateManager?.getSpedData();
+        let isMultiPeriod = false;
+        let totalItems = 0;
+        
+        if (spedData && spedData.itensDifal) {
+            hasData = true;
+            totalItems = spedData.itensDifal.length;
+        } else {
+            // Verificar modo multi-período
+            const periodsState = this.stateManager?.getPeriodsState();
+            if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                hasData = true;
+                isMultiPeriod = true;
+                totalItems = periodsState.consolidated?.totalItensDifal || 0;
+            }
+        }
+        
+        if (!hasData) {
+            calculationResults.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <h3>Nenhum dado SPED carregado</h3>
+                    <p>Faça o upload de um arquivo SPED para começar o cálculo DIFAL.</p>
+                    <button class="btn btn-primary" onclick="document.querySelector('[data-section=\"upload-section\"]').click()">
+                        📁 Ir para Upload
+                    </button>
+                </div>
+            `;
+        } else {
+            calculationResults.innerHTML = `
+                <div class="calculation-info">
+                    <div class="info-header">
+                        <h3>🎯 Pronto para Calcular DIFAL</h3>
+                        <p class="info-subtitle">${isMultiPeriod ? 'Modo Multi-Período' : 'Modo Período Único'}</p>
+                    </div>
+                    
+                    <div class="calculation-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">${totalItems}</div>
+                            <div class="stat-label">Itens DIFAL ${isMultiPeriod ? 'consolidados' : 'disponíveis'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="calculation-actions">
+                        <button class="btn btn-primary btn-large" onclick="openConfigModal()">
+                            ⚙️ Configurar e Calcular
+                        </button>
+                        <p class="action-description">
+                            Configure metodologia, benefícios fiscais e execute o cálculo DIFAL
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Mostrar a seção
+        calculationResults.classList.remove('hidden');
+    }
+    
+    /**
+     * Inicializa seção de analytics/relatórios
+     * @private
+     */
+    initializeAnalyticsSection() {
+        // Verificar se há dados disponíveis
+        let hasData = false;
+        let spedData = this.stateManager?.getSpedData();
+        let isMultiPeriod = false;
+        
+        if (spedData && spedData.itensDifal) {
+            hasData = true;
+        } else {
+            const periodsState = this.stateManager?.getPeriodsState();
+            if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                hasData = true;
+                isMultiPeriod = true;
+            }
+        }
+        
+        const analyticsContent = document.getElementById('analytics-content') || document.querySelector('#analytics-section .section-card');
+        if (!analyticsContent) return;
+        
+        if (!hasData) {
+            // Mostrar estado vazio
+            const emptyState = document.createElement('div');
+            emptyState.className = 'empty-state';
+            emptyState.innerHTML = `
+                <div class="empty-icon">📊</div>
+                <h3>Nenhum dado para análise</h3>
+                <p>Faça o upload de um arquivo SPED para gerar relatórios estatísticos.</p>
+                <button class="btn btn-primary" onclick="document.querySelector('[data-section=\"upload-section\"]').click()">
+                    📁 Ir para Upload
+                </button>
+            `;
+            
+            // Limpar conteúdo existente e adicionar estado vazio
+            const existingAnalytics = document.getElementById('analytics-summary');
+            if (existingAnalytics) {
+                existingAnalytics.style.display = 'none';
+            }
+            
+            // Verificar se já existe um empty-state para não duplicar
+            const existingEmpty = analyticsContent.querySelector('.empty-state');
+            if (existingEmpty) {
+                existingEmpty.replaceWith(emptyState);
+            } else {
+                analyticsContent.appendChild(emptyState);
+            }
+        } else {
+            // Remover estado vazio se existir
+            const existingEmpty = analyticsContent.querySelector('.empty-state');
+            if (existingEmpty) {
+                existingEmpty.remove();
+            }
+            
+            // Mostrar resumo das análises se disponível
+            const existingAnalytics = document.getElementById('analytics-summary');
+            if (existingAnalytics) {
+                existingAnalytics.style.display = 'block';
+                existingAnalytics.classList.remove('hidden');
+            }
+            
+            // Gerar analytics se necessário
+            if (this.analyticsManager) {
+                console.log('📊 Gerando analytics para seção de relatórios');
+                this.generateAnalytics();
+            }
+        }
+    }
+
     // ========== MÉTODOS ADICIONAIS PARA ANALYTICS ==========
     
     /**
@@ -1190,9 +1429,9 @@ class UIManager {
         analyticsSummary.classList.remove('hidden');
         
         // Calcular valores do resumo
-        const totalValue = analytics.ncmAnalysis?.reduce((sum, ncm) => sum + (ncm.totalValue || 0), 0) || 0;
+        const totalValue = analytics.ncmAnalysis?.top10?.reduce((sum, ncm) => sum + (ncm.totalValue || 0), 0) || analytics.totalValue || 0;
         const paretoItems = analytics.paretoAnalysis?.defaultAnalysis?.pareto80Items || [];
-        const topNCM = analytics.ncmAnalysis?.[0]?.ncm || '-';
+        const topNCM = analytics.ncmAnalysis?.top10?.[0]?.ncm || '-';
         const concentration = analytics.concentrationStats?.hhi ? Math.round(analytics.concentrationStats.hhi * 100) : 0;
         
         document.getElementById('analytics-total-value').textContent = this.formatCurrency(totalValue);
@@ -1464,6 +1703,52 @@ class UIManager {
      */
     refreshAnalytics() {
         this.generateAnalytics();
+    }
+
+    /**
+     * Configura seletor de modo de processamento
+     * @private
+     */
+    setupModeSelector() {
+        const modeOptions = document.querySelectorAll('input[name="processing-mode"]');
+        
+        if (modeOptions.length === 0) {
+            console.warn('⚠️ Seletor de modo não encontrado na interface');
+            return;
+        }
+        
+        // Event listener para mudança de modo
+        modeOptions.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const selectedMode = e.target.value;
+                
+                // Atualizar classes CSS dos labels
+                document.querySelectorAll('.mode-option').forEach(label => {
+                    label.classList.remove('active');
+                });
+                
+                const activeLabel = document.querySelector(`.mode-option[data-mode="${selectedMode}"]`);
+                if (activeLabel) {
+                    activeLabel.classList.add('active');
+                }
+                
+                // Log da mudança
+                console.log(`🔧 Modo selecionado pelo usuário: ${selectedMode}`);
+                
+                // Configurar FileUploadManager imediatamente
+                if (this.fileUploadManager) {
+                    this.fileUploadManager.setProcessingMode(selectedMode);
+                }
+            });
+        });
+        
+        // Configurar modo inicial
+        const initialMode = document.querySelector('input[name="processing-mode"]:checked')?.value || 'single';
+        if (this.fileUploadManager) {
+            this.fileUploadManager.setProcessingMode(initialMode);
+        }
+        
+        console.log('🎯 Seletor de modo configurado - Modo inicial:', initialMode);
     }
 }
 

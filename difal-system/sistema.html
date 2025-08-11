@@ -67,6 +67,33 @@
                 <div class="section-card">
                     <h2 class="section-title">📁 Upload do Arquivo SPED</h2>
                     
+                    <!-- Seletor de Modo de Processamento -->
+                    <div class="mode-selector">
+                        <h3 class="mode-selector-title">Modo de Processamento</h3>
+                        <div class="mode-options">
+                            <label class="mode-option active" data-mode="single">
+                                <input type="radio" name="processing-mode" value="single" checked>
+                                <div class="mode-content">
+                                    <span class="mode-icon">📄</span>
+                                    <div class="mode-text">
+                                        <span class="mode-title">Período Único</span>
+                                        <span class="mode-desc">Upload e análise de um arquivo SPED</span>
+                                    </div>
+                                </div>
+                            </label>
+                            <label class="mode-option" data-mode="multiple">
+                                <input type="radio" name="processing-mode" value="multiple">
+                                <div class="mode-content">
+                                    <span class="mode-icon">📅</span>
+                                    <div class="mode-text">
+                                        <span class="mode-title">Múltiplos Períodos</span>
+                                        <span class="mode-desc">Upload de vários arquivos da mesma empresa</span>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
                     <!-- Drop Zone -->
                     <div id="drop-zone" class="drop-zone">
                         <div class="drop-zone-content">

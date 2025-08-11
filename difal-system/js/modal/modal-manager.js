@@ -221,9 +221,24 @@ class ModalManager {
      */
     openItemConfigModal() {
         try {
-            const spedData = this.stateManager.getSpedData();
+            // Tentar buscar dados do StateManager primeiro (período único)
+            let spedData = this.stateManager.getSpedData();
+            
+            // Se não encontrou no StateManager, tentar no PeriodsManager (múltiplos períodos)
             if (!spedData || !spedData.itensDifal) {
-                throw new Error('Dados SPED não disponíveis');
+                const periodsState = this.stateManager.getPeriodsState();
+                if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                    // Usar dados do primeiro período disponível
+                    const firstPeriod = periodsState.periods[0];
+                    if (firstPeriod.dados && firstPeriod.dados.itensDifal) {
+                        spedData = firstPeriod.dados;
+                        console.log('📅 Usando dados do PeriodsManager para modal de configuração');
+                    }
+                }
+            }
+            
+            if (!spedData || !spedData.itensDifal) {
+                throw new Error('Dados SPED não disponíveis nem no período único nem nos múltiplos períodos');
             }
 
             const modal = document.getElementById('item-config-modal');
