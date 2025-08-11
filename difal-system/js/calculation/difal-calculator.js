@@ -325,6 +325,7 @@ class DifalCalculatorModular {
         
         // 3. ✅ NOVA LÓGICA: Calcular alíquota efetiva baseada em CST
         if (item.cstIcms && item.valorItem > 0) {
+            console.log(`📌 Chamando calcularAliquotaEfetiva para item ${item.codItem}`);
             const aliqEfetiva = this.calcularAliquotaEfetiva(
                 item.cstIcms,           // CST
                 item.valorItem,         // VL_ITEM
@@ -493,8 +494,42 @@ class DifalCalculatorModular {
             return 0;
         }
 
-        // Normalizar CST (remover origem se presente)
-        const cstNormalizado = cst.toString().slice(-2);
+        const cstStr = cst.toString();
+        
+        // CSOSN (100-900) - Simples Nacional (3 dígitos)
+        if (cstStr.length === 3) {
+            const origem = cstStr.charAt(0);  // Primeiro dígito = origem
+            const csosn = cstStr.substring(1); // Últimos 2 dígitos = CSOSN
+            
+            console.log(`📊 CSOSN ${cst}: Origem=${origem}, CSOSN=${csosn} - Simples Nacional`);
+            
+            // Casos especiais com alíquota zero
+            if (['300', '400', '500'].includes(csosn)) {
+                console.log(`📊 CSOSN ${csosn}: Alíquota zero (Imune/Não tributado/ST anterior)`);
+                return 0;
+            }
+            
+            // Tributados pelo Simples Nacional (101-103, 201-203, 900)
+            if (['101','102','103','201','202','203','900'].includes(csosn)) {
+                // Para DIFAL, usar alíquota que empresa normal pagaria
+                // Importado (origem 1,2,6,7) = 4%
+                // Nacional (origem 0,3,4,5) = 7% (ou 12% conforme região)
+                if (['1','2','6','7'].includes(origem)) {
+                    console.log(`📊 CSOSN ${csosn}: Produto importado → Alíquota 4%`);
+                    return 4;
+                } else {
+                    console.log(`📊 CSOSN ${csosn}: Produto nacional → Alíquota 7%`);
+                    return 7; // TODO: Ajustar para 12% conforme região/produto
+                }
+            }
+            
+            // CSOSN não mapeado
+            console.warn(`⚠️ CSOSN ${csosn} não mapeado, usando alíquota zero`);
+            return 0;
+        }
+        
+        // CST Normal (2 dígitos) - Regime normal
+        const cstNormalizado = cstStr.slice(-2);
         
         console.log(`🔍 Calculando alíquota efetiva - CST: ${cst} (${cstNormalizado}), VL_ITEM: ${vlItem}, VL_ICMS: ${vlIcms}, ALIQ_NOMINAL: ${aliqNominal}`);
 

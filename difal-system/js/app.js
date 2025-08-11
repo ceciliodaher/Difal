@@ -171,8 +171,10 @@ class DifalAppModular {
 
         console.log('🧮 Orquestrando cálculo DIFAL...');
         
-        const ufOrigem = spedData.dadosEmpresa?.uf || 'SP';
-        const ufDestino = configGeral.ufDestino || 'SP';  // Default sempre SP para gerar operação interestadual
+        // CORRETO: Empresa do SPED = DESTINO (onde chega a mercadoria)
+        const ufDestino = spedData.dadosEmpresa?.uf || 'GO';
+        // Origem = de onde vem a mercadoria (fornecedor) - deve ser diferente para gerar DIFAL
+        const ufOrigem = configGeral.ufOrigem || (ufDestino === 'SP' ? 'MG' : 'SP');
         
         this.stateManager.setGlobalConfiguration(configGeral);
         
