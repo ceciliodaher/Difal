@@ -395,7 +395,7 @@ class ConfigurationManager {
     /**
      * Inicia cálculo com configurações de itens
      */
-    calcularComConfiguracoesItens() {
+    async calcularComConfiguracoesItens() {
         const configCount = Object.keys(window.difalConfiguracoesItens).length;
         const spedData = this.stateManager.getSpedData();
         const totalItems = spedData?.itensDifal?.length || 0;
@@ -410,7 +410,15 @@ class ConfigurationManager {
         // Calcular com configurações usando sistema modular
         if (window.difalApp && window.difalApp.calculateDifal) {
             const configGeral = window.difalConfiguracaoGeral || {};
-            window.difalApp.calculateDifal(configGeral);
+            const { resultados, totalizadores } = await window.difalApp.calculateDifal(configGeral);
+            
+            // IMPORTANTE: Mostrar os resultados usando UIManager
+            if (window.uiManager && window.uiManager.showCalculationResults) {
+                console.log('📊 Exibindo resultados do cálculo com configurações');
+                window.uiManager.showCalculationResults(resultados, totalizadores);
+            } else {
+                console.error('❌ UIManager não disponível para exibir resultados');
+            }
         }
         
         // Emitir evento para notificar outros módulos

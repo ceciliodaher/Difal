@@ -93,7 +93,7 @@ class DifalAppModular {
         
         // Parsers e Calculators modulares
         this.spedParser = new SpedParserModular(this.eventBus, this.stateManager);
-        this.difalCalculator = new DifalCalculatorModular(this.eventBus, this.stateManager);
+        this.difalCalculator = new DifalCalculatorSimple(this.eventBus, this.stateManager);
     }
 
     /**
@@ -131,7 +131,7 @@ class DifalAppModular {
     checkModularDependencies() {
         const required = [
             'StateManager', 'ConfigurationManager', 'UIManager',
-            'SpedParserModular', 'DifalCalculatorModular', 
+            'SpedParserModular', 'DifalCalculatorSimple', 
             'Utils', 'EstadosUtil'
         ];
         
