@@ -27,6 +27,10 @@ class ExportManager {
         this.stateManager = stateManager;
         this.eventBus = eventBus;
         
+        // Managers para análises consolidadas
+        this.analyticsManager = null;
+        this.paretoAnalyzer = null;
+        
         // Configurações de exportação
         this.config = {
             excel: {
@@ -63,6 +67,17 @@ class ExportManager {
         this.setupEventListeners();
         this.checkDependencies();
         console.log('📤 ExportManager inicializado com sucesso');
+    }
+    
+    /**
+     * Define managers de análise para exportações consolidadas
+     * @param {AnalyticsManager} analyticsManager - Manager de análises
+     * @param {ParetoAnalyzer} paretoAnalyzer - Analisador de Pareto
+     */
+    setAnalyticsManagers(analyticsManager, paretoAnalyzer) {
+        this.analyticsManager = analyticsManager;
+        this.paretoAnalyzer = paretoAnalyzer;
+        console.log('📊 Managers de análise configurados no ExportManager');
     }
 
     /**
@@ -1378,6 +1393,418 @@ class ExportManager {
         }
         
         doc.setTextColor(0, 0, 0);
+    }
+
+    /**
+     * Exporta análises consolidadas para Excel
+     * @param {Object} analyticsData - Dados das análises
+     * @param {string} filename - Nome do arquivo (opcional)
+     * @returns {Promise<void>}
+     */
+    async exportAnalyticsToExcel(analyticsData, filename = null) {
+        try {
+            console.log('📊 Iniciando exportação de análises para Excel...');
+            
+            if (!this.analyticsManager) {
+                throw new Error('AnalyticsManager não configurado');
+            }
+
+            // Preparar dados
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                analytics: analyticsData,
+                summary: {
+                    totalItems: analyticsData.totalItems || 0,
+                    totalValue: analyticsData.totalValue || 0,
+                    uniqueNCMs: analyticsData.ncmAnalysis?.uniqueNCMs || 0,
+                    paretoNCMs: analyticsData.paretoAnalysis?.defaultAnalysis?.statistics?.paretoCount || 0
+                }
+            };
+
+            // Criar workbook
+            const workbook = await window.XlsxPopulate.fromBlankAsync();
+            
+            // Aba 1: Resumo Executivo
+            await this.createExecutiveSummarySheet(workbook, exportData);
+            
+            // Aba 2: Análise de Pareto
+            if (analyticsData.paretoAnalysis) {
+                await this.createParetoSheet(workbook, analyticsData.paretoAnalysis);
+            }
+            
+            // Aba 3: Ranking NCM Completo
+            if (analyticsData.ncmAnalysis) {
+                await this.createNCMRankingSheet(workbook, analyticsData.ncmAnalysis);
+            }
+            
+            // Aba 4: Análise Temporal
+            if (analyticsData.periodAnalysis) {
+                await this.createTemporalAnalysisSheet(workbook, analyticsData.periodAnalysis);
+            }
+            
+            // Aba 5: Dados Detalhados
+            await this.createDetailedDataSheet(workbook, analyticsData);
+
+            // Gerar arquivo
+            const finalFilename = filename || this.generateAnalyticsFilename(exportData);
+            const blob = await workbook.outputAsync();
+            this.downloadBlob(blob, finalFilename);
+            
+            console.log('✅ Análises exportadas para Excel com sucesso');
+            
+        } catch (error) {
+            console.error('❌ Erro ao exportar análises:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Exporta relatório de Pareto para PDF
+     * @param {Object} paretoAnalysis - Análise de Pareto
+     * @param {string} filename - Nome do arquivo (opcional)
+     * @returns {Promise<void>}
+     */
+    async exportParetoToPDF(paretoAnalysis, filename = null) {
+        try {
+            console.log('📈 Iniciando exportação de Pareto para PDF...');
+            
+            const doc = new jsPDF('landscape', 'mm', 'a4');
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const margin = 20;
+            let currentY = margin + 30;
+
+            // Header
+            this.addParetoReportHeader(doc, paretoAnalysis, currentY, pageWidth, margin);
+            currentY += 40;
+
+            // Resumo Executivo
+            currentY = this.addParetoSummary(doc, paretoAnalysis, currentY, pageWidth, margin);
+            
+            // Tabela de Itens Pareto
+            currentY = this.addParetoTable(doc, paretoAnalysis, currentY, pageWidth, margin);
+            
+            // Insights e Recomendações
+            if (paretoAnalysis.strategicInsights) {
+                currentY = this.addParetoInsights(doc, paretoAnalysis.strategicInsights, currentY, pageWidth, margin);
+            }
+
+            // Footer
+            this.addPDFFooter(doc, currentY, pageWidth, margin);
+
+            // Download
+            const finalFilename = filename || this.generateParetoFilename();
+            doc.save(finalFilename);
+            
+            console.log('✅ Relatório de Pareto exportado para PDF com sucesso');
+            
+        } catch (error) {
+            console.error('❌ Erro ao exportar Pareto:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Exporta relatório consolidado completo
+     * @param {Object} consolidatedData - Dados consolidados
+     * @returns {Promise<void>}
+     */
+    async exportConsolidatedReport(consolidatedData) {
+        try {
+            console.log('📋 Iniciando exportação de relatório consolidado...');
+            
+            if (!consolidatedData) {
+                throw new Error('Dados consolidados não fornecidos');
+            }
+
+            // Preparar dados para exportação
+            const reportData = {
+                timestamp: new Date().toISOString(),
+                company: consolidatedData.company || this.stateManager.getCurrentCompany(),
+                periods: consolidatedData.periods || [],
+                analytics: consolidatedData.analytics || {},
+                consolidated: consolidatedData.consolidated || {}
+            };
+
+            // Criar workbook multi-abas
+            const workbook = await window.XlsxPopulate.fromBlankAsync();
+            
+            // Aba 1: Capa do Relatório
+            await this.createReportCoverSheet(workbook, reportData);
+            
+            // Aba 2: Dashboard Executivo
+            await this.createExecutiveDashboardSheet(workbook, reportData);
+            
+            // Aba 3: Análise de Concentração (Pareto)
+            if (reportData.analytics.paretoAnalysis) {
+                await this.createConcentrationAnalysisSheet(workbook, reportData.analytics.paretoAnalysis);
+            }
+            
+            // Aba 4: Evolução Temporal
+            if (reportData.periods.length > 1) {
+                await this.createTimelineSheet(workbook, reportData.periods);
+            }
+            
+            // Aba 5: Recomendações Estratégicas
+            await this.createRecommendationsSheet(workbook, reportData.analytics);
+
+            // Download
+            const filename = this.generateConsolidatedReportFilename(reportData);
+            const blob = await workbook.outputAsync();
+            this.downloadBlob(blob, filename);
+            
+            console.log('✅ Relatório consolidado exportado com sucesso');
+            
+        } catch (error) {
+            console.error('❌ Erro ao exportar relatório consolidado:', error);
+            throw error;
+        }
+    }
+
+    // ========== MÉTODOS AUXILIARES PARA ANÁLISES ==========
+
+    /**
+     * Cria aba de resumo executivo
+     * @private
+     */
+    async createExecutiveSummarySheet(workbook, exportData) {
+        const sheet = workbook.sheet(0).name('Resumo Executivo');
+        const analytics = exportData.analytics;
+        
+        // Título
+        sheet.cell('A1').value('RELATÓRIO DE ANÁLISES ESTATÍSTICAS - SISTEMA DIFAL')
+            .style({ bold: true, fontSize: 16, horizontalAlignment: 'center' });
+        sheet.range('A1:H1').merged(true);
+        
+        // Informações gerais
+        let row = 3;
+        sheet.cell(`A${row}`).value('Data de Geração:').style({ bold: true });
+        sheet.cell(`B${row}`).value(new Date().toLocaleString('pt-BR'));
+        
+        row++;
+        sheet.cell(`A${row}`).value('Total de Itens Analisados:').style({ bold: true });
+        sheet.cell(`B${row}`).value(analytics.totalItems || 0);
+        
+        row++;
+        sheet.cell(`A${row}`).value('Valor Total:').style({ bold: true });
+        sheet.cell(`B${row}`).value(this.formatCurrency(analytics.totalValue || 0));
+        
+        // Principais insights
+        row += 2;
+        sheet.cell(`A${row}`).value('PRINCIPAIS INSIGHTS').style({ bold: true, fontSize: 14 });
+        
+        if (analytics.paretoAnalysis?.strategicInsights?.keyFindings) {
+            const findings = analytics.paretoAnalysis.strategicInsights.keyFindings;
+            
+            row++;
+            sheet.cell(`A${row}`).value('NCMs Estratégicos (Pareto):').style({ bold: true });
+            sheet.cell(`B${row}`).value(findings.managementFocus || 'N/A');
+            
+            row++;
+            sheet.cell(`A${row}`).value('Nível de Concentração:').style({ bold: true });
+            sheet.cell(`B${row}`).value(findings.concentrationLevel || 'N/A');
+            
+            if (findings.topPerformer) {
+                row++;
+                sheet.cell(`A${row}`).value('NCM Principal:').style({ bold: true });
+                sheet.cell(`B${row}`).value(`${findings.topPerformer.key} (${this.formatCurrency(findings.topPerformer.value)})`);
+            }
+        }
+        
+        // Auto-ajustar colunas
+        sheet.column('A').width(30);
+        sheet.column('B').width(40);
+    }
+
+    /**
+     * Cria aba de análise de Pareto
+     * @private
+     */
+    async createParetoSheet(workbook, paretoAnalysis) {
+        const sheet = workbook.addSheet('Análise Pareto');
+        const paretoItems = paretoAnalysis.defaultAnalysis?.paretoItems || [];
+        
+        // Headers
+        const headers = ['Posição', 'NCM', 'Valor Individual', '% Individual', 'Valor Acumulado', '% Acumulado', 'Classificação'];
+        headers.forEach((header, idx) => {
+            sheet.cell(1, idx + 1).value(header).style({ bold: true, fill: 'E0E0E0' });
+        });
+        
+        // Dados dos itens Pareto
+        paretoItems.forEach((item, idx) => {
+            const row = idx + 2;
+            sheet.cell(row, 1).value(item.position || idx + 1);
+            sheet.cell(row, 2).value(item.key || item.ncm);
+            sheet.cell(row, 3).value(item.value).style('currency');
+            sheet.cell(row, 4).value(item.individualPercentage / 100).style('percentage');
+            sheet.cell(row, 5).value(item.accumulatedValue).style('currency');
+            sheet.cell(row, 6).value(item.accumulatedPercentage / 100).style('percentage');
+            sheet.cell(row, 7).value(item.isPareto ? 'Estratégico' : 'Secundário');
+        });
+        
+        // Auto-ajustar colunas
+        for (let i = 1; i <= headers.length; i++) {
+            sheet.column(i).width(15);
+        }
+    }
+
+    /**
+     * Gera nome de arquivo para análises
+     * @private
+     */
+    generateAnalyticsFilename(exportData) {
+        const company = exportData.analytics?.metadata?.company || 'Empresa';
+        const timestamp = new Date().toISOString().slice(0, 10);
+        return `Analises_DIFAL_${company}_${timestamp}.xlsx`;
+    }
+
+    /**
+     * Gera nome de arquivo para Pareto
+     * @private
+     */
+    generateParetoFilename() {
+        const timestamp = new Date().toISOString().slice(0, 10);
+        return `Relatorio_Pareto_DIFAL_${timestamp}.pdf`;
+    }
+
+    /**
+     * Gera nome para relatório consolidado
+     * @private
+     */
+    generateConsolidatedReportFilename(reportData) {
+        const company = reportData.company?.razaoSocial || 'Empresa';
+        const periods = reportData.periods?.length || 0;
+        const timestamp = new Date().toISOString().slice(0, 10);
+        return `Relatorio_Consolidado_${company}_${periods}periodos_${timestamp}.xlsx`;
+    }
+
+    /**
+     * Adiciona header do relatório de Pareto
+     * @private
+     */
+    addParetoReportHeader(doc, paretoAnalysis, y, pageWidth, margin) {
+        // Background header
+        doc.setFillColor(45, 55, 72);
+        doc.rect(0, 0, pageWidth, 45, 'F');
+        
+        // Título
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(18);
+        doc.setFont('helvetica', 'bold');
+        doc.text('RELATÓRIO DE ANÁLISE PARETO - SISTEMA DIFAL', pageWidth/2, 20, { align: 'center' });
+        
+        // Subtítulo
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'normal');
+        doc.text('Identificação dos NCMs Estratégicos (Princípio 80/20)', pageWidth/2, 30, { align: 'center' });
+        
+        // Data
+        doc.setFontSize(10);
+        doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, pageWidth - margin, 40, { align: 'right' });
+        
+        doc.setTextColor(0, 0, 0);
+    }
+
+    /**
+     * Adiciona resumo da análise de Pareto
+     * @private
+     */
+    addParetoSummary(doc, paretoAnalysis, currentY, pageWidth, margin) {
+        const stats = paretoAnalysis.defaultAnalysis?.statistics;
+        if (!stats) return currentY + 10;
+        
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('RESUMO EXECUTIVO', margin, currentY);
+        currentY += 15;
+        
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'normal');
+        
+        const summaryText = [
+            `• ${stats.paretoCount} NCMs representam ${stats.paretoPercentage.toFixed(1)}% do valor total`,
+            `• Taxa de concentração: ${stats.concentrationRatio.toFixed(1)}% dos NCMs`,
+            `• Valor médio por NCM estratégico: ${this.formatCurrency(stats.averageParetoValue)}`,
+            `• Total de NCMs analisados: ${stats.paretoCount + stats.remainingCount}`
+        ];
+        
+        summaryText.forEach(text => {
+            doc.text(text, margin + 5, currentY);
+            currentY += 8;
+        });
+        
+        return currentY + 10;
+    }
+
+    /**
+     * Adiciona tabela de itens Pareto
+     * @private
+     */
+    addParetoTable(doc, paretoAnalysis, currentY, pageWidth, margin) {
+        const paretoItems = paretoAnalysis.defaultAnalysis?.paretoItems?.slice(0, 15) || []; // Top 15
+        
+        if (paretoItems.length === 0) return currentY;
+        
+        doc.setFontSize(14);
+        doc.setFont('helvetica', 'bold');
+        doc.text('TOP NCMs ESTRATÉGICOS', margin, currentY);
+        currentY += 15;
+        
+        // Headers da tabela
+        const headers = ['Pos.', 'NCM', 'Valor Individual', '% Indiv.', '% Acumulado'];
+        const colWidths = [20, 40, 35, 25, 30];
+        let currentX = margin;
+        
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        
+        headers.forEach((header, idx) => {
+            doc.text(header, currentX, currentY);
+            currentX += colWidths[idx];
+        });
+        
+        currentY += 5;
+        doc.line(margin, currentY, pageWidth - margin, currentY); // Linha horizontal
+        currentY += 8;
+        
+        // Dados da tabela
+        doc.setFont('helvetica', 'normal');
+        paretoItems.forEach((item, idx) => {
+            if (currentY > pageHeight - 30) {
+                doc.addPage();
+                currentY = margin + 20;
+            }
+            
+            currentX = margin;
+            doc.text(String(item.position || idx + 1), currentX, currentY);
+            currentX += colWidths[0];
+            
+            doc.text(this.truncateText(item.key, 12), currentX, currentY);
+            currentX += colWidths[1];
+            
+            doc.text(this.formatCurrency(item.value), currentX, currentY);
+            currentX += colWidths[2];
+            
+            doc.text(`${item.individualPercentage.toFixed(1)}%`, currentX, currentY);
+            currentX += colWidths[3];
+            
+            doc.text(`${item.accumulatedPercentage.toFixed(1)}%`, currentX, currentY);
+            
+            currentY += 7;
+        });
+        
+        return currentY + 10;
+    }
+
+    /**
+     * Formata valor como moeda
+     * @private
+     */
+    formatCurrency(value) {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(value || 0);
     }
 
     /**

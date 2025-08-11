@@ -48,6 +48,10 @@ class FileUploadManager {
         this.isProcessing = false;
         this.uploadStartTime = null;
         
+        // Estado multi-períodos
+        this.periodsManager = null;
+        this.multiPeriodMode = false;
+        
         this.init();
         
         // Armazenar referência singleton
@@ -201,6 +205,16 @@ class FileUploadManager {
     // ========== UPLOAD E PROCESSAMENTO ==========
 
     /**
+     * Define PeriodsManager para modo multi-período
+     * @param {PeriodsManager} periodsManager - Instância do PeriodsManager
+     */
+    setPeriodsManager(periodsManager) {
+        this.periodsManager = periodsManager;
+        this.multiPeriodMode = !!periodsManager;
+        console.log('📅 PeriodsManager configurado - Modo multi-período:', this.multiPeriodMode);
+    }
+
+    /**
      * Processa upload de arquivo SPED
      * @public
      * @param {File} file - Arquivo para upload
@@ -260,12 +274,22 @@ class FileUploadManager {
                 throw new Error('Parser não retornou dados válidos');
             }
             
-            // Armazenar no StateManager
+            // Armazenar dados
             try {
-                this.stateManager.setSpedData(resultado);
-                console.log('✅ Dados SPED armazenados no StateManager');
+                if (this.multiPeriodMode && this.periodsManager) {
+                    // Modo multi-período: adicionar ao PeriodsManager
+                    const addResult = await this.periodsManager.addPeriod(resultado);
+                    if (!addResult.success) {
+                        throw new Error(addResult.error);
+                    }
+                    console.log('📅 Período adicionado ao PeriodsManager:', addResult.periodLabel);
+                } else {
+                    // Modo único: armazenar no StateManager
+                    this.stateManager.setSpedData(resultado);
+                    console.log('✅ Dados SPED armazenados no StateManager');
+                }
             } catch (stateError) {
-                console.error('❌ Erro ao armazenar no StateManager:', stateError);
+                console.error('❌ Erro ao armazenar dados:', stateError);
                 throw new Error(`Erro ao armazenar dados: ${stateError.message}`);
             }
             

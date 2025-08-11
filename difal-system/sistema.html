@@ -19,6 +19,7 @@
     <script src="https://cdn.jsdelivr.net/npm/xlsx-populate@1.21.0/browser/xlsx-populate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
 </head>
 <body>
     <!-- Container Principal -->
@@ -40,6 +41,10 @@
                 <span class="nav-icon">📁</span>
                 <span class="nav-label">Upload</span>
             </button>
+            <button class="nav-btn" data-section="periods-section">
+                <span class="nav-icon">📅</span>
+                <span class="nav-label">Períodos</span>
+            </button>
             <button class="nav-btn" data-section="analysis-section">
                 <span class="nav-icon">🔍</span>
                 <span class="nav-label">Análise</span>
@@ -47,6 +52,10 @@
             <button class="nav-btn" data-section="calculation-section">
                 <span class="nav-icon">⚙️</span>
                 <span class="nav-label">Cálculo</span>
+            </button>
+            <button class="nav-btn" data-section="analytics-section">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Relatórios</span>
             </button>
         </nav>
 
@@ -174,6 +183,205 @@
                 </div>
             </section>
 
+            <!-- Seção 4: Gestão de Períodos -->
+            <section id="periods-section" class="section">
+                <div class="section-card">
+                    <h2 class="section-title">📅 Gestão de Múltiplos Períodos</h2>
+                    
+                    <!-- Informações da Empresa Atual -->
+                    <div id="current-company-info" class="company-info hidden">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Empresa:</span>
+                                <span id="current-company-name" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">CNPJ:</span>
+                                <span id="current-company-cnpj" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">UF:</span>
+                                <span id="current-company-uf" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Períodos:</span>
+                                <span id="current-company-periods" class="info-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload para Múltiplos Períodos -->
+                    <div class="multi-period-upload">
+                        <div class="upload-instructions">
+                            <h3>📁 Upload de Arquivos SPED por Período</h3>
+                            <p>Faça upload de múltiplos arquivos SPED da mesma empresa em períodos diferentes para análise consolidada.</p>
+                            <ul class="instructions-list">
+                                <li>✅ Todos os arquivos devem ser da mesma empresa (mesmo CNPJ)</li>
+                                <li>✅ Períodos não podem sobrepor</li>
+                                <li>✅ Máximo de 12 períodos por empresa</li>
+                                <li>✅ Sistema detecta automaticamente empresa e período</li>
+                            </ul>
+                        </div>
+                        
+                        <div id="multi-period-drop-zone" class="drop-zone">
+                            <div class="drop-zone-content">
+                                <svg class="drop-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <p class="drop-text">Arraste arquivos SPED aqui ou clique para selecionar múltiplos arquivos</p>
+                                <p class="drop-hint">Arquivos TXT do SPED Fiscal - Mesmo CNPJ, períodos distintos</p>
+                                <input type="file" id="multi-period-file-input" accept=".txt" multiple style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Períodos Carregados -->
+                    <div id="periods-list" class="periods-list hidden">
+                        <h3>📊 Períodos Carregados</h3>
+                        <div id="periods-table" class="table-container">
+                            <!-- Tabela de períodos será inserida via JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Estatísticas Consolidadas -->
+                    <div id="consolidated-stats" class="consolidated-stats hidden">
+                        <h3>📈 Estatísticas Consolidadas</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="consolidated-total-items">0</div>
+                                <div class="stat-label">Total de Itens</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="consolidated-total-value">R$ 0</div>
+                                <div class="stat-label">Valor Total</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="consolidated-unique-ncms">0</div>
+                                <div class="stat-label">NCMs Únicos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="consolidated-periods-count">0</div>
+                                <div class="stat-label">Períodos</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="action-buttons">
+                        <button id="clear-all-periods" class="btn btn-secondary">
+                            🧹 Limpar Todos os Períodos
+                        </button>
+                        <button id="generate-analytics" class="btn btn-primary">
+                            📊 Gerar Análises Estatísticas
+                        </button>
+                        <button id="proceed-to-analytics" class="btn btn-success">
+                            📈 Ver Relatórios →
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção 5: Relatórios e Analytics -->
+            <section id="analytics-section" class="section">
+                <div class="section-card">
+                    <h2 class="section-title">📊 Relatórios Estatísticos e Pareto</h2>
+                    
+                    <!-- Resumo das Análises -->
+                    <div id="analytics-summary" class="analytics-summary hidden">
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-value" id="analytics-total-value">R$ 0</div>
+                                <div class="summary-label">Valor Total Analisado</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="analytics-pareto-ncms">0</div>
+                                <div class="summary-label">NCMs Pareto (80%)</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="analytics-concentration">0%</div>
+                                <div class="summary-label">Taxa de Concentração</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="analytics-top-ncm">-</div>
+                                <div class="summary-label">NCM Principal</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Abas de Relatórios -->
+                    <div id="analytics-tabs" class="tabs-container hidden">
+                        <div class="tabs-header">
+                            <button class="tab-btn active" data-tab="pareto-tab">📈 Análise Pareto</button>
+                            <button class="tab-btn" data-tab="ncm-tab">🏷️ Ranking NCM</button>
+                            <button class="tab-btn" data-tab="trends-tab">📊 Tendências</button>
+                            <button class="tab-btn" data-tab="charts-tab">📉 Gráficos</button>
+                        </div>
+                        
+                        <!-- Aba: Análise Pareto -->
+                        <div id="pareto-tab" class="tab-content active">
+                            <div id="pareto-analysis" class="analysis-content">
+                                <!-- Conteúdo da análise Pareto será inserido via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Aba: Ranking NCM -->
+                        <div id="ncm-tab" class="tab-content">
+                            <div id="ncm-ranking" class="analysis-content">
+                                <!-- Ranking de NCMs será inserido via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Aba: Tendências -->
+                        <div id="trends-tab" class="tab-content">
+                            <div id="trends-analysis" class="analysis-content">
+                                <!-- Análise de tendências será inserida via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Aba: Gráficos -->
+                        <div id="charts-tab" class="tab-content">
+                            <div id="charts-dashboard" class="analysis-content">
+                                <!-- Dashboard de gráficos será inserido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Section para Analytics -->
+                    <div id="analytics-progress-section" class="progress-section hidden">
+                        <div class="progress-container">
+                            <div id="analytics-progress-bar" class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p id="analytics-status-message" class="status-message">Processando análises...</p>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Exportação de Relatórios -->
+                    <div id="analytics-export-buttons" class="export-buttons hidden">
+                        <button id="export-analytics-excel" class="btn btn-success">
+                            📥 Exportar Análises (Excel)
+                        </button>
+                        <button id="export-analytics-pdf" class="btn btn-info">
+                            📄 Relatório Pareto (PDF)
+                        </button>
+                        <button id="export-consolidated-report" class="btn btn-primary">
+                            📊 Relatório Consolidado
+                        </button>
+                    </div>
+
+                    <!-- Botões de Navegação -->
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary nav-btn" data-section="periods-section">
+                            ← Voltar para Períodos
+                        </button>
+                        <button id="refresh-analytics" class="btn btn-info">
+                            🔄 Atualizar Análises
+                        </button>
+                    </div>
+                </div>
+            </section>
 
         </main>
 
@@ -416,6 +624,12 @@
     <script src="js/ui/navigation-manager.js"></script>
     <script src="js/ui/progress-manager.js"></script>
     <script src="js/ui/pagination-manager.js"></script>
+    
+    <!-- Módulos de Múltiplos Períodos e Analytics -->
+    <script src="js/periods/periods-manager.js"></script>
+    <script src="js/analytics/analytics-manager.js"></script>
+    <script src="js/analytics/pareto-analyzer.js"></script>
+    <script src="js/charts/charts-manager.js"></script>
     
     <!-- UI Manager Principal -->
     <script src="js/ui-manager.js"></script>

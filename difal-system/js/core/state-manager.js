@@ -22,6 +22,15 @@ class StateManager {
                 summary: null
             },
             
+            // Estado de múltiplos períodos
+            periods: {
+                currentCompany: null,      // { cnpj, razaoSocial, uf, ie }
+                periods: [],               // Array de períodos carregados
+                totalPeriods: 0,
+                consolidated: null,        // Estatísticas consolidadas
+                analytics: null            // Análises estatísticas (Pareto, etc.)
+            },
+            
             // Estado do cálculo DIFAL
             calculation: {
                 inProgress: false,
@@ -689,6 +698,13 @@ class StateManager {
                 processed: false,
                 summary: null
             },
+            periods: {
+                currentCompany: null,
+                periods: [],
+                totalPeriods: 0,
+                consolidated: null,
+                analytics: null
+            },
             calculation: {
                 inProgress: false,
                 completed: false,
@@ -706,6 +722,124 @@ class StateManager {
         });
 
         console.log('🗑️ All data cleared');
+    }
+
+    /**
+     * Atualiza estado de múltiplos períodos
+     * @param {Object} periodsData - Dados dos períodos do PeriodsManager
+     */
+    updatePeriodsState(periodsData) {
+        this.setState({
+            periods: {
+                ...this.state.periods,
+                ...periodsData
+            }
+        });
+
+        this.eventBus?.emit(window.DIFAL_CONSTANTS?.EVENTS?.PERIODS_UPDATED, periodsData);
+        console.log('📅 Periods state updated:', periodsData);
+    }
+
+    /**
+     * Define dados da empresa atual para múltiplos períodos
+     * @param {Object} company - Dados da empresa
+     */
+    setCurrentCompany(company) {
+        this.setState({
+            periods: {
+                currentCompany: company
+            }
+        });
+        
+        console.log('🏢 Current company set:', company);
+    }
+
+    /**
+     * Obtém dados da empresa atual
+     * @returns {Object|null}
+     */
+    getCurrentCompany() {
+        return this.state.periods.currentCompany;
+    }
+
+    /**
+     * Obtém todos os períodos carregados
+     * @returns {Array}
+     */
+    getAllPeriods() {
+        return this.state.periods.periods || [];
+    }
+
+    /**
+     * Obtém período por ID
+     * @param {string} periodId - ID do período
+     * @returns {Object|null}
+     */
+    getPeriodById(periodId) {
+        const periods = this.getAllPeriods();
+        return periods.find(period => period.id === periodId) || null;
+    }
+
+    /**
+     * Obtém estatísticas consolidadas dos períodos
+     * @returns {Object|null}
+     */
+    getConsolidatedStats() {
+        return this.state.periods.consolidated;
+    }
+
+    /**
+     * Define análises estatísticas (Pareto, etc.)
+     * @param {Object} analytics - Dados das análises
+     */
+    setAnalytics(analytics) {
+        this.setState({
+            periods: {
+                analytics
+            }
+        });
+
+        this.eventBus?.emit(window.DIFAL_CONSTANTS?.EVENTS?.ANALYTICS_UPDATED, analytics);
+        console.log('📊 Analytics updated:', analytics);
+    }
+
+    /**
+     * Obtém análises estatísticas
+     * @returns {Object|null}
+     */
+    getAnalytics() {
+        return this.state.periods.analytics;
+    }
+
+    /**
+     * Verifica se há períodos carregados
+     * @returns {boolean}
+     */
+    hasPeriods() {
+        return this.state.periods.totalPeriods > 0;
+    }
+
+    /**
+     * Obtém itens consolidados de todos os períodos
+     * @returns {Array}
+     */
+    getConsolidatedItems() {
+        const periods = this.getAllPeriods();
+        const allItems = [];
+        
+        for (const period of periods) {
+            if (period.dados && period.dados.itensDifal) {
+                const periodItems = period.dados.itensDifal.map(item => ({
+                    ...item,
+                    _periodId: period.id,
+                    _periodo: period.periodo.label,
+                    _fileName: period.fileName
+                }));
+                allItems.push(...periodItems);
+            }
+        }
+        
+        return allItems;
     }
 }
 
