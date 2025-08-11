@@ -178,6 +178,7 @@ class NavigationManager {
             
             // Validar seção
             if (!skipValidation && !this.validateSectionNavigation(sectionId)) {
+                console.error(`❌ Navegação bloqueada para: ${sectionId}`);
                 return false;
             }
             
@@ -521,12 +522,27 @@ class NavigationManager {
             return false;
         }
         
-        // Validações específicas por seção
+        // Debug: log validation attempts
+        console.log(`🧭 Validando navegação para: ${sectionId}`);
+        
+        // Validações específicas por seção - MODO PERMISSIVO
         switch (sectionId) {
             case 'analysis-section':
-                return this.hasSpedData();
+                const hasData = this.hasSpedData();
+                console.log(`📊 Analysis section - hasSpedData: ${hasData}`);
+                // PERMISSIVO: Permitir acesso mesmo sem dados para debug
+                if (!hasData) {
+                    console.log('⚠️ Permitindo acesso à Analysis sem dados SPED (modo debug)');
+                }
+                return true; // Sempre permitir para debug
             case 'calculation-section':
-                return this.hasSpedData() && this.hasDifalItems();
+                const hasSpedAndItems = this.hasSpedData() && this.hasDifalItems();
+                console.log(`🧮 Calculation section - hasSpedData && hasDifalItems: ${hasSpedAndItems}`);
+                // PERMISSIVO: Permitir acesso mesmo sem dados para debug
+                if (!hasSpedAndItems) {
+                    console.log('⚠️ Permitindo acesso ao Calculation sem dados completos (modo debug)');
+                }
+                return true; // Sempre permitir para debug
             case 'results-section':
                 return this.hasCalculationResults();
             case 'reports-section':

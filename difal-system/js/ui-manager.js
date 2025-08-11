@@ -292,6 +292,9 @@ class UIManager {
         const tableDiv = document.getElementById('difal-items-table');
         
         if (summaryDiv) {
+            // Remover classe hidden e mostrar o div
+            summaryDiv.classList.remove('hidden');
+            
             const stats = spedData.estatisticasDifal || {};
             summaryDiv.innerHTML = `
                 <div class="summary-item">

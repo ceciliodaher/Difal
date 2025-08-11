@@ -347,13 +347,11 @@ class PeriodsManager {
                 ...data
             }));
             
-            this.stateManager.updateState({
-                periods: {
-                    currentCompany: this.currentCompany,
-                    periods: periodsArray,
-                    totalPeriods: this.periods.size,
-                    consolidated: this.getConsolidatedStats()
-                }
+            this.stateManager.updatePeriodsState({
+                currentCompany: this.currentCompany,
+                periods: periodsArray,
+                totalPeriods: this.periods.size,
+                consolidated: this.getConsolidatedStats()
             });
             
         } catch (error) {
