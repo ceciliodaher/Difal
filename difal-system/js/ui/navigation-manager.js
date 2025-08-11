@@ -40,10 +40,10 @@ class NavigationManager {
         this.config = {
             sections: [
                 'upload-section',
+                'periods-section',
                 'analysis-section', 
                 'calculation-section',
-                'results-section',
-                'reports-section'
+                'analytics-section'
             ],
             transitions: {
                 duration: 300,
@@ -331,7 +331,7 @@ class NavigationManager {
     updateCompanyInfo() {
         try {
             const spedData = this.stateManager?.getSpedData();
-            if (!spedData || !spedData.headerInfo) {
+            if (!spedData || !spedData.dadosEmpresa) {
                 console.log('📍 Dados SPED não disponíveis para atualização da empresa');
                 return;
             }
@@ -340,7 +340,7 @@ class NavigationManager {
             const companyUfElements = document.querySelectorAll('#company-uf, .company-uf');
             companyUfElements.forEach(element => {
                 if (element) {
-                    element.textContent = spedData.headerInfo.uf || '-';
+                    element.textContent = spedData.dadosEmpresa.uf || '-';
                 }
             });
             
@@ -348,7 +348,7 @@ class NavigationManager {
             const companyNameElements = document.querySelectorAll('#company-name, .company-name');
             companyNameElements.forEach(element => {
                 if (element) {
-                    const name = spedData.headerInfo.nomeEmpresa || '-';
+                    const name = spedData.dadosEmpresa.razaoSocial || '-';
                     element.textContent = this.truncateText(name, 40);
                     element.title = name; // Tooltip com nome completo
                 }
@@ -358,7 +358,7 @@ class NavigationManager {
             const companyCnpjElements = document.querySelectorAll('#company-cnpj, .company-cnpj');
             companyCnpjElements.forEach(element => {
                 if (element) {
-                    const cnpj = spedData.headerInfo.cnpj;
+                    const cnpj = spedData.dadosEmpresa.cnpj;
                     element.textContent = cnpj ? this.formatCNPJ(cnpj) : '-';
                 }
             });
@@ -367,7 +367,7 @@ class NavigationManager {
             const periodElements = document.querySelectorAll('#company-period, .company-period');
             periodElements.forEach(element => {
                 if (element) {
-                    element.textContent = spedData.headerInfo.periodo || '-';
+                    element.textContent = spedData.periodoApuracao || '-';
                 }
             });
             
@@ -543,7 +543,7 @@ class NavigationManager {
      */
     hasSpedData() {
         const spedData = this.stateManager?.getSpedData();
-        return !!(spedData && spedData.headerInfo);
+        return !!(spedData && spedData.dadosEmpresa);
     }
 
     /**

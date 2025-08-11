@@ -53,6 +53,16 @@ class UIManager {
             this.modalManager = new ModalManager(this.eventBus, this.stateManager, this.configManager);
             this.resultsRenderer = new ResultsRenderer(this.stateManager, this.eventBus, this.exportManager);
             
+            // Módulos de Múltiplos Períodos e Analytics
+            this.periodsManager = new PeriodsManager(this.stateManager, this.eventBus);
+            this.analyticsManager = new AnalyticsManager(this.stateManager, this.eventBus);
+            this.paretoAnalyzer = new ParetoAnalyzer();
+            this.chartsManager = new ChartsManager();
+            
+            // Configurar managers no FileUploadManager e ExportManager
+            this.fileUploadManager.setPeriodsManager(this.periodsManager);
+            this.exportManager.setAnalyticsManagers(this.analyticsManager, this.paretoAnalyzer);
+            
             console.log('🎯 Módulos especializados inicializados com sucesso');
         } catch (error) {
             console.error('❌ Erro ao inicializar módulos:', error);
@@ -68,7 +78,7 @@ class UIManager {
         this.setupEventListeners();
         // this.setupFileUpload(); // REMOVIDO - já feito no FileUploadManager constructor
         this.setupNavigation();
-        this.showSection('upload-section');
+        this.navigationManager.navigateToSection('upload-section');
         
         console.log('🎭 UI Manager Refatorado inicializado');
         
@@ -86,6 +96,12 @@ class UIManager {
      * @private
      */
     setupEventListeners() {
+        // Múltiplos períodos - event listeners
+        this.setupMultiPeriodsEventListeners();
+        
+        // Analytics - event listeners  
+        this.setupAnalyticsEventListeners();
+        
         // Proceed to calculation
         const proceedBtn = document.getElementById('proceed-calculation');
         if (proceedBtn) {
@@ -108,7 +124,7 @@ class UIManager {
         const proceedToCalcBtn = document.getElementById('proceed-to-calculation');
         if (proceedToCalcBtn) {
             proceedToCalcBtn.addEventListener('click', () => {
-                this.showSection('calculation-section');
+                this.navigationManager.navigateToSection('calculation-section');
                 this.updateCompanyInfo();
                 console.log('📍 Navegado para seção de cálculo sem executar cálculo');
             });
@@ -165,14 +181,11 @@ class UIManager {
             // Após upload bem-sucedido, mostrar análise
             if (resultado) {
                 this.showSpedAnalysis(resultado);
-                this.showSection('analysis-section');
+                this.navigationManager.navigateToSection('analysis-section');
                 this.updateCompanyInfo();
                 
-                // CORREÇÃO: Abrir modal de configuração automaticamente
-                console.log('🎯 Abrindo modal de configuração automaticamente após análise');
-                setTimeout(() => {
-                    this.openConfigModal();
-                }, 1000); // Delay de 1s para permitir carregamento da seção
+                // Modal de configuração agora será aberto apenas quando usuário clicar no botão
+                console.log('✅ Arquivo processado. Modal de configuração disponível via botão.');
             }
             
             return resultado;
@@ -288,18 +301,18 @@ class UIManager {
                 </div>
                 <div class="summary-item">
                     <h3>Empresa</h3>
-                    <div class="summary-value">${spedData.headerInfo.nomeEmpresa}</div>
-                    <div class="summary-label">CNPJ: ${Utils.formatarCNPJ(spedData.headerInfo.cnpj)}</div>
+                    <div class="summary-value">${spedData.dadosEmpresa?.razaoSocial || 'N/A'}</div>
+                    <div class="summary-label">CNPJ: ${Utils.formatarCNPJ(spedData.dadosEmpresa?.cnpj || '')}</div>
                 </div>
                 <div class="summary-item">
                     <h3>Período</h3>
-                    <div class="summary-value">${spedData.headerInfo.periodo}</div>
-                    <div class="summary-label">UF: ${spedData.headerInfo.uf}</div>
+                    <div class="summary-value">${spedData.periodoApuracao || 'N/A'}</div>
+                    <div class="summary-label">UF: ${spedData.dadosEmpresa?.uf || 'N/A'}</div>
                 </div>
                 <div class="summary-item">
                     <h3>Registros Totais</h3>
-                    <div class="summary-value">${Utils.formatarNumero(spedData.totalRegistros)}</div>
-                    <div class="summary-label">${spedData.tiposRegistros.length} tipos</div>
+                    <div class="summary-value">${Utils.formatarNumero(spedData.estatisticas?.totalRegistros || 0)}</div>
+                    <div class="summary-label">${Object.keys(spedData.registros || {}).length} tipos</div>
                 </div>
                 <div class="summary-item">
                     <h3>Itens DIFAL</h3>
@@ -419,7 +432,7 @@ class UIManager {
             return;
         }
         
-        this.showSection('calculation-section');
+        this.navigationManager.navigateToSection('calculation-section');
         this.updateCompanyInfo();
     }
 
@@ -437,64 +450,47 @@ class UIManager {
      * @param {Object} config - Configurações do modal (opcional)
      */
     async calculateDifal(config = {}) {
-        if (!window.spedData || !window.spedData.itensDifal) {
+        const spedData = this.stateManager.getSpedData();
+        if (!spedData || !spedData.itensDifal) {
             this.showError('Dados SPED não disponíveis');
             return;
         }
 
-        if (!window.spedData.headerInfo.uf) {
+        if (!spedData.dadosEmpresa?.uf) {
             this.showError('UF da empresa não identificada no SPED');
             return;
         }
 
-        const ufDestino = window.spedData.headerInfo.uf;
+        const ufDestino = spedData.dadosEmpresa.uf;
         console.log(`Calculando DIFAL para empresa em ${ufDestino}`);
         console.log('Configurações recebidas para cálculo:', config);
         
         this.showProgress('Calculando DIFAL...', 20);
         
         try {
-            // Inicializar calculadora
-            if (!window.DifalCalculator) {
-                throw new Error('DifalCalculator não disponível');
+            // Usar DifalAppModular para cálculo
+            if (!window.difalApp) {
+                throw new Error('DifalApp não disponível');
             }
             
-            const calculator = new window.DifalCalculator();
-            calculator.configurarUFs('OUT', ufDestino);
-            
-            // Aplicar configurações do modal
-            if (config.metodologia && config.metodologia !== 'auto') {
-                calculator.configuracao.metodologiaForcada = config.metodologia;
-                console.log('🎯 Metodologia forçada:', config.metodologia);
-            }
-            
-            if (config.percentualDestinatario !== undefined) {
-                calculator.configuracao.percentualDestinatario = config.percentualDestinatario;
-                console.log('📊 Percentual destinatário:', config.percentualDestinatario);
-            }
-            
-            // Configurar benefícios globais se definidos
-            this.configurarBeneficiosGlobais(config.beneficiosGlobais, window.spedData.itensDifal);
-            
-            // Configurar benefícios se existirem
-            if (window.difalConfiguracoes) {
-                calculator.configurarBeneficios(window.difalConfiguracoes);
-            }
-            
-            calculator.carregarItens(window.spedData.itensDifal);
+            // Preparar configuração para o app modular
+            const configApp = {
+                ufOrigem: config.ufOrigem || (ufDestino === 'SP' ? 'MG' : 'SP'),
+                metodologia: config.metodologia,
+                percentualDestinatario: config.percentualDestinatario,
+                beneficiosGlobais: config.beneficiosGlobais
+            };
             
             this.showProgress('Processando cálculos...', 60);
             
-            const resultados = calculator.calcularTodos();
-            const totalizadores = calculator.obterTotalizadores();
+            const { resultados, totalizadores } = await window.difalApp.calculateDifal(configApp);
             
             this.showProgress('Cálculo concluído!', 100);
             
             // Armazenar resultados
             window.difalResults = {
                 resultados,
-                totalizadores,
-                calculator
+                totalizadores
             };
             
             // Mostrar resultados - DELEGADO para ResultsRenderer
@@ -513,6 +509,17 @@ class UIManager {
      * @param {Object} totalizadores - Totalizadores
      */
     showCalculationResults(resultados, totalizadores) {
+        console.log('🎭 UI Manager.showCalculationResults chamado:', { 
+            resultados: resultados?.length || 0, 
+            totalizadores: totalizadores || 'undefined',
+            resultsRenderer: !!this.resultsRenderer 
+        });
+        
+        if (!this.resultsRenderer) {
+            console.error('❌ ResultsRenderer não inicializado no UI Manager');
+            return;
+        }
+        
         return this.resultsRenderer.showCalculationResults(resultados, totalizadores);
     }
 
@@ -751,45 +758,41 @@ class UIManager {
      * @param {Object} configuracao - Configurações do cálculo
      */
     async calculateDifalComConfiguracao(configuracao) {
-        if (!window.spedData || !window.spedData.itensDifal) {
+        const spedData = this.stateManager.getSpedData();
+        if (!spedData || !spedData.itensDifal) {
             this.showError('Dados SPED não disponíveis');
             return;
         }
 
-        const ufDestino = window.spedData.headerInfo.uf;
+        const ufDestino = spedData.dadosEmpresa.uf;
         console.log(`Calculando DIFAL para empresa em ${ufDestino} com metodologia: ${configuracao.metodologia}`);
         
         this.showProgress('Configurando cálculo DIFAL...', 20);
         
         try {
-            if (!window.DifalCalculator) {
-                throw new Error('DifalCalculator não disponível');
+            if (!window.difalApp) {
+                throw new Error('DifalApp não disponível');
             }
             
-            const calculator = new window.DifalCalculator();
-            
-            if (configuracao.metodologia !== 'auto') {
-                calculator.configuracao.metodologiaForcada = configuracao.metodologia;
-            }
-            
-            calculator.configuracao.percentualDestinatario = configuracao.percentualDestinatario;
-            calculator.configurarUFs('OUT', ufDestino);
+            // Preparar configuração para o app modular
+            const configApp = {
+                ufOrigem: configuracao.ufOrigem || (ufDestino === 'SP' ? 'MG' : 'SP'),
+                metodologia: configuracao.metodologia,
+                percentualDestinatario: configuracao.percentualDestinatario,
+                beneficiosGlobais: configuracao.beneficiosGlobais
+            };
             
             window.difalConfiguracaoGeral = configuracao;
             
-            calculator.carregarItens(window.spedData.itensDifal);
-            
             this.showProgress('Processando cálculos...', 60);
             
-            const resultados = calculator.calcularTodos();
-            const totalizadores = calculator.obterTotalizadores();
+            const { resultados, totalizadores } = await window.difalApp.calculateDifal(configApp);
             
             this.showProgress('Cálculo concluído!', 100);
             
             window.difalResults = {
                 resultados,
                 totalizadores,
-                calculator,
                 configuracao
             };
             
@@ -799,6 +802,665 @@ class UIManager {
             console.error('Erro no cálculo DIFAL:', error);
             this.showError(`Erro no cálculo: ${error.message}`);
         }
+    }
+    
+    // ========== MÚLTIPLOS PERÍODOS - EVENT LISTENERS ==========
+    
+    /**
+     * Configura event listeners para múltiplos períodos
+     * @private
+     */
+    setupMultiPeriodsEventListeners() {
+        // Drop zone para múltiplos períodos
+        const multiDropZone = document.getElementById('multi-period-drop-zone');
+        const multiFileInput = document.getElementById('multi-period-file-input');
+        
+        if (multiDropZone) {
+            multiDropZone.addEventListener('click', () => {
+                if (multiFileInput) multiFileInput.click();
+            });
+            
+            multiDropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                multiDropZone.classList.add('dragover');
+            });
+            
+            multiDropZone.addEventListener('dragleave', () => {
+                multiDropZone.classList.remove('dragover');
+            });
+            
+            multiDropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                multiDropZone.classList.remove('dragover');
+                
+                const files = Array.from(e.dataTransfer.files);
+                this.handleMultiplePeriodFiles(files);
+            });
+        }
+        
+        if (multiFileInput) {
+            multiFileInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                this.handleMultiplePeriodFiles(files);
+            });
+        }
+        
+        // Botões da seção de períodos
+        const clearPeriodsBtn = document.getElementById('clear-all-periods');
+        if (clearPeriodsBtn) {
+            clearPeriodsBtn.addEventListener('click', () => this.clearAllPeriods());
+        }
+        
+        const generateAnalyticsBtn = document.getElementById('generate-analytics');
+        if (generateAnalyticsBtn) {
+            generateAnalyticsBtn.addEventListener('click', () => this.generateAnalytics());
+        }
+        
+        const proceedToAnalyticsBtn = document.getElementById('proceed-to-analytics');
+        if (proceedToAnalyticsBtn) {
+            proceedToAnalyticsBtn.addEventListener('click', () => this.proceedToAnalytics());
+        }
+    }
+    
+    /**
+     * Processa múltiplos arquivos de períodos
+     * @private
+     */
+    async handleMultiplePeriodFiles(files) {
+        if (!files || files.length === 0) return;
+        
+        console.log(`📁 Processando ${files.length} arquivos SPED para múltiplos períodos`);
+        
+        try {
+            this.showProgress('Processando múltiplos períodos...', 0);
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const progress = Math.round(((i + 1) / files.length) * 100);
+                
+                this.showProgress(`Processando arquivo ${i + 1}/${files.length}: ${file.name}`, progress);
+                
+                await this.processPeriodsFile(file);
+                
+                // Pequena pausa para atualização da UI
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
+            this.showProgress('Múltiplos períodos processados com sucesso!', 100);
+            this.updatePeriodsDisplay();
+            
+        } catch (error) {
+            console.error('❌ Erro ao processar múltiplos períodos:', error);
+            this.showError(`Erro: ${error.message}`);
+        }
+    }
+    
+    /**
+     * Processa um arquivo individual de período
+     * @private
+     */
+    async processPeriodsFile(file) {
+        try {
+            // Usar FileUploadManager que já tem acesso ao spedParser configurado
+            const spedData = await this.fileUploadManager.processFileWithParser(file);
+            await this.periodsManager.addPeriod(spedData);
+            return spedData;
+        } catch (error) {
+            throw new Error(`Erro ao processar arquivo ${file.name}: ${error.message}`);
+        }
+    }
+    
+    /**
+     * Atualiza exibição dos períodos
+     * @private
+     */
+    updatePeriodsDisplay() {
+        const periodsState = this.stateManager.getPeriodsState();
+        
+        // Atualizar informações da empresa atual
+        const currentCompanyInfo = document.getElementById('current-company-info');
+        if (currentCompanyInfo && periodsState.currentCompany) {
+            currentCompanyInfo.classList.remove('hidden');
+            
+            document.getElementById('current-company-name').textContent = periodsState.currentCompany.razaoSocial || '-';
+            document.getElementById('current-company-cnpj').textContent = periodsState.currentCompany.cnpj || '-';
+            document.getElementById('current-company-uf').textContent = periodsState.currentCompany.uf || '-';
+            document.getElementById('current-company-periods').textContent = periodsState.totalPeriods;
+        }
+        
+        // Atualizar lista de períodos
+        this.renderPeriodsTable();
+        
+        // Atualizar estatísticas consolidadas
+        this.updateConsolidatedStats();
+    }
+    
+    /**
+     * Renderiza tabela de períodos
+     * @private
+     */
+    renderPeriodsTable() {
+        const periodsTable = document.getElementById('periods-table');
+        const periodsList = document.getElementById('periods-list');
+        
+        if (!periodsTable || !periodsList) return;
+        
+        const periodsState = this.stateManager.getPeriodsState();
+        
+        if (periodsState.periods.length === 0) {
+            periodsList.classList.add('hidden');
+            return;
+        }
+        
+        periodsList.classList.remove('hidden');
+        
+        let tableHTML = `
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Período</th>
+                        <th>Início</th>
+                        <th>Fim</th>
+                        <th>Itens DIFAL</th>
+                        <th>Valor Total</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        
+        periodsState.periods.forEach(period => {
+            const totalValue = period.itensDifal.reduce((sum, item) => sum + (item.valor || 0), 0);
+            
+            tableHTML += `
+                <tr>
+                    <td>${period.dtInicio}-${period.dtFim}</td>
+                    <td>${this.formatDate(period.dtInicio)}</td>
+                    <td>${this.formatDate(period.dtFim)}</td>
+                    <td>${period.itensDifal.length}</td>
+                    <td>${this.formatCurrency(totalValue)}</td>
+                    <td><span class="status-badge status-success">✅ Processado</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-secondary" onclick="window.uiManager.viewPeriodDetails('${period.dtInicio}-${period.dtFim}')">
+                            👁️ Ver
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="window.uiManager.removePeriod('${period.dtInicio}-${period.dtFim}')">
+                            🗑️ Remover
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        tableHTML += `
+                </tbody>
+            </table>
+        `;
+        
+        periodsTable.innerHTML = tableHTML;
+    }
+    
+    /**
+     * Atualiza estatísticas consolidadas
+     * @private
+     */
+    updateConsolidatedStats() {
+        const periodsState = this.stateManager.getPeriodsState();
+        
+        if (!periodsState.consolidated) return;
+        
+        const stats = periodsState.consolidated;
+        
+        document.getElementById('consolidated-total-items').textContent = stats.totalItems || 0;
+        document.getElementById('consolidated-total-value').textContent = this.formatCurrency(stats.totalValue || 0);
+        document.getElementById('consolidated-unique-ncms').textContent = stats.uniqueNCMs || 0;
+        document.getElementById('consolidated-periods-count').textContent = periodsState.totalPeriods || 0;
+        
+        const consolidatedStats = document.getElementById('consolidated-stats');
+        if (consolidatedStats) {
+            consolidatedStats.classList.remove('hidden');
+        }
+    }
+    
+    /**
+     * Limpa todos os períodos
+     * @private
+     */
+    clearAllPeriods() {
+        if (confirm('Tem certeza que deseja limpar todos os períodos?')) {
+            this.periodsManager.clearAllPeriods();
+            this.updatePeriodsDisplay();
+            console.log('🧹 Todos os períodos foram limpos');
+        }
+    }
+    
+    // ========== ANALYTICS - EVENT LISTENERS ==========
+    
+    /**
+     * Configura event listeners para analytics
+     * @private
+     */
+    setupAnalyticsEventListeners() {
+        // Botões de exportação analytics
+        const exportAnalyticsExcel = document.getElementById('export-analytics-excel');
+        if (exportAnalyticsExcel) {
+            exportAnalyticsExcel.addEventListener('click', () => this.exportAnalyticsExcel());
+        }
+        
+        const exportAnalyticsPdf = document.getElementById('export-analytics-pdf');
+        if (exportAnalyticsPdf) {
+            exportAnalyticsPdf.addEventListener('click', () => this.exportAnalyticsPdf());
+        }
+        
+        const exportConsolidatedReport = document.getElementById('export-consolidated-report');
+        if (exportConsolidatedReport) {
+            exportConsolidatedReport.addEventListener('click', () => this.exportConsolidatedReport());
+        }
+        
+        const refreshAnalytics = document.getElementById('refresh-analytics');
+        if (refreshAnalytics) {
+            refreshAnalytics.addEventListener('click', () => this.refreshAnalytics());
+        }
+        
+        // Tabs de analytics
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const tabId = e.target.getAttribute('data-tab');
+                this.switchAnalyticsTab(tabId);
+            });
+        });
+    }
+    
+    /**
+     * Gera análises estatísticas
+     * @private
+     */
+    async generateAnalytics() {
+        try {
+            const periodsState = this.stateManager.getPeriodsState();
+            
+            if (!periodsState.periods || periodsState.periods.length === 0) {
+                this.showError('Nenhum período disponível para análise');
+                return;
+            }
+            
+            this.showProgress('Gerando análises estatísticas...', 0);
+            
+            // Processar analytics
+            const analytics = await this.analyticsManager.processAllAnalytics();
+            
+            this.showProgress('Análises concluídas!', 100);
+            
+            // Navegar para seção de analytics
+            this.navigationManager.navigateToSection('analytics-section');
+            
+            // Renderizar resultados
+            this.renderAnalyticsResults(analytics);
+            
+        } catch (error) {
+            console.error('❌ Erro ao gerar analytics:', error);
+            this.showError(`Erro: ${error.message}`);
+        }
+    }
+    
+    /**
+     * Renderiza resultados das análises
+     * @private
+     */
+    renderAnalyticsResults(analytics) {
+        // Atualizar resumo
+        this.updateAnalyticsSummary(analytics);
+        
+        // Mostrar abas
+        const analyticsTabs = document.getElementById('analytics-tabs');
+        if (analyticsTabs) {
+            analyticsTabs.classList.remove('hidden');
+        }
+        
+        // Mostrar botões de exportação
+        const exportButtons = document.getElementById('analytics-export-buttons');
+        if (exportButtons) {
+            exportButtons.classList.remove('hidden');
+        }
+        
+        // Renderizar cada aba
+        this.renderParetoTab(analytics.paretoAnalysis);
+        this.renderNCMTab(analytics.ncmAnalysis);
+        this.renderTrendsTab(analytics.periodAnalysis);
+        this.renderChartsTab(analytics);
+    }
+    
+    /**
+     * Procede para analytics
+     * @private
+     */
+    proceedToAnalytics() {
+        const analyticsState = this.stateManager.getAnalyticsState();
+        
+        if (!analyticsState || !analyticsState.results) {
+            this.generateAnalytics();
+        } else {
+            this.navigationManager.navigateToSection('analytics-section');
+        }
+    }
+    
+    // ========== UTILITY METHODS ==========
+    
+    /**
+     * Formata data
+     * @private
+     */
+    formatDate(dateString) {
+        if (!dateString) return '-';
+        
+        // Formato: DDMMAAAA -> DD/MM/AAAA
+        if (dateString.length === 8) {
+            return `${dateString.substr(0, 2)}/${dateString.substr(2, 2)}/${dateString.substr(4, 4)}`;
+        }
+        
+        return dateString;
+    }
+    
+    /**
+     * Formata moeda
+     * @private
+     */
+    formatCurrency(value) {
+        return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+        }).format(value || 0);
+    }
+    
+    // ========== MÉTODOS ADICIONAIS PARA ANALYTICS ==========
+    
+    /**
+     * Atualiza resumo das análises
+     * @private
+     */
+    updateAnalyticsSummary(analytics) {
+        const analyticsSummary = document.getElementById('analytics-summary');
+        if (!analyticsSummary || !analytics) return;
+        
+        analyticsSummary.classList.remove('hidden');
+        
+        // Calcular valores do resumo
+        const totalValue = analytics.ncmAnalysis?.reduce((sum, ncm) => sum + (ncm.totalValue || 0), 0) || 0;
+        const paretoItems = analytics.paretoAnalysis?.defaultAnalysis?.pareto80Items || [];
+        const topNCM = analytics.ncmAnalysis?.[0]?.ncm || '-';
+        const concentration = analytics.concentrationStats?.hhi ? Math.round(analytics.concentrationStats.hhi * 100) : 0;
+        
+        document.getElementById('analytics-total-value').textContent = this.formatCurrency(totalValue);
+        document.getElementById('analytics-pareto-ncms').textContent = paretoItems.length;
+        document.getElementById('analytics-concentration').textContent = `${concentration}%`;
+        document.getElementById('analytics-top-ncm').textContent = topNCM;
+    }
+    
+    /**
+     * Renderiza aba Pareto
+     * @private
+     */
+    renderParetoTab(paretoAnalysis) {
+        const paretoContent = document.getElementById('pareto-analysis');
+        if (!paretoContent || !paretoAnalysis) return;
+        
+        let html = '<h3>📈 Análise Pareto (Princípio 80/20)</h3>';
+        
+        if (paretoAnalysis.defaultAnalysis) {
+            const analysis = paretoAnalysis.defaultAnalysis;
+            
+            html += `
+                <div class="analysis-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">NCMs que representam 80% do valor:</span>
+                        <span class="stat-value">${analysis.pareto80Items.length} NCMs</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Percentual de NCMs (80% valor):</span>
+                        <span class="stat-value">${analysis.percentageOf80Items.toFixed(1)}%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Valor dos 80% principais:</span>
+                        <span class="stat-value">${this.formatCurrency(analysis.valueOf80Items)}</span>
+                    </div>
+                </div>
+                
+                <div class="pareto-table">
+                    <h4>NCMs Estratégicos (80% do Valor)</h4>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Posição</th>
+                                <th>NCM</th>
+                                <th>Valor Total</th>
+                                <th>% do Total</th>
+                                <th>% Acumulado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            analysis.pareto80Items.forEach((item, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.ncm || 'SEM NCM'}</td>
+                        <td>${this.formatCurrency(item.totalValue)}</td>
+                        <td>${item.percentageOfTotal.toFixed(2)}%</td>
+                        <td>${item.cumulativePercentage.toFixed(2)}%</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        paretoContent.innerHTML = html;
+    }
+    
+    /**
+     * Renderiza aba NCM
+     * @private
+     */
+    renderNCMTab(ncmAnalysis) {
+        const ncmContent = document.getElementById('ncm-ranking');
+        if (!ncmContent || !ncmAnalysis) return;
+        
+        let html = '<h3>🏷️ Ranking de NCMs</h3>';
+        
+        html += `
+            <div class="ncm-table">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Ranking</th>
+                            <th>NCM</th>
+                            <th>Qtd Itens</th>
+                            <th>Valor Total</th>
+                            <th>% do Total</th>
+                            <th>Períodos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+        
+        ncmAnalysis.forEach((ncm, index) => {
+            html += `
+                <tr>
+                    <td>${index + 1}º</td>
+                    <td>${ncm.ncm || 'SEM NCM'}</td>
+                    <td>${ncm.totalItems}</td>
+                    <td>${this.formatCurrency(ncm.totalValue)}</td>
+                    <td>${ncm.percentageOfTotal?.toFixed(2) || '0.00'}%</td>
+                    <td>${ncm.periods || 1}</td>
+                </tr>
+            `;
+        });
+        
+        html += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        ncmContent.innerHTML = html;
+    }
+    
+    /**
+     * Renderiza aba Tendências
+     * @private
+     */
+    renderTrendsTab(periodAnalysis) {
+        const trendsContent = document.getElementById('trends-analysis');
+        if (!trendsContent) return;
+        
+        let html = '<h3>📊 Análise de Tendências por Período</h3>';
+        
+        if (periodAnalysis && periodAnalysis.length > 0) {
+            html += `
+                <div class="trends-table">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Período</th>
+                                <th>Itens DIFAL</th>
+                                <th>Valor Total</th>
+                                <th>NCMs Únicos</th>
+                                <th>Tendência</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            periodAnalysis.forEach((period, index) => {
+                const trend = index > 0 ? 
+                    (period.totalValue > periodAnalysis[index-1].totalValue ? '📈 Crescimento' : '📉 Redução') : 
+                    '➖ Primeiro período';
+                
+                html += `
+                    <tr>
+                        <td>${period.period}</td>
+                        <td>${period.totalItems}</td>
+                        <td>${this.formatCurrency(period.totalValue)}</td>
+                        <td>${period.uniqueNCMs}</td>
+                        <td>${trend}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        } else {
+            html += '<p>Nenhum dado de período disponível para análise de tendências.</p>';
+        }
+        
+        trendsContent.innerHTML = html;
+    }
+    
+    /**
+     * Renderiza aba Gráficos
+     * @private
+     */
+    renderChartsTab(analytics) {
+        const chartsContent = document.getElementById('charts-dashboard');
+        if (!chartsContent) return;
+        
+        chartsContent.innerHTML = `
+            <h3>📉 Dashboard de Gráficos</h3>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h4>Distribuição por NCM (Pareto)</h4>
+                    <canvas id="pareto-chart" width="400" height="200"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h4>Evolução por Período</h4>
+                    <canvas id="trends-chart" width="400" height="200"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h4>Top 10 NCMs</h4>
+                    <canvas id="ncm-chart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        `;
+        
+        // Renderizar gráficos usando ChartsManager
+        setTimeout(() => {
+            this.chartsManager.renderParetoChart('pareto-chart', analytics.paretoAnalysis);
+            this.chartsManager.renderTrendsChart('trends-chart', analytics.periodAnalysis);
+            this.chartsManager.renderNCMChart('ncm-chart', analytics.ncmAnalysis);
+        }, 100);
+    }
+    
+    /**
+     * Troca aba de analytics
+     * @private
+     */
+    switchAnalyticsTab(tabId) {
+        // Remover classe active de todas as abas
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        // Ativar aba selecionada
+        const tabBtn = document.querySelector(`[data-tab="${tabId}"]`);
+        const tabContent = document.getElementById(tabId);
+        
+        if (tabBtn) tabBtn.classList.add('active');
+        if (tabContent) tabContent.classList.add('active');
+    }
+    
+    // ========== MÉTODOS DE EXPORTAÇÃO ANALYTICS ==========
+    
+    /**
+     * Exporta analytics para Excel
+     * @private
+     */
+    exportAnalyticsExcel() {
+        if (this.exportManager) {
+            this.exportManager.exportAnalyticsExcel();
+        } else {
+            console.warn('ExportManager não disponível');
+        }
+    }
+    
+    /**
+     * Exporta analytics para PDF
+     * @private
+     */
+    exportAnalyticsPdf() {
+        if (this.exportManager) {
+            this.exportManager.exportAnalyticsPdf();
+        } else {
+            console.warn('ExportManager não disponível');
+        }
+    }
+    
+    /**
+     * Exporta relatório consolidado
+     * @private
+     */
+    exportConsolidatedReport() {
+        if (this.exportManager) {
+            this.exportManager.exportConsolidatedReport();
+        } else {
+            console.warn('ExportManager não disponível');
+        }
+    }
+    
+    /**
+     * Atualiza análises
+     * @private
+     */
+    refreshAnalytics() {
+        this.generateAnalytics();
     }
 }
 

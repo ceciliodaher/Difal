@@ -1,0 +1,1673 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;\f1\fnil\fcharset0 Menlo-Bold;\f2\fnil\fcharset0 Menlo-BoldItalic;
+\f3\fnil\fcharset0 Menlo-Italic;}
+{\colortbl;\red255\green255\blue255;\red108\green108\blue108;\red0\green0\blue0;\red36\green36\blue36;
+\red101\green145\blue99;\red190\green99\blue101;\red140\green132\blue255;\red64\green11\blue217;\red180\green36\blue25;
+\red47\green180\blue29;\red153\green153\blue153;\red171\green211\blue210;\red196\green196\blue196;\red46\green174\blue187;
+\red159\green160\blue28;\red44\green146\blue144;\red253\green155\blue206;\red0\green0\blue0;\red119\green210\blue116;
+\red168\green168\blue168;\red123\green123\blue123;\red206\green206\blue206;\red203\green72\blue77;\red80\green163\blue77;
+\red152\green123\blue124;\red254\green205\blue206;}
+{\*\expandedcolortbl;;\cssrgb\c49854\c49854\c49854;\csgray\c0;\cssrgb\c18938\c18938\c18938;
+\cssrgb\c46696\c62743\c46520;\cssrgb\c79877\c47312\c46937;\cssrgb\c61800\c61007\c100000;\cssrgb\c32309\c18666\c88229;\cssrgb\c76411\c21697\c12527;
+\cssrgb\c20241\c73898\c14950;\csgenericrgb\c60000\c60000\c60000;\csgenericrgb\c66886\c82828\c82515;\csgenericrgb\c76927\c76927\c76927;\cssrgb\c20199\c73241\c78251;
+\cssrgb\c68469\c68012\c14211;\cssrgb\c20282\c63252\c63102;\cspthree\c95401\c69977\c83611;\cspthree\c0\c0\c0;\cspthree\c60118\c83509\c56008;
+\csgenericrgb\c65690\c65690\c65690;\csgenericrgb\c48410\c48410\c48410;\cspthree\c84314\c84314\c84314;\cspthree\c78529\c40048\c38722;\cspthree\c44949\c67870\c40609;
+\csgenericrgb\c59731\c48156\c48432;\cspthree\c97456\c84897\c84614;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \CocoaLigature0 H\'e1 um erro de interpreta\'e7\'e3o ou sist\'eamico aqui. Voc\'ea diz: O problema est\'e1 na linha 224: quando aliqDestino \'e9 zero (GO \uc0\u8594  GO, opera\'e7\'e3o \cf3 \
+  \cf2 estadual), a divis\'e3o resulta em Infinity. Para opera\'e7\'f5es estaduais (mesmo estado), n\'e3o h\'e1 DIFAL!. Voc\'ea est\'e1 correto ao dizer isso, mas o \cf3 \
+  \cf2 CFOP \'e9 do grupo 2000, opera\'e7\'f5es interestaduais. O erro pode estar no preenchimento da UF de origem.\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Voc\'ea est\'e1 
+\f1\b absolutamente correto
+\f0\b0 ! H\'e1 um erro sist\'eamico na interpreta\'e7\'e3o das UFs. Vou analisar o problema:\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (console-export-2025-8-10_22-56-39.txt)\
+  \uc0\u9151  \'a0Read 
+\f1\b 10
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+  \uc0\u9151  \'a0\cf6 Error searching files\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Analisando o log, vejo:\
+\
+  1. 
+\f1\b CFOPs Identificados como DIFAL
+\f0\b0 : 2551, 2556 (s\'e9rie 2000 = interestaduais) \uc0\u9989 \
+  2. 
+\f1\b UFs Configuradas
+\f0\b0 : \cf7 \uc0\u55356 \u57263  UFs configuradas: GO \u8594  GO\cf3  \uc0\u10060  
+\f1\b ERRO AQUI!
+\f0\b0 \
+  3. 
+\f1\b Empresa no SPED
+\f0\b0 : Goi\'e1s (GO) \uc0\u9989 \
+  4. 
+\f1\b DIFAL Resultante
+\f0\b0 : Zero (porque GO \uc0\u8594  GO \'e9 estadual) \u10060 \
+\
+  
+\f1\b AN\'c1LISE DO PROBLEMA:
+\f0\b0 \
+\
+  O sistema est\'e1 
+\f1\b incorretamente definindo ambas UFs como GO
+\f0\b0 , quando deveria ser:\
+  - 
+\f1\b UF Origem
+\f0\b0 : Estado do 
+\f1\b fornecedor
+\f0\b0  (extra\'edda da nota fiscal)\
+  - 
+\f1\b UF Destino
+\f0\b0 : Estado da 
+\f1\b empresa
+\f0\b0  (GO, extra\'edda do registro 0000)\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/app.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 20
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  
+\f1\b PROBLEMA IDENTIFICADO!
+\f0\b0 \
+\
+  Na linha 174-175 do app.js:\
+  \cf8 const\cf3  ufOrigem = spedData.dadosEmpresa?.uf || \cf9 'SP'\cf3 ;  \cf10 // \uc0\u10060  ERRADO: UF da empresa, n\'e3o do fornecedor\cf3 \
+  \cf8 const\cf3  ufDestino = configGeral.ufDestino || ufOrigem; \cf10 // \uc0\u10060  ERRADO: Fallback para mesma UF\cf3 \
+\
+  
+\f1\b ERRO CONCEITUAL:
+\f0\b0 \
+\
+  - 
+\f1\b UF Origem
+\f0\b0 : Deveria ser a UF do 
+\f1\b fornecedor
+\f0\b0  (extra\'edda de cada nota fiscal)\
+  - 
+\f1\b UF Destino
+\f0\b0 : Deveria ser a UF da 
+\f1\b empresa
+\f0\b0  (GO)\
+  - 
+\f1\b Sistema atual
+\f0\b0 : Est\'e1 usando UF da empresa para 
+\f1\b ambas
+\f0\b0 \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Search
+\f0\b0 (pattern: "CFOP.*2551|CFOP.*2556", glob: "**/sped-parser.js", output_mode: "content")\
+  \uc0\u9151  \'a0Found 
+\f1\b 0 
+\f0\b0 lines \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/parsing/sped-parser.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 30
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/parsing/sped-parser.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 30
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Preciso encontrar onde a UF de origem deveria ser extra\'edda. Vou verificar se h\'e1 processamento do registro C100 (cabe\'e7alho da nota fiscal):\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Search
+\f0\b0 (pattern: "C100|processarC100", glob: "**/sped-parser.js", output_mode: "content")\
+  \uc0\u9151  \'a0Found 
+\f1\b 0 
+\f0\b0 lines \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/parsing/sped-parser.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 40
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Vou verificar o arquivo SPED original para entender a estrutura das notas fiscais:\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (../documentos/13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt)\
+  \uc0\u9151  \'a0Read 
+\f1\b 20
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Agora vou procurar por registros C100 (cabe\'e7alho das notas fiscais) no arquivo:\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Search
+\f0\b0 (pattern: "^\\|C100\\|", glob:\
+        "**/13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt", output_mode: "content",\
+        head_limit: 5)\
+  \uc0\u9151  \'a0Found 
+\f1\b 0 
+\f0\b0 lines \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Bash
+\f0\b0 (grep -n "|C100|" /Users/ceciliodaher/Documents/git/difal/documentos/13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64\
+      C38A3A038FCC8EF950DF-SPED-E\'85)\
+  \uc0\u9151  Binary file /Users/ceciliodaher/Documents/git/difal/documentos/13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A03\
+    8FCC8EF950DF-SPED-EFD.txt matches\
+\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Bash
+\f0\b0 (file /Users/ceciliodaher/Documents/git/difal/documentos/13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC\
+      8EF950DF-SPED-EFD.txt)\
+  \uc0\u9151  /Users/ceciliodaher/Documents/git/difal/documentos/13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF\
+    -SPED-EFD.txt: data\
+\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Bash
+\f0\b0 (strings /Users/ceciliodaher/Documents/git/difal/documentos/13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038\
+      FCC8EF950DF-SPED-EFD.txt |\'85)\
+  \uc0\u9151  129:|C100|0|1|FOR000000536|55|00|001|8160|52250400622292000102550010000081601003273286|10042025|10042025|2481,7|2|0|0|2481,7|9|0|0|0|0|0\
+    |0|0|0|0|0|0|0|\
+    133:|C100|0|1|FOR000000540|55|00|014|2667145|31250459717553000617550140026671451608403668|30042025|30042025|127998,69|2|0|0|115055|0|0|0\
+    \cf11 \'85 +3 lines (ctrl+r to expand)\cf3 \
+\
+\
+\
+\cf4 \uc0\u9210 \cf3  Perfeito! Agora vejo os registros C100. Analisando a estrutura:\
+\
+  |C100|0|1|FOR000000536|55|00|001|8160|52250400622292000102550010000081601003273286|10042025|10042025|2481,7|...\
+\
+  
+\f1\b AN\'c1LISE COMPLETA DO PROBLEMA:
+\f0\b0 \
+\
+  
+\f1\b 1. ESTRUTURA DO SPED IDENTIFICADA:
+\f0\b0 \
+\
+  
+\f1\b Registro 0150 (Fornecedores):
+\f0\b0 \
+  - \cf7 |0150|FOR000000536|PAPELARIA MASTER LTDA|1058|00622292000102||102741840|5208707|\cf3 \
+  - 
+\f1\b Posi\'e7\'e3o 7
+\f0\b0 : \cf7 5208707\cf3  = C\'f3digo do munic\'edpio (Goi\'e2nia-GO)\
+  - 
+\f1\b CNPJ
+\f0\b0 : \cf7 00622292000102\cf3 \
+\
+  
+\f1\b Registro C100 (Nota Fiscal):
+\f0\b0 \
+  - \cf7 |C100|0|1|FOR000000536|55|00|001|8160|52250400622292000102550010000081601003273286|...\cf3 \
+  - 
+\f1\b Posi\'e7\'e3o 3
+\f0\b0 : \cf7 FOR000000536\cf3  = Link para registro 0150\
+  - 
+\f1\b Chave NFe
+\f0\b0 : \cf7 52250400622292000102...\cf3  onde \cf7 52\cf3  = 
+\f1\b c\'f3digo UF de Goi\'e1s
+\f0\b0 \
+\
+  
+\f1\b 2. PROBLEMA IDENTIFICADO:
+\f0\b0 \
+\
+  O parser 
+\f1\b N\'c3O est\'e1 processando registros C100
+\f0\b0  para extrair a 
+\f1\b UF de origem
+\f0\b0  de cada nota fiscal. Est\'e1 usando apenas a UF da empresa\
+  (destino).\
+\
+  
+\f1\b 3. SOLU\'c7\'d5ES NECESS\'c1RIAS:
+\f0\b0 \
+  \uc0\u9151  \'a0\cf6 User rejected Claude's plan:\cf3 \
+     \cf12 \uc0\u9581 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9582 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f2\i\b \cf2 \ul \ulc2 Plano de Corre\'e7\'e3o: Problemas DIFAL e Aba de C\'e1lculo
+\f0\i0\b0 \cf3 \ulnone                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Problemas Identificados
+\f0\b0 \cf3                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 1. 
+\f1\b UF de Origem Incorreta \uc0\u55357 \u57000 
+\f0\b0 \cf3                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Problema
+\f0\b0 \cf2 : Sistema usa UF da empresa (GO) para origem e destino\cf3    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Correto
+\f0\b0 \cf2 : UF origem deve vir da chave NFe no registro C100\cf3         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Impacto
+\f0\b0 \cf2 : DIFAL = 0 porque GO \uc0\u8594  GO \'e9 opera\'e7\'e3o estadual\cf3             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 2. 
+\f1\b C\'e1lculo de Redu\'e7\'e3o de Base com Infinity \uc0\u55357 \u57000 
+\f0\b0 \cf3                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Problema
+\f0\b0 \cf2 : Divis\'e3o por zero quando al\'edquota destino = 0\cf3            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Causa
+\f0\b0 \cf2 : Opera\'e7\'e3o estadual tem al\'edquota diferencial = 0\cf3             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Impacto
+\f0\b0 \cf2 : NaN e Infinity quebram renderiza\'e7\'e3o da aba\cf3               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 3. 
+\f1\b Parser SPED Incompleto \uc0\u9888 \u65039 
+\f0\b0 \cf3                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Problema
+\f0\b0 \cf2 : N\'e3o processa registros C100 (notas fiscais)\cf3             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Necess\'e1rio
+\f0\b0 \cf2 : Extrair UF origem da chave NFe\cf3                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Dados
+\f0\b0 \cf2 : Chave \cf7 52250400622292000102...\cf2  \uc0\u8594  UF 52 (Goi\'e1s)\cf3              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Corre\'e7\'f5es Planejadas
+\f0\b0 \cf3                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 Fase 1: Corrigir Parser SPED\cf3                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 1. 
+\f1\b \cf2 Adicionar processamento C100
+\f0\b0 \cf3                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Extrair chave NFe do campo 8\cf3                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Obter UF origem dos primeiros 2 d\'edgitos da chave\cf3                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Associar UF origem a cada item C170\cf3                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 2. 
+\f1\b \cf2 Enriquecer dados dos itens
+\f0\b0 \cf3                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Adicionar campo \cf7 ufOrigem\cf2  em cada item DIFAL\cf3                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Manter \cf7 ufDestino\cf2  da empresa (GO)\cf3                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 Fase 2: Corrigir Calculadora DIFAL\cf3                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 1. 
+\f1\b \cf2 Usar UF espec\'edfica por item
+\f0\b0 \cf3                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Obter \cf7 ufOrigem\cf2  de cada item, n\'e3o global\cf3                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Manter \cf7 ufDestino\cf2  global da empresa\cf3                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 2. 
+\f1\b \cf2 Validar opera\'e7\'f5es interestaduais
+\f0\b0 \cf3                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Se \cf7 ufOrigem === ufDestino\cf2 : DIFAL = 0 (v\'e1lido)\cf3                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Se \cf7 ufOrigem !== ufDestino\cf2 : Calcular normalmente\cf3                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 3. 
+\f1\b \cf2 Corrigir redu\'e7\'e3o de base
+\f0\b0 \cf3                                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Validar se opera\'e7\'e3o \'e9 interestadual antes de aplicar benef\'edcio\cf3  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Rejeitar benef\'edcios em opera\'e7\'f5es estaduais\cf3                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 Fase 3: Melhorar UX\cf3                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 1. 
+\f1\b \cf2 Renderiza\'e7\'e3o de resultados
+\f0\b0 \cf3                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Tratar casos de DIFAL = 0 corretamente\cf3                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Evitar NaN/Infinity na interface\cf3                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 2. 
+\f1\b \cf2 Exibir origem correta
+\f0\b0 \cf3                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Mostrar UF origem espec\'edfica por item\cf3                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Destacar opera\'e7\'f5es estaduais vs interestaduais\cf3                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Arquivos a Modificar
+\f0\b0 \cf3                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 1. 
+\f1\b \cf7 sped-parser.js
+\f0\b0 \cf3                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Adicionar \cf7 processarRegistroC100()\cf3                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Extrair UF origem da chave NFe\cf3                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Associar UF aos itens C170\cf3                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 2. 
+\f1\b \cf7 difal-calculator.js
+\f0\b0 \cf3                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Usar UF origem por item\cf3                                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Validar opera\'e7\'f5es interestaduais\cf3                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Corrigir divis\'e3o por zero\cf3                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 3. 
+\f1\b \cf7 app.js
+\f0\b0 \cf2  \cf3                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Remover UF origem fixa\cf3                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Delegar UF origem para cada item\cf3                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Resultado Esperado
+\f0\b0 \cf3                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  UF origem correta por fornecedor/nota\cf3                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  DIFAL calculado apenas para opera\'e7\'f5es interestaduais  \cf3          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Aba de c\'e1lculo funcionando normalmente\cf3                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Benef\'edcios aplicados apenas quando aplic\'e1veis\cf3                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9584 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9583 \cf3 \
+\
+\cf2 >\cf3  \cf2 Quando n\'e3o for poss\'edvel extrair a uf de origem, utilize uma sigla gen\'e9rica. O que importa \'e9 que a opera\'e7\'e3o seja interestadual e que a \cf3 \
+  \cf2 al\'edquota da nota fiscal seja corretamente extra\'edda para possibilitar o c\'e1lculo. Quando a al\'edquota de origem for maior que a de destino, \cf3 \
+  \cf2 p.ex., al\'edquota na nota fiscal de 12% e carga efetiva no estado por benef\'edcio de 10%, o difal \'e9 zero.\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Entendi perfeitamente! Voc\'ea quer simplificar a abordagem focando no que realmente importa para o c\'e1lculo DIFAL. Vou ajustar o plano:\
+  \uc0\u9151  \'a0\cf6 User rejected Claude's plan:\cf3 \
+     \cf12 \uc0\u9581 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9582 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f2\i\b \cf2 \ul \ulc2 Plano de Corre\'e7\'e3o Simplificado: DIFAL Funcional
+\f0\i0\b0 \cf3 \ulnone                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Abordagem Simplificada
+\f0\b0 \cf3                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 Premissas\cf3                                                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 UF Gen\'e9rica
+\f0\b0 \cf2 : Usar "XX" quando n\'e3o conseguir extrair UF origem\cf3                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Foco na Al\'edquota
+\f0\b0 \cf2 : O importante \'e9 a al\'edquota ICMS da nota fiscal vs. al\'edquota efetiva destino\cf3  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Opera\'e7\'e3o Interestadual
+\f0\b0 \cf2 : For\'e7ar como interestadual para permitir c\'e1lculo\cf3                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 DIFAL Negativo = Zero
+\f0\b0 \cf2 : Quando al\'edquota origem > destino, DIFAL = 0\cf3                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Problemas a Corrigir
+\f0\b0 \cf3                                                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 1. 
+\f1\b For\'e7ar Opera\'e7\'e3o Interestadual
+\f0\b0 \cf3                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Atual
+\f0\b0 \cf2 : GO \uc0\u8594  GO (estadual, DIFAL = 0)\cf3                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Corre\'e7\'e3o
+\f0\b0 \cf2 : XX \uc0\u8594  GO (interestadual, permite c\'e1lculo)\cf3                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 2. 
+\f1\b Extrair Al\'edquota ICMS da Nota
+\f0\b0 \cf3                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Campo
+\f0\b0 \cf2 : VL_ICMS e VL_BC_ICMS do registro C170\cf3                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 C\'e1lculo
+\f0\b0 \cf2 : aliqOrigem = (VL_ICMS / VL_BC_ICMS) * 100\cf3                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Fallback
+\f0\b0 \cf2 : 12% (al\'edquota interestadual padr\'e3o)\cf3                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 3. 
+\f1\b Corrigir L\'f3gica DIFAL
+\f0\b0 \cf3                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 F\'f3rmula
+\f0\b0 \cf2 : DIFAL = max(0, ICMS_Destino - ICMS_Origem)\cf3                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Benef\'edcios
+\f0\b0 \cf2 : Aplicar primeiro, depois calcular\cf3                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Exemplo
+\f0\b0 \cf2 : 12% origem \uc0\u8594  10% destino efetiva = DIFAL 0\cf3                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 4. 
+\f1\b Eliminar Infinity/NaN
+\f0\b0 \cf3                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Redu\'e7\'e3o Base
+\f0\b0 \cf2 : Validar antes de dividir\cf3                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Renderiza\'e7\'e3o
+\f0\b0 \cf2 : Tratar valores inv\'e1lidos\cf3                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Corre\'e7\'f5es Espec\'edficas
+\f0\b0 \cf3                                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 1. 
+\f1\b app.js - For\'e7ar Interestadual
+\f0\b0 \cf3                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // ANTES:\cf3                                                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  ufOrigem = spedData.dadosEmpresa?.uf || \cf9 'SP'\cf2 ;\cf3                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  ufDestino = configGeral.ufDestino || ufOrigem;\cf3                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // DEPOIS: \cf3                                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  ufOrigem = \cf9 'XX'\cf2 ; \cf10 // Gen\'e9rico para for\'e7ar interestadual\cf3                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  ufDestino = spedData.dadosEmpresa?.uf || \cf9 'GO'\cf2 ;\cf3                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 2. 
+\f1\b sped-parser.js - Extrair Al\'edquota Real
+\f0\b0 \cf3                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Adicionar no processamento C170:\cf3                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  baseIcms = \cf14 parseFloat\cf2 (campos[\cf10 12\cf2 ]) || \cf10 0\cf2 ;\cf3                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  valorIcms = \cf14 parseFloat\cf2 (campos[\cf10 14\cf2 ]) || \cf10 0\cf2 ;\cf3                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  aliqRealNota = baseIcms > \cf10 0\cf2  ? (valorIcms / baseIcms) * \cf10 100\cf2  : \cf10 12\cf2 ;\cf3                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 item.aliqOrigemNota = aliqRealNota; \cf10 // Nova propriedade\cf3                                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 3. 
+\f1\b difal-calculator.js - Usar Al\'edquota Real
+\f0\b0 \cf3                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Usar al\'edquota da nota em vez de tabela:\cf3                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  aliqOrigem = item.aliqOrigemNota || \cf10 12\cf2 ;\cf3                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Resto permanece igual\cf3                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 4. 
+\f1\b difal-calculator.js - DIFAL N\'e3o-Negativo
+\f0\b0 \cf3                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Garantir DIFAL n\'e3o-negativo:\cf3                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 calculo.valorDifal = \cf14 Math\cf2 .max(\cf10 0\cf2 , icmsDestino - icmsOrigem);\cf3                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 5. 
+\f1\b difal-calculator.js - Prote\'e7\'e3o Infinity
+\f0\b0 \cf3                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Na redu\'e7\'e3o de base:\cf3                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 if\cf2  (!aliqDestino || aliqDestino <= \cf10 0\cf2 ) \{\cf3                                                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf14 console\cf2 .log(\cf9 `\uc0\u9888 \u65039  Al\'edquota destino inv\'e1lida: $\{aliqDestino\}%`\cf2 );\cf3                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 return\cf2  calculo; \cf10 // N\'e3o aplicar benef\'edcio\cf3                                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 \}\cf3                                                                                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Arquivos a Modificar
+\f0\b0 \cf3                                                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 1. 
+\f1\b \cf7 js/app.js
+\f0\b0 \cf2  (1 linha)\cf3                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - For\'e7ar ufOrigem = 'XX'\cf3                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 2. 
+\f1\b \cf7 js/parsing/sped-parser.js
+\f0\b0 \cf2  (5 linhas)\cf3                                                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Calcular al\'edquota real da nota\cf3                                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Adicionar propriedade aliqOrigemNota\cf3                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 3. 
+\f1\b \cf7 js/calculation/difal-calculator.js
+\f0\b0 \cf2  (10 linhas)\cf3                                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Usar al\'edquota real do item\cf3                                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Garantir DIFAL \uc0\u8805  0\cf3                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Proteger contra divis\'e3o por zero\cf3                                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Resultado Esperado
+\f0\b0 \cf3                                                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Opera\'e7\'f5es tratadas como interestaduais (XX \u8594  GO)\cf3                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Al\'edquotas reais da nota fiscal usadas no c\'e1lculo\cf3                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  DIFAL = 0 quando origem > destino (correto)\cf3                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Sem Infinity/NaN, aba de c\'e1lculo funcional\cf3                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Benef\'edcios aplicados corretamente\cf3                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9584 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9583 \cf3 \
+\
+\cf2 >\cf3  \cf2 N\'e3o \'e9 "Opera\'e7\'e3o Interestadual: For\'e7ar como interestadual para permitir c\'e1lculo". A opera\'e7\'e3o dever\'e1 ter obrigatoriamente CFOP interestadual\cf3 \
+  \cf2  (grupo 2000). Fallback: 12% (al\'edquota interestadual padr\'e3o) => Esta interpreta\'e7\'e3o pode levar a erros. Mercadorias importadas entram com \cf3 \
+  \cf2 al\'edquota de 4% e h\'e1 al\'edquotas de 7% e 12%.\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Perfeito! Voc\'ea est\'e1 correto. Vou corrigir o plano baseado nos pontos cr\'edticos:\
+  \uc0\u9151  \'a0\cf6 User rejected Claude's plan:\cf3 \
+     \cf12 \uc0\u9581 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9582 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f2\i\b \cf2 \ul \ulc2 Plano de Corre\'e7\'e3o DIFAL - Vers\'e3o Corrigida
+\f0\i0\b0 \cf3 \ulnone                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Premissas Corretas
+\f0\b0 \cf3                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 1. 
+\f1\b Opera\'e7\'e3o Interestadual via CFOP
+\f0\b0 \cf3                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Condi\'e7\'e3o
+\f0\b0 \cf2 : Apenas CFOPs s\'e9rie 2000 (j\'e1 filtrados corretamente)\cf3                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Exemplo do SPED
+\f0\b0 \cf2 : 2551, 2556 s\'e3o interestaduais \uc0\u9989 \cf3                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 N\'e3o for\'e7ar
+\f0\b0 \cf2 : Sistema j\'e1 filtra CFOPs corretos\cf3                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 2. 
+\f1\b Al\'edquota Origem - Sem Fallback Fixo
+\f0\b0 \cf3                                                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Prioridade 1
+\f0\b0 \cf2 : Calcular da nota fiscal (VL_ICMS / VL_BC_ICMS * 100)\cf3                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Prioridade 2
+\f0\b0 \cf2 : Usar al\'edquota interestadual por regi\'e3o (4%, 7%, 12%)\cf3                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 N\'e3o usar
+\f0\b0 \cf2 : Fallback fixo de 12% (perigoso para importadas 4%)\cf3                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 3. 
+\f1\b UF Origem Gen\'e9rica Quando Necess\'e1rio
+\f0\b0 \cf3                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Usar
+\f0\b0 \cf2 : "XX" quando n\'e3o conseguir extrair UF real\cf3                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Importante
+\f0\b0 \cf2 : Al\'edquota real, n\'e3o UF espec\'edfica\cf3                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Problemas Reais Identificados
+\f0\b0 \cf3                                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 1. 
+\f1\b Sistema Atual: GO \uc0\u8594  GO (Incorreto)
+\f0\b0 \cf3                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 \uc0\u55356 \u57263  UFs configuradas: GO \u8594  GO  // \u10060  Deveria ser XX \u8594  GO ou UF
+\f3\i _Real \uc0\u8594  GO
+\f0\i0 \cf3                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 2. 
+\f1\b Al\'edquota Origem Mal Calculada
+\f0\b0 \cf3                                                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Atual: Usa tabela de al\'edquotas (incorreto para DIFAL)\cf3                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  aliqOrigem = \cf14 this\cf2 .obterAliquotaPadrao(\cf14 this\cf2 .ufOrigem);\cf3                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Deveria: Usar al\'edquota real da nota fiscal\cf3                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 3. 
+\f1\b Infinity em Redu\'e7\'e3o de Base
+\f0\b0 \cf3                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 baseNova: Infinity, percentualReducao: -Infinity\cf3                                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Corre\'e7\'f5es Espec\'edficas
+\f0\b0 \cf3                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 1. 
+\f1\b sped-parser.js - Calcular Al\'edquota Real
+\f0\b0 \cf3                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // No processamento C170, adicionar:\cf3                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  baseIcms = \cf14 parseFloat\cf2 (campos[\cf10 12\cf2 ]) || \cf10 0\cf2 ;    \cf10 // VL_BC_ICMS\cf3                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  valorIcms = \cf14 parseFloat\cf2 (campos[\cf10 14\cf2 ]) || \cf10 0\cf2 ;   \cf10 // VL_ICMS\cf3                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Calcular al\'edquota efetiva da nota\cf3                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 let\cf2  aliqOrigemNota = \cf10 0\cf2 ;\cf3                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 if\cf2  (baseIcms > \cf10 0\cf2  && valorIcms > \cf10 0\cf2 ) \{\cf3                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     aliqOrigemNota = (valorIcms / baseIcms) * \cf10 100\cf2 ;\cf3                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 \} \cf8 else\cf2  \{\cf3                                                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf10 // Buscar al\'edquota interestadual por UF origem se dispon\'edvel\cf3                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     aliqOrigemNota = \cf14 this\cf2 .obterAliquotaInterestadual(ufOrigem, ufDestino);\cf3                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 \}\cf3                                                                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 item.aliqOrigemNota = aliqOrigemNota;\cf3                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 item.ufOrigem = ufOrigem || \cf9 'XX'\cf2 ; \cf10 // UF gen\'e9rica se n\'e3o conseguir extrair\cf3                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 2. 
+\f1\b difal-calculator.js - Usar Al\'edquota Real
+\f0\b0 \cf3                                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Substituir obten\'e7\'e3o de al\'edquota origem:\cf3                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf15 obterAliquotaOrigem(item, config)\cf2  \{\cf3                                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf10 // 1. Prioridade: configura\'e7\'e3o individual\cf3                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 if\cf2  (config.aliqOrigemEfetiva !== \cf8 undefined\cf2 ) \{\cf3                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf8 return\cf2  config.aliqOrigemEfetiva;\cf3                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \}\cf3                                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf3                                                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf10 // 2. Prioridade: configura\'e7\'e3o global\cf3                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 const\cf2  configGlobal = \cf14 this\cf2 .stateManager?.getState(\cf9 'calculation.settings'\cf2 ) || \{\};\cf3            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 if\cf2  (configGlobal.aliqOrigemEfetiva !== \cf8 undefined\cf2 ) \{\cf3                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf8 return\cf2  configGlobal.aliqOrigemEfetiva;\cf3                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \}\cf3                                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf3                                                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf10 // 3. Prioridade: al\'edquota real da nota fiscal\cf3                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 if\cf2  (item.aliqOrigemNota !== \cf8 undefined\cf2  && item.aliqOrigemNota > \cf10 0\cf2 ) \{\cf3                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf8 return\cf2  item.aliqOrigemNota;\cf3                                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \}\cf3                                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf3                                                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf10 // 4. \'daltima op\'e7\'e3o: al\'edquota interestadual por regi\'e3o\cf3                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 return\cf2  \cf14 this\cf2 .obterAliquotaInterestadual(item.ufOrigem, \cf14 this\cf2 .ufDestino);\cf3                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 \}\cf3                                                                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 3. 
+\f1\b app.js - Corrigir UF Assignment**
+\f0\b0 \cf3                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Substituir l\'f3gica atual:\cf3                                                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  ufDestino = spedData.dadosEmpresa?.uf || \cf9 'GO'\cf2 ;\cf3                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // UF origem vem individual de cada item, n\'e3o global\cf3                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Configurar por item:\cf3                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf14 this\cf2 .difalCalculator.configurarUFDestino(ufDestino);\cf3                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf14 this\cf2 .difalCalculator.carregarItens(spedData.itensDifal);\cf3                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 4. 
+\f1\b difal-calculator.js - Prote\'e7\'e3o Infinity**
+\f0\b0 \cf3                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf15 aplicarReducaoBase(calculo, cargaEfetivaDesejada)\cf2  \{\cf3                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf10 // Validar se c\'e1lculo \'e9 vi\'e1vel\cf3                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 if\cf2  (!calculo.aliqDestino || calculo.aliqDestino <= \cf10 0\cf2 ) \{\cf3                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         calculo.memoriaCalculo.push(\cf9 `\uc0\u55357 \u57003  Benef\'edcio n\'e3o aplic\'e1vel: al\'edquota destino inv\'e1lida`\cf2 );\cf3  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf8 return\cf2  calculo;\cf3                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \}\cf3                                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf3                                                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 if\cf2  (calculo.ufOrigem === calculo.ufDestino) \{\cf3                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         calculo.memoriaCalculo.push(\cf9 `\uc0\u55357 \u57003  Benef\'edcio n\'e3o aplic\'e1vel: opera\'e7\'e3o estadual`\cf2 );\cf3          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf8 return\cf2  calculo;\cf3                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \}\cf3                                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf3                                                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf10 // Resto do c\'e1lculo permanece igual...\cf3                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 \}\cf3                                                                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Arquivos a Modificar
+\f0\b0 \cf3                                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 1. 
+\f1\b \cf7 js/parsing/sped-parser.js
+\f0\b0 \cf3                                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Calcular al\'edquota real da nota (VL_ICMS/VL_BC_ICMS)\cf3                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Extrair UF origem ou usar 'XX'\cf3                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Adicionar propriedades nos itens\cf3                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 2. 
+\f1\b \cf7 js/calculation/difal-calculator.js
+\f0\b0 \cf3                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Usar al\'edquota real do item como prioridade\cf3                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Implementar obten\'e7\'e3o de al\'edquota interestadual correta\cf3                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Proteger contra divis\'e3o por zero\cf3                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 3. 
+\f1\b \cf7 js/app.js
+\f0\b0 \cf3                                                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Remover UF origem global\cf3                                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2   - Configurar apenas UF destino\cf3                                                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Resultado Esperado
+\f0\b0 \cf3                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  CFOPs interestaduais (2551, 2556) processados corretamente\cf3                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Al\'edquotas reais das notas fiscais usadas (4%, 7%, 12%, etc.)\cf3                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  UF origem XX ou real conforme disponibilidade\cf3                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  DIFAL = max(0, icmsDestino - icmsOrigem)\cf3                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Sem erros Infinity/NaN\cf3                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Aba de c\'e1lculo funcionando\cf3                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9584 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9583 \cf3 \
+\
+\cf2 >\cf3  \cf2 "// Calcular al\'edquota efetiva da nota" O sped costuma trazer a al\'edquota sem que seja necess\'e1rio calcul\'e1-la. Inclua as altera\'e7\'f5es no \cf3 \
+  \cf2 claude-memory-mcp\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Voc\'ea est\'e1 absolutamente correto! O SPED j\'e1 traz a al\'edquota ICMS diretamente no campo ALIQ_ICMS do registro C170. Vou ajustar o plano e\
+  incluir na mem\'f3ria:\
+                                                                                                                 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf16 \uc0\u9210 \cf3  User approved Claude's plan:\
+  \uc0\u9151  \'a0
+\f2\i\b \cf2 \ul \ulc2 Plano de Corre\'e7\'e3o DIFAL - Vers\'e3o Final
+\f0\i0\b0 \cf3 \ulnone \
+\
+     
+\f1\b \cf2 Corre\'e7\'e3o Principal: Usar Al\'edquota ICMS do SPED
+\f0\b0 \cf3 \
+\
+     \cf13 An\'e1lise do Registro C170 (do pr\'f3prio SPED)\cf3 \
+\
+     \cf2 Array(15) [ "C170", "1", "200.0052", "", "66", "65", "1718,64", "0", "0", "000", \'85 ]\cf3 \
+\
+     
+\f1\b \cf2 Posi\'e7\'f5es dos campos C170:
+\f0\b0 \cf3 \
+     \cf2 - \cf7 campos[13]\cf2 : 
+\f1\b \cf2 ALIQ_ICMS
+\f0\b0 \cf2  (al\'edquota j\'e1 calculada) \uc0\u9989 \cf3 \
+     \cf2 - \cf7 campos[12]\cf2 : VL_BC_ICMS (base de c\'e1lculo)\cf3 \
+     \cf2 - \cf7 campos[14]\cf2 : VL_ICMS (valor do imposto)\cf3 \
+\
+     
+\f1\b \cf2 Problema Atual
+\f0\b0 \cf3 \
+\
+     \cf10 // Em sped-parser.js linha ~288:\cf3 \
+     \cf14 aliqIcms\cf2 : \cf14 parseFloat\cf2 (campos[\cf10 13\cf2 ]) || \cf10 0\cf2 ,    \cf10 // ALIQ_ICMS - J\'c1 DISPON\'cdVEL!\cf3 \
+\
+     
+\f1\b \cf2 O parser j\'e1 extrai a al\'edquota, mas o calculador n\'e3o usa!
+\f0\b0 \cf3 \
+\
+     
+\f1\b \cf2 Corre\'e7\'f5es Espec\'edficas
+\f0\b0 \cf3 \
+\
+     \cf13 1. 
+\f1\b sped-parser.js - Usar Al\'edquota Existente
+\f0\b0 \cf3 \
+\
+     \cf10 // No processamento C170 (j\'e1 extraindo, s\'f3 adicionar):\cf3 \
+     \cf8 const\cf2  aliqOrigemNota = \cf14 parseFloat\cf2 (campos[\cf10 13\cf2 ]) || \cf10 0\cf2 ; \cf10 // ALIQ_ICMS direto do SPED\cf3 \
+\
+     \cf10 // Adicionar nos dados do item:\cf3 \
+     \cf2 item.aliqOrigemNota = aliqOrigemNota;\cf3 \
+     \cf2 item.ufOrigem = \cf9 'XX'\cf2 ; \cf10 // Gen\'e9rico para for\'e7ar interestadual\cf3 \
+\
+     \cf13 2. 
+\f1\b difal-calculator.js - Priorizar Al\'edquota do SPED
+\f0\b0 \cf3 \
+\
+     \cf15 obterAliquotaOrigem(item, config)\cf2  \{\cf3 \
+     \cf2     \cf10 // 1. Configura\'e7\'e3o manual (benef\'edcios)\cf3 \
+     \cf2     \cf8 if\cf2  (config.aliqOrigemEfetiva !== \cf8 undefined\cf2 ) \{\cf3 \
+     \cf2         \cf8 return\cf2  config.aliqOrigemEfetiva;\cf3 \
+     \cf2     \}\cf3 \
+     \cf2     \cf3 \
+     \cf2     \cf10 // 2. Configura\'e7\'e3o global\cf3 \
+     \cf2     \cf8 const\cf2  configGlobal = \cf14 this\cf2 .stateManager?.getState(\cf9 'calculation.settings'\cf2 ) || \{\};\cf3 \
+     \cf2     \cf8 if\cf2  (configGlobal.aliqOrigemEfetiva !== \cf8 undefined\cf2 ) \{\cf3 \
+     \cf2         \cf8 return\cf2  configGlobal.aliqOrigemEfetiva;\cf3 \
+     \cf2     \}\cf3 \
+     \cf2     \cf3 \
+     \cf2     \cf10 // 3. \uc0\u9989  NOVO: Al\'edquota real do SPED (priorit\'e1ria)\cf3 \
+     \cf2     \cf8 if\cf2  (item.aliqOrigemNota !== \cf8 undefined\cf2  && item.aliqOrigemNota > \cf10 0\cf2 ) \{\cf3 \
+     \cf2         \cf8 return\cf2  item.aliqOrigemNota;\cf3 \
+     \cf2     \}\cf3 \
+     \cf2     \cf3 \
+     \cf2     \cf10 // 4. Fallback: al\'edquota por regi\'e3o\cf3 \
+     \cf2     \cf8 return\cf2  \cf14 this\cf2 .obterAliquotaInterestadual(\cf9 'XX'\cf2 , \cf14 this\cf2 .ufDestino);\cf3 \
+     \cf2 \}\cf3 \
+\
+     \cf13 3. 
+\f1\b app.js - Configurar Apenas UF Destino
+\f0\b0 \cf3 \
+\
+     \cf10 // Remover UF origem global:\cf3 \
+     \cf8 const\cf2  ufDestino = spedData.dadosEmpresa?.uf || \cf9 'GO'\cf2 ;\cf3 \
+\
+     \cf10 // Configurar apenas destino:\cf3 \
+     \cf14 this\cf2 .difalCalculator.configurarUFDestino(ufDestino);\cf3 \
+     \cf14 this\cf2 .difalCalculator.carregarItens(spedData.itensDifal);\cf3 \
+\
+     \cf13 4. 
+\f1\b difal-calculator.js - M\'e9todo UF Destino
+\f0\b0 \cf3 \
+\
+     \cf10 // Adicionar m\'e9todo para configurar s\'f3 destino:\cf3 \
+     \cf15 configurarUFDestino(ufDestino)\cf2  \{\cf3 \
+     \cf2     \cf14 this\cf2 .ufDestino = ufDestino;\cf3 \
+     \cf2     \cf14 console\cf2 .log(\cf9 `\uc0\u55356 \u57263  UF Destino configurada: $\{ufDestino\}`\cf2 );\cf3 \
+     \cf2 \}\cf3 \
+\
+     \cf10 // Modificar configurarUFs para ser opcional:\cf3 \
+     \cf15 configurarUFs(ufOrigemGlobal, ufDestino)\cf2  \{\cf3 \
+     \cf2     \cf10 // Manter para compatibilidade, mas UF origem vem do item\cf3 \
+     \cf2     \cf14 this\cf2 .ufOrigem = ufOrigemGlobal || \cf9 'XX'\cf2 ;\cf3 \
+     \cf2     \cf14 this\cf2 .ufDestino = ufDestino;\cf3 \
+     \cf2     \cf14 console\cf2 .log(\cf9 `\uc0\u55356 \u57263  UFs configuradas: $\{\cf14 this\cf9 .ufOrigem\} \uc0\u8594  $\{\cf14 this\cf9 .ufDestino\}`\cf2 );\cf3 \
+     \cf2 \}\cf3 \
+\
+     \cf13 5. 
+\f1\b Prote\'e7\'e3o Infinity
+\f0\b0 \cf3 \
+\
+     \cf15 aplicarReducaoBase(calculo, cargaEfetivaDesejada)\cf2  \{\cf3 \
+     \cf2     \cf8 if\cf2  (!calculo.aliqDestino || calculo.aliqDestino <= \cf10 0\cf2 ) \{\cf3 \
+     \cf2         calculo.memoriaCalculo.push(\cf9 `\uc0\u55357 \u57003  Redu\'e7\'e3o base: al\'edquota destino inv\'e1lida ($\{calculo.aliqDestino\}%)`\cf2 );\cf3 \
+     \cf2         \cf8 return\cf2  calculo;\cf3 \
+     \cf2     \}\cf3 \
+     \cf2     \cf10 // Resto permanece igual\cf3 \
+     \cf2 \}\cf3 \
+\
+     
+\f1\b \cf2 Para Incluir no CLAUDE.md
+\f0\b0 \cf3 \
+\
+     \cf2 ## Corre\'e7\'e3o DIFAL - Al\'edquotas Reais do SPED\cf3 \
+\
+     \cf2 ### Problema Identificado\cf3 \
+     \cf2 - Sistema usava UF empresa (GO) para origem e destino\cf3 \
+     \cf2 - Calculadora n\'e3o utilizava al\'edquota ICMS real do SPED\cf3 \
+     \cf2 - Gerava Infinity em redu\'e7\'f5es de base por divis\'e3o por zero\cf3 \
+\
+     \cf2 ### Solu\'e7\'e3o Implementada\cf3 \
+     \cf2 1. 
+\f1\b \cf2 **Usar al\'edquota real**
+\f0\b0 \cf2 : Campo ALIQ
+\f3\i _ICMS (posi\'e7\'e3o 13) do registro C170
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 2. 
+\f2\b \cf2 **UF gen\'e9rica**
+\f3\b0 \cf2 : 'XX' para origem quando necess\'e1rio
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 3. 
+\f2\b \cf2 **Valida\'e7\'f5es**
+\f3\b0 \cf2 : Prote\'e7\'e3o contra divis\'e3o por zero
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 4. 
+\f2\b \cf2 **Prioridades**
+\f3\b0 \cf2 : Manual > Global > SPED > Tabela regional
+\f0\i0 \cf3 \
+\
+     
+\f3\i \cf2 ### Arquivos Modificados
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 - `sped-parser.js`: Adicionar aliqOrigemNota aos itens
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 - `difal-calculator.js`: Priorizar al\'edquota real do SPED
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 - `app.js`: Configurar apenas UF destino
+\f0\i0 \cf3 \
+\
+     
+\f1\b \cf2 Arquivos a Modificar
+\f0\b0 \cf3 \
+\
+     \cf2 1. 
+\f1\b \cf7 js/parsing/sped-parser.js
+\f0\b0 \cf2  (2 linhas)\cf3 \
+     \cf2   - Adicionar \cf7 item.aliqOrigemNota = parseFloat(campos[13]) || 0;\cf3 \
+     \cf2   - Adicionar \cf7 item.ufOrigem = 'XX';\cf3 \
+     \cf2 2. 
+\f1\b \cf7 js/calculation/difal-calculator.js
+\f0\b0 \cf2  (15 linhas)\cf3 \
+     \cf2   - Modificar \cf7 obterAliquotaOrigem()\cf2  para priorizar SPED\cf3 \
+     \cf2   - Adicionar \cf7 configurarUFDestino()\cf3 \
+     \cf2   - Validar divis\'e3o por zero em benef\'edcios\cf3 \
+     \cf2 3. 
+\f1\b \cf7 js/app.js
+\f0\b0 \cf2  (3 linhas)\cf3 \
+     \cf2   - Remover UF origem global\cf3 \
+     \cf2   - Usar apenas \cf7 configurarUFDestino()\cf3 \
+\
+     
+\f1\b \cf2 Resultado
+\f0\b0 \cf3 \
+\
+     \cf2 - \uc0\u9989  Al\'edquotas reais das notas fiscais (4%, 7%, 12%, 17%, 18%, 19%, etc.)\cf3 \
+     \cf2 - \uc0\u9989  CFOPs interestaduais processados corretamente\cf3 \
+     \cf2 - \uc0\u9989  DIFAL = max(0, icmsDestino - icmsOrigem)\cf3 \
+     \cf2 - \uc0\u9989  Aba de c\'e1lculo funcionando\cf3 \
+     \cf2 - \uc0\u9989  Sem erros Infinity/NaN\cf3 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf5 \uc0\u9210 \cf3  
+\f1\b Update Todos
+\f0\b0 \
+  \uc0\u9151  \'a0\u9746  Verificar se todas as corre\'e7\'f5es est\'e3o aplicadas corretamente                       \
+     \uc0\u9746  Iniciar servidor para teste com arquivo SPED real\
+     \uc0\u9746  Testar sistema completo sem erros de fun\'e7\'e3o n\'e3o encontrada\
+     \uc0\u9746  ERRO: window.EstadosUtil.obterPorSigla is not a function\
+     \uc0\u9746  Analisar discrep\'e2ncias entre constants.js, estados-brasil.js e documenta\'e7\'e3o oficial\
+     \uc0\u9746  Implementar l\'f3gica FCP correta conforme documenta\'e7\'e3o oficial\
+     \uc0\u9746  Corrigir constants.js para seguir a documenta\'e7\'e3o\
+     \uc0\u9746  Remover abertura autom\'e1tica do modal de configura\'e7\'e3o\
+     \cf5 \uc0\u9746  Analisar problemas na aba de c\'e1lculo\cf3 \
+     \uc0\u9744  Adicionar aliqOrigemNota aos itens no sped-parser.js\
+     \uc0\u9744  Modificar obterAliquotaOrigem() para priorizar SPED\
+     \uc0\u9744  Corrigir app.js para usar apenas UF destino\
+     \uc0\u9744  Adicionar prote\'e7\'e3o contra Infinity em redu\'e7\'e3o de base\
+     \uc0\u9744  Testar sistema com corre\'e7\'f5es aplicadas\
+\
+\cf4 \uc0\u9210 \cf3  Agora vou implementar as corre\'e7\'f5es conforme o plano aprovado:\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Update Todos
+\f0\b0 \
+  \uc0\u9151  \'a0\u9746  Verificar se todas as corre\'e7\'f5es est\'e3o aplicadas corretamente                       \
+     \uc0\u9746  Iniciar servidor para teste com arquivo SPED real\
+     \uc0\u9746  Testar sistema completo sem erros de fun\'e7\'e3o n\'e3o encontrada\
+     \uc0\u9746  ERRO: window.EstadosUtil.obterPorSigla is not a function\
+     \uc0\u9746  Analisar discrep\'e2ncias entre constants.js, estados-brasil.js e documenta\'e7\'e3o oficial\
+     \uc0\u9746  Implementar l\'f3gica FCP correta conforme documenta\'e7\'e3o oficial\
+     \uc0\u9746  Corrigir constants.js para seguir a documenta\'e7\'e3o\
+     \uc0\u9746  Remover abertura autom\'e1tica do modal de configura\'e7\'e3o\
+     \uc0\u9746  Analisar problemas na aba de c\'e1lculo\
+     
+\f1\b \cf7 \uc0\u9744  Adicionar aliqOrigemNota aos itens no sped-parser.js
+\f0\b0 \cf3 \
+     \uc0\u9744  Modificar obterAliquotaOrigem() para priorizar SPED\
+     \uc0\u9744  Corrigir app.js para usar apenas UF destino\
+     \uc0\u9744  Adicionar prote\'e7\'e3o contra Infinity em redu\'e7\'e3o de base\
+     \uc0\u9744  Testar sistema com corre\'e7\'f5es aplicadas\
+\
+\cf4 \uc0\u9210 \cf3  
+\f1\b 1. Adicionar aliqOrigemNota aos itens no sped-parser.js
+\f0\b0 \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/parsing/sped-parser.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 15
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Perfeito! Posso ver que o campo \cf7 aliqIcms\cf3  j\'e1 est\'e1 sendo extra\'eddo na linha 288. Agora vou adicionar a \cf7 aliqOrigemNota\cf3  e configurar UF origem\
+  como 'XX':\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Update
+\f0\b0 (js/parsing/sped-parser.js)\
+  \uc0\u9151  \'a0Updated 
+\f1\b js/parsing/sped-parser.js
+\f0\b0  with 
+\f1\b 2
+\f0\b0  additions and 
+\f1\b 1
+\f0\b0  removal                                          \
+     \cf2   291 \cf4                    // Campos calculados\cf3 \
+     \cf2   292 \cf4                    valorLiquido: 0,\cf3 \
+     \cf2   293 \cf4                    baseCalculoDifal: 0,\cf3 \
+     \cf2   294 \cf3 \cb17 -  \cf18                 ufOrigem: this.dadosEmpresa?.uf || '',\cf3 \cb1 \
+     \cf2   294 \cf3 \cb19 +  \cf18                 ufOrigem: 'XX',  // UF gen\'e9rica para for\'e7ar opera\'e7\'e3o interestadual\cf3 \cb1 \
+     \cf2   295 \cf18 \cb19 +                  aliqOrigemNota: parseFloat(campos[13]) || 0,  // Al\'edquota real do SPED para DIFAL\cf3 \cb1 \
+     \cf2   296 \cf4                    \cf3 \
+     \cf2   297 \cf4                    // Debug info\cf3 \
+     \cf2   298 \cf4                    camposOriginais: campos,\cf3 \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Update Todos
+\f0\b0 \
+  \uc0\u9151  \'a0\u9746  Verificar se todas as corre\'e7\'f5es est\'e3o aplicadas corretamente                       \
+     \uc0\u9746  Iniciar servidor para teste com arquivo SPED real\
+     \uc0\u9746  Testar sistema completo sem erros de fun\'e7\'e3o n\'e3o encontrada\
+     \uc0\u9746  ERRO: window.EstadosUtil.obterPorSigla is not a function\
+     \uc0\u9746  Analisar discrep\'e2ncias entre constants.js, estados-brasil.js e documenta\'e7\'e3o oficial\
+     \uc0\u9746  Implementar l\'f3gica FCP correta conforme documenta\'e7\'e3o oficial\
+     \uc0\u9746  Corrigir constants.js para seguir a documenta\'e7\'e3o\
+     \uc0\u9746  Remover abertura autom\'e1tica do modal de configura\'e7\'e3o\
+     \uc0\u9746  Analisar problemas na aba de c\'e1lculo\
+     \cf5 \uc0\u9746  Adicionar aliqOrigemNota aos itens no sped-parser.js\cf3 \
+     
+\f1\b \cf7 \uc0\u9744  Modificar obterAliquotaOrigem() para priorizar SPED
+\f0\b0 \cf3 \
+     \uc0\u9744  Corrigir app.js para usar apenas UF destino\
+     \uc0\u9744  Adicionar prote\'e7\'e3o contra Infinity em redu\'e7\'e3o de base\
+     \uc0\u9744  Testar sistema com corre\'e7\'f5es aplicadas\
+\
+\cf4 \uc0\u9210 \cf3  
+\f1\b 2. Modificar obterAliquotaOrigem() para priorizar SPED
+\f0\b0 \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/calculation/difal-calculator.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 15
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Update
+\f0\b0 (js/calculation/difal-calculator.js)\
+  \uc0\u9151  \'a0Updated 
+\f1\b js/calculation/difal-calculator.js
+\f0\b0  with 
+\f1\b 10
+\f0\b0  additions and 
+\f1\b 2
+\f0\b0  removals                     \
+     \cf2   308 \cf4    \cf3 \
+     \cf2   309 \cf4        /**\cf3 \
+     \cf2   310 \cf4         * Obt\'e9m al\'edquota de origem\cf3 \
+     \cf2   311 \cf18 \cb19 +       * Prioridade: Manual > Global > SPED > Tabela Regional\cf3 \cb1 \
+     \cf2   312 \cf4         */\cf3 \
+     \cf2   313 \cf4        obterAliquotaOrigem(item, config) \{\cf3 \
+     \cf2   314 \cf3 \cb17 -  \cf18         // Prioridade: configura\'e7\'e3o individual > configura\'e7\'e3o global > al\'edquota padr\'e3o\cf3 \cb1 \
+     \cf2   314 \cf3 \cb19 +  \cf18         // 1. Prioridade: configura\'e7\'e3o manual individual\cf3 \cb1 \
+     \cf2   315 \cf4            if (config.aliqOrigemEfetiva !== undefined) \{\cf3 \
+     \cf2   316 \cf4                return config.aliqOrigemEfetiva;\cf3 \
+     \cf2   317 \cf4            \}\cf3 \
+     \cf2   318 \cf4            \cf3 \
+     \cf2   319 \cf18 \cb19 +          // 2. Prioridade: configura\'e7\'e3o global\cf3 \cb1 \
+     \cf2   320 \cf4            const configGlobal = this.stateManager?.getState('calculation.settings') || \{\};\cf3 \
+     \cf2   321 \cf4            if (configGlobal.aliqOrigemEfetiva !== undefined) \{\cf3 \
+     \cf2   322 \cf4                return configGlobal.aliqOrigemEfetiva;\cf3 \
+     \cf2   323 \cf4            \}\cf3 \
+     \cf2   324 \cf4            \cf3 \
+     \cf2   325 \cf3 \cb17 -  \cf18         return this.obterAliquotaPadrao(this.ufOrigem);\cf3 \cb1 \
+     \cf2   325 \cf3 \cb19 +  \cf18         // 3. \uc0\u9989  NOVA PRIORIDADE: Al\'edquota real do SPED\cf3 \cb1 \
+     \cf2   326 \cf18 \cb19 +          if (item.aliqOrigemNota !== undefined && item.aliqOrigemNota > 0) \{\cf3 \cb1 \
+     \cf2   327 \cf18 \cb19 +              return item.aliqOrigemNota;\cf3 \cb1 \
+     \cf2   328 \cf18 \cb19 +          \}\cf3 \cb1 \
+     \cf2   329 \cf18 \cb19 +          \cf3 \cb1 \
+     \cf2   330 \cf18 \cb19 +          // 4. Fallback: al\'edquota por regi\'e3o (considerando UF origem gen\'e9rica)\cf3 \cb1 \
+     \cf2   331 \cf18 \cb19 +          return this.obterAliquotaInterestadual(item.ufOrigem || 'XX', this.ufDestino);\cf3 \cb1 \
+     \cf2   332 \cf4        \}\cf3 \
+     \cf2   333 \cf4    \cf3 \
+     \cf2   334 \cf4        /**\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Agora preciso implementar o m\'e9todo \cf7 obterAliquotaInterestadual\cf3 :\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/calculation/difal-calculator.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 25
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Vou adicionar o m\'e9todo \cf7 obterAliquotaInterestadual\cf3  ap\'f3s o m\'e9todo \cf7 obterAliquotaFcpPadrao\cf3 :\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/calculation/difal-calculator.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 10
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf6 \uc0\u9210 \cf3  
+\f1\b Update
+\f0\b0 (js/calculation/difal-calculator.js)\
+  \uc0\u9151  \'a0\cf6 User rejected update to 
+\f1\b \cf6 js/calculation/difal-calculator.js
+\f0\b0 \cf3 \
+     \cf2   385 \cf20        \}\cf3 \
+     \cf2   386 \cf20    \cf3 \
+     \cf2   387 \cf20        /**\cf3 \
+     \cf2   388 \cf21 \cb22 +       * Obt\'e9m al\'edquota interestadual baseada nas regi\'f5es\cf3 \cb1 \
+     \cf2   389 \cf21 \cb22 +       * @param \{string\} ufOrigem - UF de origem \cf3 \cb1 \
+     \cf2   390 \cf21 \cb22 +       * @param \{string\} ufDestino - UF de destino\cf3 \cb1 \
+     \cf2   391 \cf21 \cb22 +       * @returns \{number\} Al\'edquota interestadual (4%, 7% ou 12%)\cf3 \cb1 \
+     \cf2   392 \cf21 \cb22 +       */\cf3 \cb1 \
+     \cf2   393 \cf21 \cb22 +      obterAliquotaInterestadual(ufOrigem, ufDestino) \{\cf3 \cb1 \
+     \cf2   394 \cf21 \cb22 +          if (!window.DIFAL_CONSTANTS) return 12; // Fallback\cf3 \cb1 \
+     \cf2   395 \cf21 \cb22 +          \cf3 \cb1 \
+     \cf2   396 \cf21 \cb22 +          // Para UF gen\'e9rica 'XX', usar al\'edquota padr\'e3o\cf3 \cb1 \
+     \cf2   397 \cf21 \cb22 +          if (ufOrigem === 'XX') \{\cf3 \cb1 \
+     \cf2   398 \cf21 \cb22 +              return window.DIFAL_CONSTANTS.DIFAL.ALIQUOTAS_INTERESTADUAIS.DEFAULT || 12;\cf3 \cb1 \
+     \cf2   399 \cf21 \cb22 +          \}\cf3 \cb1 \
+     \cf2   400 \cf21 \cb22 +          \cf3 \cb1 \
+     \cf2   401 \cf21 \cb22 +          // Usar l\'f3gica regional se EstadosUtil dispon\'edvel\cf3 \cb1 \
+     \cf2   402 \cf21 \cb22 +          if (window.EstadosUtil && typeof window.EstadosUtil.obterAliquotaInterestadual === 'function') \{\cf3 \cb1 \
+     \cf2   403 \cf21 \cb22 +              return window.EstadosUtil.obterAliquotaInterestadual(ufOrigem, ufDestino);\cf3 \cb1 \
+     \cf2   404 \cf21 \cb22 +          \}\cf3 \cb1 \
+     \cf2   405 \cf21 \cb22 +          \cf3 \cb1 \
+     \cf2   406 \cf21 \cb22 +          // Fallback para al\'edquota padr\'e3o\cf3 \cb1 \
+     \cf2   407 \cf21 \cb22 +          return window.DIFAL_CONSTANTS.DIFAL.ALIQUOTAS_INTERESTADUAIS.DEFAULT || 12;\cf3 \cb1 \
+     \cf2   408 \cf21 \cb22 +      \}\cf3 \cb1 \
+     \cf2   409 \cf21 \cb22 +  \cf3 \cb1 \
+     \cf2   410 \cf21 \cb22 +      /**\cf3 \cb1 \
+     \cf2   411 \cf20         * Handler para mudan\'e7a de configura\'e7\'e3o\cf3 \
+     \cf2   412 \cf20         */\cf3 \
+     \cf2   413 \cf20        onConfigurationChanged(data) \{\cf3 \
+\
+\cf2 >\cf3  \cf2 A al\'edquota tem que ser extra\'edda do sped, sempre.\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Voc\'ea est\'e1 correto! A al\'edquota deve 
+\f1\b sempre
+\f0\b0  vir do SPED. Vou simplificar o m\'e9todo para priorizar sempre o SPED:\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Update
+\f0\b0 (js/calculation/difal-calculator.js)\
+  \uc0\u9151  \'a0Updated 
+\f1\b js/calculation/difal-calculator.js
+\f0\b0  with 
+\f1\b 8
+\f0\b0  additions and 
+\f1\b 7
+\f0\b0  removals                      \
+     \cf2   308 \cf4    \cf3 \
+     \cf2   309 \cf4        /**\cf3 \
+     \cf2   310 \cf4         * Obt\'e9m al\'edquota de origem\cf3 \
+     \cf2   311 \cf3 \cb17 -  \cf18      * Prioridade: Manual > Global > SPED > Tabela Regional\cf3 \cb1 \
+     \cf2   311 \cf3 \cb19 +  \cf18      * SEMPRE usa al\'edquota do SPED, exceto se houver configura\'e7\'e3o manual\cf3 \cb1 \
+     \cf2   312 \cf4         */\cf3 \
+     \cf2   313 \cf4        obterAliquotaOrigem(item, config) \{\cf3 \
+     \cf2   314 \cf3 \cb17 -  \cf18         // 1. \cb23 Prioridade:\cb17  configura\'e7\'e3o manual individual\cf3 \cb1 \
+     \cf2   314 \cf3 \cb19 +  \cf18         // 1. \cb24 Apenas\cb19  configura\'e7\'e3o manual individual\cb24  sobrescreve SPED\cf3 \cb1 \
+     \cf2   315 \cf4            if (config.aliqOrigemEfetiva !== undefined) \{\cf3 \
+     \cf2   316 \cf4                return config.aliqOrigemEfetiva;\cf3 \
+     \cf2   317 \cf4            \}\cf3 \
+     \cf2   318 \cf4            \cf3 \
+     \cf2   319 \cf3 \cb17 -  \cf18         // 2. \cb23 Prioridade:\cb17  configura\'e7\'e3o global\cf3 \cb1 \
+     \cf2   319 \cf3 \cb19 +  \cf18         // 2. \cb24 Apenas\cb19  configura\'e7\'e3o global\cb24  sobrescreve SPED\cf3 \cb1 \
+     \cf2   320 \cf4            const configGlobal = this.stateManager?.getState('calculation.settings') || \{\};\cf3 \
+     \cf2   321 \cf4            if (configGlobal.aliqOrigemEfetiva !== undefined) \{\cf3 \
+     \cf2   322 \cf4                return configGlobal.aliqOrigemEfetiva;\cf3 \
+     \cf2   323 \cf4            \}\cf3 \
+     \cf2   324 \cf4            \cf3 \
+     \cf2   325 \cf3 \cb17 -  \cf18         // 3. \uc0\u9989  \cb23 NOVA PRIORIDADE\cb17 : Al\'edquota real do SPED\cf3 \cb1 \
+     \cf2   326 \cf3 \cb17 -  \cf18         if (item.aliqOrigemNota !== undefined && item.aliqOrigemNota > 0) \{\cf3 \cb1 \
+     \cf2   325 \cf3 \cb19 +  \cf18         // 3. \uc0\u9989  \cb24 SEMPRE\cb19 : Al\'edquota real do SPED\cb24  (obrigat\'f3ria)\cf3 \cb1 \
+     \cf2   326 \cf3 \cb19 +  \cf18         if (item.aliqOrigemNota !== undefined && item.aliqOrigemNota >\cb24 =\cb19  0) \{\cf3 \cb1 \
+     \cf2   327 \cf4                return item.aliqOrigemNota;\cf3 \
+     \cf2   328 \cf4            \}\cf3 \
+     \cf2   329 \cf4            \cf3 \
+     \cf2   330 \cf3 \cb17 -  \cf18         // 4. Fallback: al\'edquota por regi\'e3o (considerando UF origem gen\'e9rica)\cf3 \cb1 \
+     \cf2   331 \cf3 \cb17 -  \cf18         return this.obterAliquotaInterestadual(item.ufOrigem || 'XX', this.ufDestino);\cf3 \cb1 \
+     \cf2   330 \cf3 \cb19 +  \cf18         // 4. Erro: SPED deveria ter al\'edquota\cf3 \cb1 \
+     \cf2   331 \cf3 \cb19 +  \cf18         console.warn(`\uc0\u9888 \u65039  Item $\{item.codItem\}: al\'edquota n\'e3o encontrada no SPED`);\cf3 \cb1 \
+     \cf2   332 \cf18 \cb19 +          return 0;\cf3 \cb1 \
+     \cf2   333 \cf4        \}\cf3 \
+     \cf2   334 \cf4    \cf3 \
+     \cf2   335 \cf4        /**\cf3 \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Update Todos
+\f0\b0 \
+  \uc0\u9151  \'a0\u9746  Verificar se todas as corre\'e7\'f5es est\'e3o aplicadas corretamente                       \
+     \uc0\u9746  Iniciar servidor para teste com arquivo SPED real\
+     \uc0\u9746  Testar sistema completo sem erros de fun\'e7\'e3o n\'e3o encontrada\
+     \uc0\u9746  ERRO: window.EstadosUtil.obterPorSigla is not a function\
+     \uc0\u9746  Analisar discrep\'e2ncias entre constants.js, estados-brasil.js e documenta\'e7\'e3o oficial\
+     \uc0\u9746  Implementar l\'f3gica FCP correta conforme documenta\'e7\'e3o oficial\
+     \uc0\u9746  Corrigir constants.js para seguir a documenta\'e7\'e3o\
+     \uc0\u9746  Remover abertura autom\'e1tica do modal de configura\'e7\'e3o\
+     \uc0\u9746  Analisar problemas na aba de c\'e1lculo\
+     \uc0\u9746  Adicionar aliqOrigemNota aos itens no sped-parser.js\
+     \cf5 \uc0\u9746  Modificar obterAliquotaOrigem() para priorizar SPED\cf3 \
+     
+\f1\b \cf7 \uc0\u9744  Corrigir app.js para usar apenas UF destino
+\f0\b0 \cf3 \
+     \uc0\u9744  Adicionar prote\'e7\'e3o contra Infinity em redu\'e7\'e3o de base\
+     \uc0\u9744  Testar sistema com corre\'e7\'f5es aplicadas\
+\
+\cf4 \uc0\u9210 \cf3  
+\f1\b 3. Corrigir app.js para usar apenas UF destino
+\f0\b0 \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/app.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 15
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf6 \uc0\u9210 \cf3  
+\f1\b Update
+\f0\b0 (js/app.js)\
+  \uc0\u9151  \'a0\cf6 User rejected update to 
+\f1\b \cf6 js/app.js
+\f0\b0 \cf3 \
+     \cf2   171 \cf20    \cf3 \
+     \cf2   172 \cf20            console.log('\uc0\u55358 \u56814  Orquestrando c\'e1lculo DIFAL...');\cf3 \
+     \cf2   173 \cf20            \cf3 \
+     \cf2   174 \cf25 \cb26 -          const ufOrigem = spedData.dadosEmpresa?.uf || 'SP';\cf3 \cb1 \
+     \cf2   175 \cf25 \cb26 -          const ufDestino = configGeral.ufDestino || ufOrigem;\cf3 \cb1 \
+     \cf2   174 \cf21 \cb22 +          // UF Destino: sempre da empresa (adquirente)\cf3 \cb1 \
+     \cf2   175 \cf21 \cb22 +          const ufDestino = spedData.dadosEmpresa?.uf || 'GO';\cf3 \cb1 \
+     \cf2   176 \cf21 \cb22 +          // UF Origem: vem individual de cada item do SPED (j\'e1 configurado no parser)\cf3 \cb1 \
+     \cf2   177 \cf20            \cf3 \
+     \cf2   178 \cf20            this.stateManager.setGlobalConfiguration(configGeral);\cf3 \
+     \cf2   179 \cf20            \cf3 \
+     \cf2   180 \cf25 \cb26 -          this.difalCalculator.configurarUFs(ufOrigem, ufDestino);\cf3 \cb1 \
+     \cf2   180 \cf21 \cb22 +          // Configurar apenas UF destino (origem vem do item)\cf3 \cb1 \
+     \cf2   181 \cf21 \cb22 +          this.difalCalculator.configurarUFs('XX', ufDestino);\cf3 \cb1 \
+     \cf2   182 \cf20            this.difalCalculator.carregarItens(spedData.itensDifal);\cf3 \
+     \cf2   183 \cf20            \cf3 \
+     \cf2   184 \cf20            const resultados = this.difalCalculator.calcularTodos();\cf3 \
+\
+\cf2 >\cf3  \cf2 Retornando ao prompt anterior, das al\'edquotas, \'e9 sempre poss\'edvel que haja algum benef\'edcio fiscal de redu\'e7\'e3o de base na origem. Neste caso, \cf3 \
+  \cf2 o CST tamb\'e9m deve ser verificado e a al\'edquota efetiva dever\'e1 ser calculada pela divis\'e3o do ICMS pelo valor da mercadoria.\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Voc\'ea est\'e1 absolutamente correto! Preciso considerar os benef\'edcios fiscais na origem que podem afetar a al\'edquota efetiva. Vou analisar a\
+  situa\'e7\'e3o:\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (console-export-2025-8-10_22-56-39.txt)\
+  \uc0\u9151  \'a0Read 
+\f1\b 10
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Analisando os dados do SPED, vejo casos como:\
+\
+  Array(15) [ "C170", "2", "AGG0001", "", "6000", "140", "3000", "0", "0", "400", \'85 ]\
+\
+  Onde:\
+  - 
+\f1\b VL_ITEM
+\f0\b0  (posi\'e7\'e3o 6): 3000\
+  - 
+\f1\b VL_ICMS
+\f0\b0  (posi\'e7\'e3o 14): 0\
+  - 
+\f1\b CST
+\f0\b0  (posi\'e7\'e3o 9): "400"\
+\
+  Isso indica benef\'edcio fiscal (CST 400 = isento), onde ICMS = 0.\
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (js/parsing/sped-parser.js)\
+  \uc0\u9151  \'a0Read 
+\f1\b 30
+\f0\b0  lines \cf2 (ctrl+r to expand)\cf3 \
+\
+\cf4 \uc0\u9210 \cf3  Perfeito! Tenho todos os campos necess\'e1rios j\'e1 sendo extra\'eddos:\
+\
+  - 
+\f1\b VL_ITEM
+\f0\b0  (campos[6]): Valor da mercadoria\
+  - 
+\f1\b VL_ICMS
+\f0\b0  (campos[14]): Valor do ICMS\
+  - 
+\f1\b CST_ICMS
+\f0\b0  (campos[9]): C\'f3digo de Situa\'e7\'e3o Tribut\'e1ria\
+  - 
+\f1\b ALIQ_ICMS
+\f0\b0  (campos[13]): Al\'edquota nominal\
+\
+  
+\f1\b AN\'c1LISE DO PROBLEMA:
+\f0\b0 \
+\
+  
+\f1\b Cen\'e1rios de Al\'edquota Origem:
+\f0\b0 \
+\
+  1. 
+\f1\b Sem Benef\'edcio
+\f0\b0 : ALIQ_ICMS do SPED est\'e1 correta\
+  2. 
+\f1\b Com Benef\'edcio na Origem
+\f0\b0 : Precisa calcular al\'edquota efetiva\
+    - 
+\f1\b CST 10, 30, 70
+\f0\b0 : Redu\'e7\'e3o de base\
+    - 
+\f1\b CST 40
+\f0\b0 : Isen\'e7\'e3o (al\'edquota efetiva = 0%)\
+    - 
+\f1\b CST 41
+\f0\b0 : N\'e3o tributado (al\'edquota efetiva = 0%)\
+\
+  
+\f1\b C\'e1lculo Correto da Al\'edquota Efetiva:
+\f0\b0 \
+\
+  \cf10 // Se h\'e1 benef\'edcio fiscal na origem:\cf3 \
+  aliquotaEfetiva = (VL_ICMS / VL_ITEM) * \cf10 100\cf3 \
+\
+  \cf10 // Exemplos:\cf3 \
+  \cf10 // Item: VL_ITEM=1000, VL_ICMS=120 \uc0\u8594  al\'edquota efetiva = 12%\cf3 \
+  \cf10 // Item: VL_ITEM=1000, VL_ICMS=70  \uc0\u8594  al\'edquota efetiva = 7% (benef\'edcio)\cf3 \
+  \cf10 // Item: VL_ITEM=1000, VL_ICMS=0   \uc0\u8594  al\'edquota efetiva = 0% (isento)\cf3 \
+  \uc0\u9151  \'a0\cf6 User rejected Claude's plan:\cf3 \
+     \cf12 \uc0\u9581 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9582 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f2\i\b \cf2 \ul \ulc2 Corre\'e7\'e3o: Al\'edquota Efetiva com Benef\'edcios na Origem
+\f0\i0\b0 \cf3 \ulnone                                                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Problema Identificado
+\f0\b0 \cf3                                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 A al\'edquota origem deve considerar benef\'edcios fiscais aplicados na origem. O campo ALIQ_ICMS pode estar nominal (18%), mas o valor \cf3   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 real pode ser menor devido a:\cf3                                                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Redu\'e7\'e3o de base
+\f0\b0 \cf2  (CST 10, 30, 70)\cf3                                                                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 Isen\'e7\'e3o
+\f0\b0 \cf2  (CST 40)  \cf3                                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - 
+\f1\b \cf2 N\'e3o tributado
+\f0\b0 \cf2  (CST 41)\cf3                                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Solu\'e7\'e3o: C\'e1lculo de Al\'edquota Efetiva
+\f0\b0 \cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 L\'f3gica por CST:\cf3                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 1. 
+\f1\b \cf2 CST 00, 20
+\f0\b0 \cf2 : Usar ALIQ_ICMS (sem benef\'edcio)\cf3                                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 2. 
+\f1\b \cf2 CST 10, 30, 70
+\f0\b0 \cf2 : Calcular al\'edquota efetiva (VL_ICMS/VL_ITEM*100)\cf3                                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 3. 
+\f1\b \cf2 CST 40, 41
+\f0\b0 \cf2 : Al\'edquota efetiva = 0%\cf3                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 Implementa\'e7\'e3o no sped-parser.js:\cf3                                                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf10 // Calcular al\'edquota efetiva baseada no CST e valores reais\cf3                                                                          \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 let\cf2  aliqOrigemEfetiva;\cf3                                                                                                               \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  cst = campos[\cf10 9\cf2 ] || \cf9 ""\cf2 ;\cf3                                                                                                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  valorItem = \cf14 parseFloat\cf2 (campos[\cf10 6\cf2 ]) || \cf10 0\cf2 ;\cf3                                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  valorIcms = \cf14 parseFloat\cf2 (campos[\cf10 14\cf2 ]) || \cf10 0\cf2 ;\cf3                                                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 const\cf2  aliqNominal = \cf14 parseFloat\cf2 (campos[\cf10 13\cf2 ]) || \cf10 0\cf2 ;\cf3                                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf8 switch\cf2 (cst) \{\cf3                                                                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 case\cf2  \cf9 '00'\cf2 : \cf10 // Tributado normalmente\cf3                                                                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 case\cf2  \cf9 '20'\cf2 : \cf10 // Tributado com redu\'e7\'e3o de BC no destino\cf3                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         aliqOrigemEfetiva = aliqNominal;\cf3                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf8 break\cf2 ;\cf3                                                                                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf3                                                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 case\cf2  \cf9 '10'\cf2 : \cf10 // Tributado com redu\'e7\'e3o de BC na origem\cf3                                                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 case\cf2  \cf9 '30'\cf2 : \cf10 // Isento/NT e com cobran\'e7a do ICMS por ST\cf3                                                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 case\cf2  \cf9 '70'\cf2 : \cf10 // Tributado com redu\'e7\'e3o de BC e cobran\'e7a por ST\cf3                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf10 // Calcular al\'edquota efetiva real\cf3                                                                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         aliqOrigemEfetiva = valorItem > \cf10 0\cf2  ? (valorIcms / valorItem) * \cf10 100\cf2  : \cf10 0\cf2 ;\cf3                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf8 break\cf2 ;\cf3                                                                                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf3                                                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 case\cf2  \cf9 '40'\cf2 : \cf10 // Isento\cf3                                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 case\cf2  \cf9 '41'\cf2 : \cf10 // N\'e3o tributado  \cf3                                                                                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         aliqOrigemEfetiva = \cf10 0\cf2 ;\cf3                                                                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf8 break\cf2 ;\cf3                                                                                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf3                                                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2     \cf8 default\cf2 :\cf3                                                                                                                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         \cf10 // Para outros CSTs, calcular pela propor\'e7\'e3o real\cf3                                                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2         aliqOrigemEfetiva = valorItem > \cf10 0\cf2  ? (valorIcms / valorItem) * \cf10 100\cf2  : aliqNominal;\cf3                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 \}\cf3                                                                                                                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 item.aliqOrigemNota = aliqOrigemEfetiva;\cf3                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Arquivos a Modificar
+\f0\b0 \cf3                                                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 1. 
+\f1\b sped-parser.js (10 linhas)
+\f0\b0 \cf3                                                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - Substituir \cf7 aliqOrigemNota: parseFloat(campos[13]) || 0\cf3                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - Por c\'e1lculo baseado em CST e valores reais\cf3                                                                                         \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - Adicionar l\'f3gica switch/case para CSTs\cf3                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 2. 
+\f1\b difal-calculator.js (j\'e1 correto)
+\f0\b0 \cf3                                                                                                  \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - M\'e9todo \cf7 obterAliquotaOrigem()\cf2  j\'e1 prioriza \cf7 item.aliqOrigemNota\cf3                                                                       \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - N\'e3o precisa altera\'e7\'e3o\cf3                                                                                                              \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Exemplos Pr\'e1ticos
+\f0\b0 \cf3                                                                                                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 Caso 1: Sem Benef\'edcio\cf3                                                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 CST: "00", VL
+\f3\i _ITEM: 1000, VL_
+\f0\i0 ICMS: 180, ALIQ
+\f3\i _ICMS: 18
+\f0\i0 \cf3                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f3\i \cf2 \uc0\u8594  aliqOrigemEfetiva = 18% (usar nominal)
+\f0\i0 \cf3                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 Caso 2: Redu\'e7\'e3o de Base na Origem\cf3                                                                                                    \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 CST: "10", VL
+\f3\i _ITEM: 1000, VL_
+\f0\i0 ICMS: 108, ALIQ
+\f3\i _ICMS: 18
+\f0\i0 \cf3                                                                                \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f3\i \cf2 \uc0\u8594  aliqOrigemEfetiva = 10.8% (108/1000*100)
+\f0\i0 \cf3                                                                                           \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf13 Caso 3: Isen\'e7\'e3o na Origem\cf3                                                                                                            \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 CST: "40", VL
+\f3\i _ITEM: 1000, VL_
+\f0\i0 ICMS: 0, ALIQ
+\f3\i _ICMS: 0  
+\f0\i0 \cf3                                                                                 \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f3\i \cf2 \uc0\u8594  aliqOrigemEfetiva = 0%
+\f0\i0 \cf3                                                                                                             \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  
+\f1\b \cf2 Resultado Esperado
+\f0\b0 \cf3                                                                                                                   \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3                                                                                                                                      \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  Al\'edquotas origem corretas considerando benef\'edcios fiscais\cf3                                                                        \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  DIFAL calculado com al\'edquotas efetivas reais\cf3                                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  CST 40/41 geram al\'edquota origem 0% (correto)\cf3                                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9474 \cf3  \cf2 - \uc0\u9989  CST 10/30/70 usam al\'edquota efetiva calculada\cf3                                                                                     \cf12 \uc0\u9474 \cf3 \
+     \cf12 \uc0\u9584 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9472 \u9583 \cf3 \
+\
+\cf2 >\cf3  \cf2 /Users/ceciliodaher/Documents/git/difal/documentos/CST-CSOSN.pdf traz os CSTs a serem considerados.\cf3 \
+\
+\cf5 \uc0\u9210 \cf3  
+\f1\b Read
+\f0\b0 (../documentos/CST-CSOSN.pdf)\
+  \uc0\u9151  \'a0Read PDF (36.3KB)\
+                                                                                             \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+\cf16 \uc0\u9210 \cf3  User approved Claude's plan:\
+  \uc0\u9151  \'a0
+\f2\i\b \cf2 \ul \ulc2 Corre\'e7\'e3o CST: Al\'edquota Efetiva Conforme Documento Oficial
+\f0\i0\b0 \cf3 \ulnone \
+\
+     
+\f1\b \cf2 CSTs Identificados no Documento
+\f0\b0 \cf3 \
+\
+     
+\f1\b \cf2 Grupo 1: Usar Al\'edquota Nominal (sem benef\'edcio origem)
+\f0\b0 \cf3 \
+\
+     \cf2 - 
+\f1\b \cf2 00
+\f0\b0 \cf2 : Tributada integralmente\cf3 \
+     \cf2 - 
+\f1\b \cf2 90
+\f0\b0 \cf2 : Outras (tributa\'e7\'e3o normal)\cf3 \
+\
+     
+\f1\b \cf2 Grupo 2: Calcular Al\'edquota Efetiva (benef\'edcio origem)
+\f0\b0 \cf3 \
+\
+     \cf2 - 
+\f1\b \cf2 10
+\f0\b0 \cf2 : Tributada com ST (pode ter redu\'e7\'e3o)\cf3 \
+     \cf2 - 
+\f1\b \cf2 20
+\f0\b0 \cf2 : Com redu\'e7\'e3o de base de c\'e1lculo\cf3 \
+     \cf2 - 
+\f1\b \cf2 30
+\f0\b0 \cf2 : Isenta/NT com ST (calcular real)\cf3 \
+     \cf2 - 
+\f1\b \cf2 70
+\f0\b0 \cf2 : Com redu\'e7\'e3o de BC e ST\cf3 \
+\
+     
+\f1\b \cf2 Grupo 3: Al\'edquota Zero (isento/n\'e3o tributado)
+\f0\b0 \cf3 \
+\
+     \cf2 - 
+\f1\b \cf2 40
+\f0\b0 \cf2 : Isenta\cf3 \
+     \cf2 - 
+\f1\b \cf2 41
+\f0\b0 \cf2 : N\'e3o tributada\cf3 \
+     \cf2 - 
+\f1\b \cf2 50
+\f0\b0 \cf2 : Suspens\'e3o\cf3 \
+     \cf2 - 
+\f1\b \cf2 51
+\f0\b0 \cf2 : Diferimento\cf3 \
+\
+     
+\f1\b \cf2 Grupo 4: Situa\'e7\'f5es Especiais
+\f0\b0 \cf3 \
+\
+     \cf2 - 
+\f1\b \cf2 60
+\f0\b0 \cf2 : ICMS cobrado anteriormente por ST (al\'edquota = 0 na origem)\cf3 \
+\
+     
+\f1\b \cf2 L\'f3gica de Implementa\'e7\'e3o
+\f0\b0 \cf3 \
+\
+     
+\f1\b \cf2 sped-parser.js - C\'e1lculo por CST:
+\f0\b0 \cf3 \
+\
+     \cf10 // Extrair dados do SPED\cf3 \
+     \cf8 const\cf2  cst = campos[\cf10 9\cf2 ] || \cf9 ""\cf2 ;\cf3 \
+     \cf8 const\cf2  valorItem = \cf14 parseFloat\cf2 (campos[\cf10 6\cf2 ]) || \cf10 0\cf2 ;\cf3 \
+     \cf8 const\cf2  valorIcms = \cf14 parseFloat\cf2 (campos[\cf10 14\cf2 ]) || \cf10 0\cf2 ; \cf3 \
+     \cf8 const\cf2  aliqNominal = \cf14 parseFloat\cf2 (campos[\cf10 13\cf2 ]) || \cf10 0\cf2 ;\cf3 \
+\
+     \cf8 let\cf2  aliqOrigemEfetiva;\cf3 \
+\
+     \cf10 // Classificar por grupos CST\cf3 \
+     \cf8 switch\cf2 (cst) \{\cf3 \
+     \cf2     \cf10 // GRUPO 1: Tributa\'e7\'e3o integral (usar al\'edquota nominal)\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '00'\cf2 : \cf10 // Tributada integralmente\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '90'\cf2 : \cf10 // Outras\cf3 \
+     \cf2         aliqOrigemEfetiva = aliqNominal;\cf3 \
+     \cf2         \cf8 break\cf2 ;\cf3 \
+     \cf2         \cf3 \
+     \cf2     \cf10 // GRUPO 2: Benef\'edcios fiscais (calcular al\'edquota efetiva)\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '10'\cf2 : \cf10 // Tributada com ST\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '20'\cf2 : \cf10 // Com redu\'e7\'e3o de BC\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '30'\cf2 : \cf10 // Isenta/NT com ST  \cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '70'\cf2 : \cf10 // Redu\'e7\'e3o BC + ST\cf3 \
+     \cf2         \cf10 // Calcular al\'edquota efetiva: (VL_ICMS / VL_ITEM) * 100\cf3 \
+     \cf2         aliqOrigemEfetiva = valorItem > \cf10 0\cf2  ? (valorIcms / valorItem) * \cf10 100\cf2  : \cf10 0\cf2 ;\cf3 \
+     \cf2         \cf8 break\cf2 ;\cf3 \
+     \cf2         \cf3 \
+     \cf2     \cf10 // GRUPO 3: Isen\'e7\'e3o/N\'e3o tributado (al\'edquota zero)\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '40'\cf2 : \cf10 // Isenta\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '41'\cf2 : \cf10 // N\'e3o tributada\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '50'\cf2 : \cf10 // Suspens\'e3o\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '51'\cf2 : \cf10 // Diferimento\cf3 \
+     \cf2         aliqOrigemEfetiva = \cf10 0\cf2 ;\cf3 \
+     \cf2         \cf8 break\cf2 ;\cf3 \
+     \cf2         \cf3 \
+     \cf2     \cf10 // GRUPO 4: ST anterior (sem ICMS na origem)\cf3 \
+     \cf2     \cf8 case\cf2  \cf9 '60'\cf2 : \cf10 // ICMS cobrado anteriormente por ST\cf3 \
+     \cf2         aliqOrigemEfetiva = \cf10 0\cf2 ;\cf3 \
+     \cf2         \cf8 break\cf2 ;\cf3 \
+     \cf2         \cf3 \
+     \cf2     \cf10 // DEFAULT: Calcular pela propor\'e7\'e3o (seguran\'e7a)\cf3 \
+     \cf2     \cf8 default\cf2 :\cf3 \
+     \cf2         \cf14 console\cf2 .warn(\cf9 `\uc0\u9888 \u65039  CST n\'e3o mapeado: $\{cst\}, calculando por propor\'e7\'e3o`\cf2 );\cf3 \
+     \cf2         aliqOrigemEfetiva = valorItem > \cf10 0\cf2  ? (valorIcms / valorItem) * \cf10 100\cf2  : aliqNominal;\cf3 \
+     \cf2 \}\cf3 \
+\
+     \cf10 // Adicionar ao item\cf3 \
+     \cf2 item.aliqOrigemNota = aliqOrigemEfetiva;\cf3 \
+     \cf2 item.cstOrigem = cst; \cf10 // Para debug/auditoria\cf3 \
+\
+     
+\f1\b \cf2 Impactos no C\'e1lculo DIFAL
+\f0\b0 \cf3 \
+\
+     
+\f1\b \cf2 Cen\'e1rio 1: CST 20 (Redu\'e7\'e3o de Base)
+\f0\b0 \cf3 \
+\
+     \cf2 VL
+\f3\i _ITEM: 1000, VL_
+\f0\i0 ICMS: 90, ALIQ
+\f3\i _ICMS: 18, CST: "20"
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 \uc0\u8594  aliqOrigemEfetiva = 9% (90/1000*100)
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 \uc0\u8594  DIFAL = max(0, icmsDestino - icmsOrigem)
+\f0\i0 \cf3 \
+\
+     
+\f1\b \cf2 Cen\'e1rio 2: CST 40 (Isento)
+\f0\b0 \cf3 \
+\
+     \cf2 VL
+\f3\i _ITEM: 1000, VL_
+\f0\i0 ICMS: 0, ALIQ
+\f3\i _ICMS: 0, CST: "40"
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 \uc0\u8594  aliqOrigemEfetiva = 0%
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 \uc0\u8594  DIFAL = 100% do ICMS destino
+\f0\i0 \cf3 \
+\
+     
+\f1\b \cf2 Cen\'e1rio 3: CST 00 (Normal)
+\f0\b0 \cf3 \
+\
+     \cf2 VL
+\f3\i _ITEM: 1000, VL_
+\f0\i0 ICMS: 120, ALIQ
+\f3\i _ICMS: 12, CST: "00" 
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 \uc0\u8594  aliqOrigemEfetiva = 12% (usar nominal)
+\f0\i0 \cf3 \
+     
+\f3\i \cf2 \uc0\u8594  DIFAL = diferen\'e7a normal
+\f0\i0 \cf3 \
+\
+     
+\f1\b \cf2 Arquivos a Modificar
+\f0\b0 \cf3 \
+\
+     
+\f1\b \cf2 1. sped-parser.js\cf13  (substituir c\'e1lculo aliqOrigemNota)
+\f0\b0 \cf3 \
+\
+     \cf2 - Implementar l\'f3gica switch/case baseada em CST\cf3 \
+     \cf2 - Adicionar propriedade \cf7 cstOrigem\cf2  para auditoria\cf3 \
+     \cf2 - Valida\'e7\'f5es de seguran\'e7a (VL_ITEM > 0)\cf3 \
+\
+     
+\f1\b \cf2 2. Documentar no CLAUDE.md
+\f0\b0 \cf3 \
+\
+     \cf2 - Mapeamento CST \uc0\u8594  C\'e1lculo de al\'edquota\cf3 \
+     \cf2 - Refer\'eancia ao documento oficial CST-CSOSN.pdf\cf3 \
+     \cf2 - Exemplos pr\'e1ticos por CST\cf3 \
+\
+     
+\f1\b \cf2 Valida\'e7\'e3o de Qualidade
+\f0\b0 \cf3 \
+\
+     
+\f1\b \cf2 Testes Esperados:
+\f0\b0 \cf3 \
+\
+     \cf2 - \uc0\u9989  CST 00/90: al\'edquota nominal preservada\cf3 \
+     \cf2 - \uc0\u9989  CST 20/70: al\'edquota efetiva calculada corretamente  \cf3 \
+     \cf2 - \uc0\u9989  CST 40/41: al\'edquota zero p}

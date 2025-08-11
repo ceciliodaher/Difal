@@ -291,7 +291,8 @@ class SpedParserModular {
                 // Campos calculados
                 valorLiquido: 0,
                 baseCalculoDifal: 0,
-                ufOrigem: this.dadosEmpresa?.uf || '',
+                ufOrigem: 'XX',  // UF genérica para forçar operação interestadual
+                aliqOrigemNota: parseFloat(campos[13]) || 0,  // Alíquota real do SPED para DIFAL
                 
                 // Debug info
                 camposOriginais: campos,

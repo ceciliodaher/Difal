@@ -66,35 +66,36 @@ window.DIFAL_CONSTANTS = {
             BASE_DUPLA: 'base-dupla'
         },
 
-        // Alíquotas padrão FCP por UF
+        // Alíquotas FCP por UF - Conforme documentação oficial 2025
+        // LÓGICA: Faixas (1% a 2%) = usar MÍNIMO | Até x% = usar ZERO | Fixo = usar FIXO
         FCP_DEFAULT: {
-            'AC': 0,    // Acre
-            'AL': 0,    // Alagoas  
-            'AP': 0,    // Amapá
-            'AM': 0,    // Amazonas
-            'BA': 2,    // Bahia
-            'CE': 2,    // Ceará
-            'DF': 0,    // Distrito Federal
-            'ES': 1,    // Espírito Santo
-            'GO': 0,    // Goiás
-            'MA': 2,    // Maranhão
-            'MT': 0,    // Mato Grosso
-            'MS': 0,    // Mato Grosso do Sul
-            'MG': 0,    // Minas Gerais
-            'PA': 2,    // Pará
-            'PB': 2,    // Paraíba
-            'PR': 0,    // Paraná
-            'PE': 2,    // Pernambuco
-            'PI': 2,    // Piauí
-            'RJ': 2,    // Rio de Janeiro
-            'RN': 2,    // Rio Grande do Norte
-            'RS': 0,    // Rio Grande do Sul
-            'RO': 0,    // Rondônia
-            'RR': 0,    // Roraima
-            'SC': 0,    // Santa Catarina
-            'SP': 0,    // São Paulo
-            'SE': 2,    // Sergipe
-            'TO': 0     // Tocantins
+            'AC': 0,    // Acre - Não possui
+            'AL': 1,    // Alagoas - 1,00% a 2,00% (usar mínimo = 1%)  
+            'AP': 0,    // Amapá - Não possui
+            'AM': 1.5,  // Amazonas - 1,50% a 2,00% (usar mínimo = 1,5%)
+            'BA': 2,    // Bahia - 2,00% (fixo)
+            'CE': 2,    // Ceará - 2,00% (fixo)
+            'DF': 2,    // Distrito Federal - 2,00% (fixo)
+            'ES': 2,    // Espírito Santo - 2,00% (fixo)
+            'GO': 0,    // Goiás - Até 2,00% (não cobra atualmente = usar zero)
+            'MA': 2,    // Maranhão - 2,00% (fixo)
+            'MT': 0,    // Mato Grosso - Até 2,00% (usar zero)
+            'MS': 0,    // Mato Grosso do Sul - Até 2,00% (usar zero)
+            'MG': 2,    // Minas Gerais - 2,00% (fixo)
+            'PA': 0,    // Pará - Não possui
+            'PB': 2,    // Paraíba - 2,00% (fixo)
+            'PR': 2,    // Paraná - 2,00% (fixo)
+            'PE': 2,    // Pernambuco - 2,00% (fixo)
+            'PI': 2,    // Piauí - 2,00% (fixo)
+            'RJ': 0,    // Rio de Janeiro - Até 4,00% (usar zero)
+            'RN': 2,    // Rio Grande do Norte - 2,00% (fixo)
+            'RS': 2,    // Rio Grande do Sul - 2,00% (fixo)
+            'RO': 2,    // Rondônia - 2,00% (fixo)
+            'RR': 0,    // Roraima - Até 2,00% (usar zero)
+            'SC': 0,    // Santa Catarina - Não possui
+            'SP': 2,    // São Paulo - 2,00% (fixo)
+            'SE': 1,    // Sergipe - 1,00% a 2,00% (usar mínimo = 1%)
+            'TO': 2     // Tocantins - 2,00% (fixo)
         },
 
         // Alíquotas interestaduais padrão ICMS  

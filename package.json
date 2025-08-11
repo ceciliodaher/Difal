@@ -1,0 +1,23 @@
+{
+  "name": "difal",
+  "version": "1.0.0",
+  "main": "test-difal-system.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ceciliodaher/Difal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ceciliodaher/Difal/issues"
+  },
+  "homepage": "https://github.com/ceciliodaher/Difal#readme",
+  "description": "",
+  "dependencies": {
+    "playwright": "^1.54.2"
+  }
+}

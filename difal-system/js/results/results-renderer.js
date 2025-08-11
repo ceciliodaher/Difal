@@ -37,7 +37,7 @@ class ResultsRenderer {
                 sortColumn: null,
                 sortDirection: 'asc',
                 filters: {
-                    showOnlyWithDifal: true,
+                    showOnlyWithDifal: false, // Exibir todos para auditoria
                     showOnlyBenefited: false,
                     minValue: 0
                 }
@@ -125,23 +125,43 @@ class ResultsRenderer {
      */
     showCalculationResults(resultados, totalizadores) {
         try {
+            console.log('🎯 ResultsRenderer.showCalculationResults chamado:', { 
+                resultados: resultados?.length || 0, 
+                totalizadores: totalizadores || 'undefined',
+                itensComDifal: resultados?.filter(r => (r.valorDifal || 0) > 0).length || 0,
+                itensSemDifal: resultados?.filter(r => (r.valorDifal || 0) === 0).length || 0
+            });
+            
             const resultsDiv = document.getElementById('calculation-results');
             const summaryDiv = document.getElementById('results-summary');
             const detailDiv = document.getElementById('results-detail');
             
+            console.log('🔍 Elementos DOM encontrados:', {
+                resultsDiv: !!resultsDiv,
+                summaryDiv: !!summaryDiv,
+                detailDiv: !!detailDiv
+            });
+            
             // Mostrar seção de resultados
             if (resultsDiv) {
                 resultsDiv.classList.remove('hidden');
+                console.log('✅ Classe "hidden" removida de #calculation-results');
+            } else {
+                console.error('❌ Elemento #calculation-results não encontrado');
             }
             
             // Renderizar resumo
             if (summaryDiv) {
+                console.log('📊 Renderizando resumo:', totalizadores);
                 this.renderResultsSummary(summaryDiv, totalizadores);
             }
             
             // Renderizar detalhes
             if (detailDiv && resultados.length > 0) {
+                console.log('📋 Renderizando detalhes para', resultados.length, 'resultados');
                 this.renderResultsDetail(detailDiv, resultados);
+            } else if (detailDiv) {
+                console.log('⚠️ Nenhum resultado para renderizar detalhes');
             }
             
             // Emitir evento de resultados exibidos
@@ -232,15 +252,16 @@ class ResultsRenderer {
      * @param {Array} resultados - Array com resultados do cálculo
      */
     renderResultsDetail(container, resultados) {
-        // Filtrar itens conforme configuração
-        const itensComDifal = resultados
-            .filter(r => !r.erro && r.difal > 0)
+        // Filtrar apenas itens com erro (manter todos os calculados para auditoria)
+        const itensCalculados = resultados
+            .filter(r => !r.erro) // Remove apenas itens com erro, mantém DIFAL=0 para auditoria
             .slice(0, this.config.table.maxItemsPerPage);
         
-        if (itensComDifal.length > 0) {
-            this.createResultsTable(container, itensComDifal);
+        if (itensCalculados.length > 0) {
+            console.log(`📋 Exibindo ${itensCalculados.length} itens calculados (incluindo DIFAL=0 para auditoria)`);
+            this.createResultsTable(container, itensCalculados);
         } else {
-            container.innerHTML = '<p class="text-center text-gray-600">Nenhum item com DIFAL a recolher</p>';
+            container.innerHTML = '<p class="text-center text-gray-600">Nenhum item calculado disponível</p>';
         }
     }
 
@@ -293,32 +314,34 @@ class ResultsRenderer {
      * @returns {string} HTML da linha da tabela
      */
     renderTableRow(resultado) {
+        const totalRecolher = (resultado.valorDifal || 0) + (resultado.valorFcp || 0);
+        
         return `
-            <tr data-item-id="${resultado.item.codItem}">
+            <tr data-item-id="${resultado.codItem}">
                 <td>
-                    <div class="font-mono text-sm">${resultado.item.codItem}</div>
+                    <div class="font-mono text-sm">${resultado.codItem}</div>
                     <div class="text-xs text-gray-600" 
-                         title="${this.formatCompleteDescription(resultado.item)}">
-                        ${this.formatDisplayDescription(resultado.item)}
+                         title="${this.formatCompleteDescription(resultado)}">
+                        ${this.formatDisplayDescription(resultado)}
                     </div>
                 </td>
-                <td class="font-mono">${resultado.item.cfop}</td>
-                <td class="text-right">${this.formatCurrency(resultado.base)}</td>
+                <td class="font-mono">${resultado.cfop}</td>
+                <td class="text-right">${this.formatCurrency(resultado.baseCalculo)}</td>
                 <td class="text-center">
-                    <span class="badge ${this.getMethodologyBadgeClass(resultado.metodologia)}">
-                        ${this.getMethodologyDisplayName(resultado.metodologia)}
+                    <span class="badge ${this.getMethodologyBadgeClass(resultado.metodoCalculo)}">
+                        ${this.getMethodologyDisplayName(resultado.metodoCalculo)}
                     </span>
                 </td>
-                <td class="text-right">${this.formatCurrency(resultado.difal)}</td>
+                <td class="text-right">${this.formatCurrency(resultado.valorDifal)}</td>
                 <td class="text-center">
                     <span class="badge badge-gray">${resultado.aliqFcp || 0}%</span>
-                    <div class="text-xs text-gray-600">${this.formatCurrency(resultado.fcp)}</div>
+                    <div class="text-xs text-gray-600">${this.formatCurrency(resultado.valorFcp)}</div>
                 </td>
-                <td class="text-right font-bold">${this.formatCurrency(resultado.totalRecolher)}</td>
+                <td class="text-right font-bold">${this.formatCurrency(totalRecolher)}</td>
                 <td class="text-center">${this.formatBenefits(resultado)}</td>
                 <td class="text-center">
                     <button class="btn btn-sm btn-outline" 
-                            onclick="window.mostrarMemoriaCalculo('${resultado.item.codItem}')">
+                            onclick="window.mostrarMemoriaCalculo('${resultado.codItem}')">
                         📋 Memória
                     </button>
                 </td>
@@ -334,7 +357,7 @@ class ResultsRenderer {
      */
     formatBenefits(resultado) {
         try {
-            const itemId = resultado.item?.codItem;
+            const itemId = resultado.codItem;
             const config = this.stateManager.getState().itemConfigs.get(itemId);
             
             if (!config || !config.beneficio) {
@@ -389,8 +412,9 @@ class ResultsRenderer {
     showMemoryCalculation(itemId) {
         try {
             const state = this.stateManager.getState();
-            const resultado = state.calculation.results?.resultados
-                .find(r => r.item.codItem === itemId);
+            // Corrigir acesso aos dados: results é o array direto, não results.resultados
+            const resultados = state.calculation.results || [];
+            const resultado = resultados.find(r => r.codItem === itemId);
             
             if (!resultado || !resultado.memoriaCalculo) {
                 this.handleError('Memória de cálculo não disponível para este item');
@@ -477,8 +501,8 @@ ${memoriaCalculo.join('\n')}
     async copyMemoryCalculation(itemId) {
         try {
             const state = this.stateManager.getState();
-            const resultado = state.calculation.results?.resultados
-                .find(r => r.item.codItem === itemId);
+            const resultados = state.calculation.results || [];
+            const resultado = resultados.find(r => r.codItem === itemId);
             
             if (!resultado || !resultado.memoriaCalculo) {
                 this.handleError('Memória de cálculo não disponível');
@@ -514,8 +538,8 @@ ${memoriaCalculo.join('\n')}
     exportMemoryCalculation(itemId) {
         try {
             const state = this.stateManager.getState();
-            const resultado = state.calculation.results?.resultados
-                .find(r => r.item.codItem === itemId);
+            const resultados = state.calculation.results || [];
+            const resultado = resultados.find(r => r.codItem === itemId);
             
             if (!resultado || !resultado.memoriaCalculo) {
                 this.handleError('Memória de cálculo não disponível');
@@ -574,8 +598,8 @@ ${memoriaCalculo.join('\n')}
      * @param {Object} item - Item do SPED
      * @returns {string} Descrição completa
      */
-    formatCompleteDescription(item) {
-        return item.descItem || `Item ${item.codItem}`;
+    formatCompleteDescription(resultado) {
+        return resultado.descricaoItem || resultado.descItem || `Item ${resultado.codItem}`;
     }
 
     /**
@@ -584,8 +608,8 @@ ${memoriaCalculo.join('\n')}
      * @param {Object} item - Item do SPED
      * @returns {string} Descrição limitada
      */
-    formatDisplayDescription(item) {
-        const description = this.formatCompleteDescription(item);
+    formatDisplayDescription(resultado) {
+        const description = this.formatCompleteDescription(resultado);
         const maxLength = this.config.display.maxDescriptionLength;
         return description.length > maxLength ? 
                `${description.substring(0, maxLength)}...` : description;

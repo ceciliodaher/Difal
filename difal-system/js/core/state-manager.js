@@ -787,6 +787,22 @@ class StateManager {
     getConsolidatedStats() {
         return this.state.periods.consolidated;
     }
+    
+    /**
+     * Obtém todo o estado de períodos
+     * @returns {Object}
+     */
+    getPeriodsState() {
+        return this.state.periods;
+    }
+    
+    /**
+     * Obtém estado das análises estatísticas
+     * @returns {Object|null}
+     */
+    getAnalyticsState() {
+        return this.state.periods.analytics;
+    }
 
     /**
      * Define análises estatísticas (Pareto, etc.)

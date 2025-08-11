@@ -317,7 +317,7 @@ class ModalManager {
             const element = document.getElementById(elementId);
             if (element) {
                 element.addEventListener('input', this.debounce(() => {
-                    this.aplicarFiltros();
+                    this.configManager.aplicarFiltros();
                 }, 300));
             }
         });
@@ -339,10 +339,10 @@ class ModalManager {
             const endIndex = startIndex + itemsPerPage;
             const pageItems = filteredItems.slice(startIndex, endIndex);
 
-            tbody.innerHTML = pageItems.map(item => this.createItemConfigRow(item)).join('');
+            tbody.innerHTML = pageItems.map(item => this.configManager.createItemConfigRow(item)).join('');
             
-            this.updatePagination();
-            this.updateSummary();
+            this.configManager.updatePagination();
+            this.configManager.updateSummary();
             this.configManager.updateStorageStats();
 
         } catch (error) {

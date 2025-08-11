@@ -85,7 +85,7 @@ test.describe('Sistema DIFAL - Teste Completo End-to-End', () => {
         expect(spedData.itensDifal.length).toBeGreaterThan(0);
         
         console.log(`✅ Upload concluído: ${spedData.itensDifal.length} itens DIFAL identificados`);
-        console.log(`📊 Empresa: ${spedData.headerInfo.nomeEmpresa} (${spedData.headerInfo.uf})`);
+        console.log(`📊 Empresa: ${spedData.dadosEmpresa.razaoSocial} (${spedData.dadosEmpresa.uf})`);
 
         // Verificar se o botão de prosseguir apareceu
         const proceedBtn = page.locator('#proceed-calculation');
