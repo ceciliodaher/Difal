@@ -387,71 +387,11 @@
     </div>
 
     <!-- Scripts -->
-    <script>
-        // ⚠️ IMPORTANTE: Funções globais DEVEM estar ANTES dos outros scripts
-        // para estarem disponíveis quando os event listeners forem criados
-        
-        // Funções globais para os modais (esperadas pelos JS modules)
-        function openConfigModal() {
-            console.log('🎯 Tentando abrir modal de configuração');
-            const modal = document.getElementById('config-modal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                console.log('✅ Modal de configuração aberto');
-            } else {
-                console.error('❌ Modal config-modal não encontrado');
-            }
-        }
-
-        function closeConfigModal() {
-            const modal = document.getElementById('config-modal');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-        }
-
-        function prosseguirParaConfiguracaoItens() {
-            console.log('🎯 Abrindo configuração de itens');
-            
-            // Fechar modal de configuração geral
-            closeConfigModal();
-            
-            // Abrir modal de configuração de itens
-            const modal = document.getElementById('item-config-modal');
-            if (modal) {
-                modal.classList.remove('hidden');
-                console.log('✅ Modal de configuração de itens aberto');
-                
-                // Carregar itens na tabela se ConfigurationManager estiver disponível
-                if (window.configurationManager && window.configurationManager.renderItemConfigTable) {
-                    window.configurationManager.renderItemConfigTable();
-                }
-            } else {
-                console.error('❌ Modal item-config-modal não encontrado');
-            }
-        }
-
-        // Esta função agora será delegada para o ui-manager.js
-        function calcularSemConfiguracaoItens() {
-            if (window.calcularSemConfiguracaoItens) {
-                window.calcularSemConfiguracaoItens();
-            } else {
-                console.error('❌ Função calcularSemConfiguracaoItens não encontrada no ui-manager.js');
-            }
-        }
-
-        function closeItemConfigModal() {
-            const modal = document.getElementById('item-config-modal');
-            if (modal) {
-                modal.classList.add('hidden');
-            }
-        }
-
-        // Placeholder functions para funções esperadas pelo JS
-        function aplicarFiltros() { console.log('aplicarFiltros called'); }
-        function limparFiltros() { console.log('limparFiltros called'); }
-        function salvarConfiguracoesPorItem() { console.log('salvarConfiguracoesPorItem called'); }
-    </script>
+    <!-- Funções inline removidas - migradas para módulos respectivos:
+         - Modal functions → js/modal/modal-manager.js
+         - Configuration functions → js/core/configuration-manager.js  
+         - UI functions → js/ui-manager.js
+    -->
     
     <!-- Módulos Core (Infraestrutura) -->
     <script src="js/core/constants.js"></script>
@@ -467,66 +407,21 @@
     <script src="js/utils.js"></script>
     <script src="js/parsing/sped-parser.js"></script>
     <script src="js/calculation/difal-calculator.js"></script>
-    <script src="js/app-modular.js"></script>
     
-    <script>
-        // Inicialização da aplicação modular
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Iniciando Sistema DIFAL Modular...');
-            
-            // Verificar dependências modulares
-            if (typeof DifalAppModular === 'undefined') {
-                console.error('❌ DifalAppModular não encontrado!');
-                return;
-            }
-            
-            // Criar e inicializar aplicação modular
-            window.difalApp = new DifalAppModular();
-            window.difalApp.init().then(() => {
-                console.log('✅ Sistema DIFAL Modular pronto!');
-                
-                // Configurar funções globais compatíveis
-                window.calcularSemConfiguracaoItens = function() {
-                    console.log('🎯 Iniciando cálculo sem configuração individual...');
-                    
-                    const configGeral = {
-                        metodologia: document.querySelector('input[name="metodologia"]:checked')?.value || 'auto',
-                        cargaEfetiva: parseFloat(document.getElementById('carga-efetiva')?.value) || null,
-                        aliqOrigemEfetiva: parseFloat(document.getElementById('aliq-origem-efetiva')?.value) || null,
-                        aliqDestinoEfetiva: parseFloat(document.getElementById('aliq-destino-efetiva')?.value) || null
-                    };
-                    
-                    // Debug - verificar se há dados disponíveis
-                    if (window.difalApp.currentData && window.difalApp.currentData.itensDifal) {
-                        console.log(`📊 Dados disponíveis: ${window.difalApp.currentData.itensDifal.length} itens DIFAL`);
-                    } else {
-                        console.error('❌ Nenhum dado DIFAL disponível');
-                        alert('Erro: Nenhum item DIFAL disponível para cálculo');
-                        return;
-                    }
-                    
-                    window.difalApp.calculateDifal(configGeral)
-                        .then((resultado) => {
-                            console.log('✅ Cálculo concluído:', resultado);
-                            
-                            // Fechar modal
-                            if (window.closeConfigModal) {
-                                window.closeConfigModal();
-                            }
-                            
-                            // Ir para seção de resultados
-                            window.difalApp.showCalculationSection();
-                        })
-                        .catch(error => {
-                            console.error('❌ Erro no cálculo:', error);
-                            alert('Erro no cálculo: ' + error.message);
-                        });
-                };
-                
-            }).catch(error => {
-                console.error('❌ Erro ao inicializar aplicação modular:', error);
-            });
-        });
-    </script>
+    <!-- Novos Módulos UI -->
+    <script src="js/export/export-manager.js"></script>
+    <script src="js/file/file-upload-manager.js"></script>
+    <script src="js/modal/modal-manager.js"></script>
+    <script src="js/results/results-renderer.js"></script>
+    <script src="js/ui/navigation-manager.js"></script>
+    <script src="js/ui/progress-manager.js"></script>
+    <script src="js/ui/pagination-manager.js"></script>
+    
+    <!-- UI Manager Principal -->
+    <script src="js/ui-manager.js"></script>
+    
+    <!-- App Principal -->
+    <script src="js/app.js"></script>
+    
 </body>
 </html>

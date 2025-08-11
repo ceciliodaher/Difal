@@ -95,6 +95,15 @@ class ConfigurationManager {
         window.calcularComConfiguracoesItens = function() {
             self.calcularComConfiguracoesItens();
         };
+
+        // Funções de filtros (chamadas pelos event handlers do HTML)
+        window.aplicarFiltros = function() {
+            self.aplicarFiltros();
+        };
+
+        window.limparFiltros = function() {
+            self.limparFiltros();
+        };
     }
 
     /**
@@ -267,7 +276,13 @@ class ConfigurationManager {
             return;
         }
         
-        const itensComMesmoNCM = window.spedData.itensDifal.filter(item => item.ncm === ncm);
+        const spedData = this.stateManager.getSpedData();
+        if (!spedData || !spedData.itensDifal) {
+            alert('Dados SPED não disponíveis');
+            return;
+        }
+        
+        const itensComMesmoNCM = spedData.itensDifal.filter(item => item.ncm === ncm);
         const count = itensComMesmoNCM.length;
         
         if (confirm(`Aplicar configuração deste item para ${count} item(ns) com NCM ${ncm}?`)) {
@@ -282,10 +297,8 @@ class ConfigurationManager {
                 Object.assign(window.difalConfiguracoesItens[itemId], configOrigem);
             });
             
-            // Re-renderizar tabela se a função existir no UIManager
-            if (window.uiManager && window.uiManager.renderItemConfigTable) {
-                window.uiManager.renderItemConfigTable();
-            }
+            // Re-renderizar tabela usando método próprio
+            this.renderItemConfigTable();
             
             alert(`Configuração aplicada para ${count} item(ns) com NCM ${ncm}`);
         }
@@ -299,12 +312,15 @@ class ConfigurationManager {
         if (window.difalConfiguracoesItens[itemId]) {
             delete window.difalConfiguracoesItens[itemId];
             
-            // Re-renderizar linha se a função existir no UIManager
+            // Re-renderizar linha usando método próprio
             const row = document.querySelector(`tr[data-item="${itemId}"]`);
-            if (row && window.uiManager) {
-                const item = window.spedData.itensDifal.find(i => i.codItem === itemId);
-                if (item && window.uiManager.createItemConfigRow) {
-                    row.outerHTML = window.uiManager.createItemConfigRow(item);
+            if (row) {
+                const spedData = this.stateManager.getSpedData();
+                if (spedData && spedData.itensDifal) {
+                    const item = spedData.itensDifal.find(i => i.codItem === itemId);
+                    if (item) {
+                        row.outerHTML = this.createItemConfigRow(item);
+                    }
                 }
             }
             
@@ -360,9 +376,7 @@ class ConfigurationManager {
             this.limparConfiguracoesLocalStorage();
             
             // Recarregar a tabela para refletir as mudanças
-            if (window.uiManager && window.uiManager.renderItemConfigTable) {
-                window.uiManager.renderItemConfigTable();
-            }
+            this.renderItemConfigTable();
             
             // Atualizar estatísticas na interface
             this.updateStorageStats();
@@ -383,18 +397,20 @@ class ConfigurationManager {
      */
     calcularComConfiguracoesItens() {
         const configCount = Object.keys(window.difalConfiguracoesItens).length;
-        const totalItems = window.spedData?.itensDifal?.length || 0;
+        const spedData = this.stateManager.getSpedData();
+        const totalItems = spedData?.itensDifal?.length || 0;
         
         console.log(`🧮 Calculando DIFAL com ${configCount} configuração(ões) de item`);
         
         // Fechar modal se estiver aberto
-        if (window.uiManager && window.uiManager.closeItemConfigModal) {
-            window.uiManager.closeItemConfigModal();
+        if (window.closeItemConfigModal) {
+            window.closeItemConfigModal();
         }
         
-        // Calcular com configurações
-        if (window.uiManager && window.uiManager.calculateDifalComConfiguracao) {
-            window.uiManager.calculateDifalComConfiguracao(window.difalConfiguracaoGeral);
+        // Calcular com configurações usando sistema modular
+        if (window.difalApp && window.difalApp.calculateDifal) {
+            const configGeral = window.difalConfiguracaoGeral || {};
+            window.difalApp.calculateDifal(configGeral);
         }
         
         // Emitir evento para notificar outros módulos
@@ -753,6 +769,224 @@ class ConfigurationManager {
             console.error('❌ Erro ao importar configurações:', error);
             return false;
         }
+    }
+
+    // === FUNÇÕES DE RENDERIZAÇÃO E UI ===
+
+    /**
+     * Renderiza tabela de configuração de itens - MÉTODO CRÍTICO
+     */
+    renderItemConfigTable() {
+        console.log('🎯 renderItemConfigTable called');
+        
+        // Obter dados via StateManager (versão modular)
+        const spedData = this.stateManager.getSpedData();
+        if (!spedData || !spedData.itensDifal) {
+            console.error('❌ Nenhum dado SPED disponível para renderização');
+            this.renderEmptyTable();
+            return;
+        }
+
+        // Inicializar itens filtrados
+        this.filteredItems = [...spedData.itensDifal];
+        this.currentPage = 1;
+        this.totalPages = Math.ceil(this.filteredItems.length / this.pageSize);
+
+        console.log(`📊 Renderizando tabela com ${this.filteredItems.length} itens DIFAL`);
+
+        // Renderizar tabela
+        this.renderTableContent();
+        
+        // Atualizar componentes auxiliares
+        this.setupFilters();
+        this.updateSummary();
+        this.updatePagination();
+        this.updateStorageStats();
+    }
+
+    /**
+     * Renderiza conteúdo da tabela
+     */
+    renderTableContent() {
+        const tbody = document.querySelector('#tabela-configuracao-itens tbody');
+        if (!tbody) {
+            console.error('❌ Tbody da tabela não encontrado');
+            return;
+        }
+
+        const startIndex = (this.currentPage - 1) * this.pageSize;
+        const endIndex = startIndex + this.pageSize;
+        const pageItems = this.filteredItems.slice(startIndex, endIndex);
+
+        tbody.innerHTML = pageItems.map(item => this.createItemConfigRow(item)).join('');
+    }
+
+    /**
+     * Renderiza tabela vazia
+     */
+    renderEmptyTable() {
+        const tbody = document.querySelector('#tabela-configuracao-itens tbody');
+        if (tbody) {
+            tbody.innerHTML = '<tr><td colspan="9" class="text-center text-gray-500">Nenhum item DIFAL disponível</td></tr>';
+        }
+        
+        // Zerar estatísticas
+        const elements = {
+            'total-itens-config': '0',
+            'itens-com-beneficio': '0', 
+            'valor-total-base': 'R$ 0,00',
+            'configs-localstorage': '0'
+        };
+
+        Object.entries(elements).forEach(([id, value]) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        });
+    }
+
+    /**
+     * Cria linha de configuração para um item
+     */
+    createItemConfigRow(item) {
+        const itemId = item.codItem;
+        const config = window.difalConfiguracoesItens[itemId] || {};
+        
+        return `
+            <tr class="item-row ${config.beneficio ? 'with-benefit' : ''} ${config.fcpManual ? 'with-fcp' : ''}" data-item="${itemId}">
+                <td class="font-mono">${item.codItem}</td>
+                <td class="font-mono">${item.ncm || 'N/A'}</td>
+                <td class="descricao-cell" title="${this.formatarDescricaoCompleta(item)}">${this.formatarDescricaoExibicao(item, 30)}</td>
+                <td class="font-mono">${item.cfop}</td>
+                <td class="text-right">${window.Utils?.formatarMoeda(item.baseCalculoDifal) || item.baseCalculoDifal}</td>
+                <td>
+                    <select onchange="configurarBeneficioItem('${itemId}', this.value)">
+                        <option value="" ${!config.beneficio ? 'selected' : ''}>Nenhum</option>
+                        <option value="reducao-base" ${config.beneficio === 'reducao-base' ? 'selected' : ''}>Redução Base</option>
+                        <option value="reducao-aliquota-origem" ${config.beneficio === 'reducao-aliquota-origem' ? 'selected' : ''}>Redução Alíq. Origem</option>
+                        <option value="reducao-aliquota-destino" ${config.beneficio === 'reducao-aliquota-destino' ? 'selected' : ''}>Redução Alíq. Destino</option>
+                        <option value="isencao" ${config.beneficio === 'isencao' ? 'selected' : ''}>Isenção</option>
+                    </select>
+                </td>
+                <td>
+                    <div id="beneficio-fields-${itemId}" class="beneficio-fields-inline ${config.beneficio ? 'show' : ''}">
+                        ${this.createBeneficioFields(itemId, config)}
+                    </div>
+                </td>
+                <td class="text-center">
+                    <input type="number" min="0" max="4" step="0.1" 
+                           value="${config.fcpManual || ''}" 
+                           placeholder="2.0"
+                           onchange="configurarFcpItem('${itemId}', this.value)"
+                           style="width: 60px;">
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-mini apply-ncm" 
+                                onclick="aplicarPorNCM('${item.ncm}', '${itemId}')"
+                                title="Aplicar para todos os itens deste NCM">
+                            NCM
+                        </button>
+                        <button class="btn-mini clear" 
+                                onclick="limparConfigItem('${itemId}')"
+                                title="Limpar configuração">
+                            ×
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    /**
+     * Configura filtros dos selects
+     */
+    setupFilters() {
+        const spedData = this.stateManager.getSpedData();
+        if (!spedData || !spedData.itensDifal) return;
+
+        // Filtro CFOP
+        const cfopSelect = document.getElementById('filtro-cfop');
+        if (cfopSelect) {
+            const cfopsUnicos = [...new Set(spedData.itensDifal.map(item => item.cfop))].sort();
+            cfopSelect.innerHTML = '<option value="">Todos</option>' + 
+                cfopsUnicos.map(cfop => `<option value="${cfop}">${cfop}</option>`).join('');
+        }
+
+        // Filtro NCM
+        const ncmSelect = document.getElementById('filtro-ncm');
+        if (ncmSelect) {
+            const ncmsUnicos = [...new Set(spedData.itensDifal.map(item => item.ncm).filter(Boolean))].sort();
+            ncmSelect.innerHTML = '<option value="">Todos</option>' + 
+                ncmsUnicos.map(ncm => `<option value="${ncm}">${ncm}</option>`).join('');
+        }
+    }
+
+    /**
+     * Atualiza paginação
+     */
+    updatePagination() {
+        const infoPagina = document.getElementById('info-pagina');
+        if (infoPagina) {
+            infoPagina.textContent = `Página ${this.currentPage} de ${this.totalPages}`;
+        }
+    }
+
+    /**
+     * Formata descrição completa do item
+     */
+    formatarDescricaoCompleta(item) {
+        return item.descricaoItem || `Item ${item.codItem} - NCM ${item.ncm}`;
+    }
+
+    /**
+     * Formata descrição para exibição (truncada)
+     */
+    formatarDescricaoExibicao(item, maxLength = 30) {
+        const desc = this.formatarDescricaoCompleta(item);
+        return desc.length > maxLength ? desc.substring(0, maxLength) + '...' : desc;
+    }
+
+    /**
+     * Aplicar filtros nos itens
+     */
+    aplicarFiltros() {
+        const spedData = this.stateManager.getSpedData();
+        if (!spedData || !spedData.itensDifal) return;
+
+        const cfopFiltro = document.getElementById('filtro-cfop')?.value;
+        const ncmFiltro = document.getElementById('filtro-ncm')?.value;
+        const valorMinFiltro = parseFloat(document.getElementById('filtro-valor-min')?.value) || 0;
+        const buscaFiltro = document.getElementById('busca-item')?.value.toLowerCase();
+
+        this.filteredItems = spedData.itensDifal.filter(item => {
+            const matchCfop = !cfopFiltro || item.cfop === cfopFiltro;
+            const matchNcm = !ncmFiltro || item.ncm === ncmFiltro;
+            const matchValor = !valorMinFiltro || (parseFloat(item.baseCalculoDifal) || 0) >= valorMinFiltro;
+            const matchBusca = !buscaFiltro || 
+                item.codItem.toLowerCase().includes(buscaFiltro) ||
+                (item.descricaoItem || '').toLowerCase().includes(buscaFiltro) ||
+                (item.ncm || '').toLowerCase().includes(buscaFiltro);
+
+            return matchCfop && matchNcm && matchValor && matchBusca;
+        });
+
+        this.currentPage = 1;
+        this.totalPages = Math.ceil(this.filteredItems.length / this.pageSize);
+        this.renderTableContent();
+        this.updateSummary();
+        this.updatePagination();
+    }
+
+    /**
+     * Limpar filtros
+     */
+    limparFiltros() {
+        document.getElementById('filtro-cfop').value = '';
+        document.getElementById('filtro-ncm').value = '';
+        document.getElementById('filtro-valor-min').value = '';
+        document.getElementById('busca-item').value = '';
+        
+        this.aplicarFiltros();
     }
 }
 

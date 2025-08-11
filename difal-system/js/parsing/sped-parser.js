@@ -548,6 +548,8 @@ class SpedParserModular {
 // Expor globalmente para compatibilidade
 if (typeof window !== 'undefined') {
     window.SpedParserModular = SpedParserModular;
+    // Alias para compatibilidade com código existente
+    window.SpedParser = SpedParserModular;
 }
 
 // Exportar classe para uso se necessário

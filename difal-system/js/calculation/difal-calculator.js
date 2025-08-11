@@ -482,6 +482,8 @@ class DifalCalculatorModular {
 // Expor globalmente para compatibilidade
 if (typeof window !== 'undefined') {
     window.DifalCalculatorModular = DifalCalculatorModular;
+    // Alias para compatibilidade com código existente
+    window.DifalCalculator = DifalCalculatorModular;
 }
 
 // Exportar classe para uso se necessário

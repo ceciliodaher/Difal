@@ -1,0 +1,691 @@
+/**
+ * @fileoverview Navigation Manager - Módulo de gerenciamento de navegação
+ * @module NavigationManager
+ * @description Responsável por controlar a navegação entre seções, estados de botões,
+ * transições de interface e sincronização de informações da empresa durante a navegação.
+ * 
+ * @author Sistema DIFAL
+ * @version 1.0.0
+ * @since 2025-01-10
+ */
+
+/**
+ * @class NavigationManager
+ * @classdesc Gerencia todas as operações de navegação do sistema DIFAL
+ */
+class NavigationManager {
+    /**
+     * @constructor
+     * @param {StateManager} stateManager - Instância do gerenciador de estado
+     * @param {EventBus} eventBus - Instância do barramento de eventos
+     */
+    constructor(stateManager, eventBus) {
+        if (!stateManager) {
+            throw new Error('NavigationManager requer uma instância de StateManager');
+        }
+        
+        this.stateManager = stateManager;
+        this.eventBus = eventBus;
+        
+        // Estado da navegação
+        this.navigationState = {
+            currentSection: 'upload-section',
+            previousSection: null,
+            history: [],
+            transitionInProgress: false,
+            maxHistorySize: 20
+        };
+        
+        // Configurações de navegação
+        this.config = {
+            sections: [
+                'upload-section',
+                'analysis-section', 
+                'calculation-section',
+                'results-section',
+                'reports-section'
+            ],
+            transitions: {
+                duration: 300,
+                easing: 'ease-in-out'
+            },
+            breadcrumbs: {
+                enabled: true,
+                showSectionNames: true
+            }
+        };
+        
+        this.init();
+    }
+
+    /**
+     * Inicializa o Navigation Manager
+     * @private
+     */
+    init() {
+        this.setupEventListeners();
+        this.setupNavigationButtons();
+        this.initializeCurrentSection();
+        this.setupBreadcrumbs();
+        console.log('🧭 NavigationManager inicializado com sucesso');
+    }
+
+    /**
+     * Configura listeners de eventos
+     * @private
+     */
+    setupEventListeners() {
+        // Listeners do EventBus
+        if (this.eventBus) {
+            this.eventBus.on('SECTION_CHANGE_REQUESTED', (data) => {
+                this.handleSectionChangeRequest(data);
+            });
+            
+            this.eventBus.on('DATA_LOADED', () => {
+                this.onDataLoaded();
+            });
+            
+            this.eventBus.on('CALCULATION_COMPLETED', () => {
+                this.onCalculationCompleted();
+            });
+        }
+        
+        // Listener do StateManager para mudanças de seção
+        if (this.stateManager) {
+            this.stateManager.addEventListener('app.currentSection', (newSection) => {
+                this.syncWithStateManager(newSection);
+            });
+        }
+    }
+
+    /**
+     * Configura botões de navegação
+     * @private
+     */
+    setupNavigationButtons() {
+        try {
+            const navButtons = document.querySelectorAll('.nav-btn, [data-section]');
+            
+            navButtons.forEach(btn => {
+                // Remove listeners existentes
+                btn.removeEventListener('click', this.handleNavButtonClick);
+                
+                // Adiciona novo listener
+                btn.addEventListener('click', (e) => this.handleNavButtonClick(e));
+            });
+            
+            console.log(`📍 ${navButtons.length} botões de navegação configurados`);
+        } catch (error) {
+            console.error('❌ Erro ao configurar botões de navegação:', error);
+        }
+    }
+
+    /**
+     * Inicializa seção atual
+     * @private
+     */
+    initializeCurrentSection() {
+        // Verificar seção ativa no DOM
+        const activeSection = document.querySelector('.section.active');
+        if (activeSection) {
+            this.navigationState.currentSection = activeSection.id;
+        }
+        
+        // Sincronizar com StateManager
+        const stateSection = this.stateManager?.getState('app.currentSection');
+        if (stateSection) {
+            this.navigationState.currentSection = stateSection;
+        }
+        
+        // Garantir que a seção atual está visível
+        this.showSection(this.navigationState.currentSection, false);
+    }
+
+    /**
+     * Configura sistema de breadcrumbs
+     * @private
+     */
+    setupBreadcrumbs() {
+        if (!this.config.breadcrumbs.enabled) return;
+        
+        try {
+            const breadcrumbContainer = document.querySelector('.breadcrumb, #navigation-breadcrumb');
+            if (breadcrumbContainer) {
+                this.updateBreadcrumbs();
+            }
+        } catch (error) {
+            console.warn('⚠️ Breadcrumbs não configurados:', error.message);
+        }
+    }
+
+    // ========== MÉTODOS DE NAVEGAÇÃO ==========
+
+    /**
+     * Navega para uma seção específica
+     * @public
+     * @param {string} sectionId - ID da seção de destino
+     * @param {Object} options - Opções de navegação
+     * @returns {Promise<boolean>} True se navegação foi bem-sucedida
+     */
+    async navigateToSection(sectionId, options = {}) {
+        try {
+            const {
+                updateHistory = true,
+                skipValidation = false,
+                animate = true,
+                updateCompanyInfo = true
+            } = options;
+            
+            // Validar seção
+            if (!skipValidation && !this.validateSectionNavigation(sectionId)) {
+                return false;
+            }
+            
+            console.log(`🧭 Navegando para: ${sectionId}`);
+            
+            // Marcar transição em progresso
+            this.navigationState.transitionInProgress = true;
+            
+            // Atualizar histórico
+            if (updateHistory) {
+                this.addToHistory(this.navigationState.currentSection, sectionId);
+            }
+            
+            // Executar navegação
+            const success = await this.showSection(sectionId, animate);
+            
+            if (success) {
+                // Atualizar estado
+                this.navigationState.previousSection = this.navigationState.currentSection;
+                this.navigationState.currentSection = sectionId;
+                
+                // Atualizar StateManager
+                this.stateManager?.navigateToSection(sectionId);
+                
+                // Atualizar informações da empresa se necessário
+                if (updateCompanyInfo) {
+                    this.updateCompanyInfo();
+                }
+                
+                // Atualizar breadcrumbs
+                this.updateBreadcrumbs();
+                
+                // Emitir evento
+                this.eventBus?.emit('SECTION_CHANGED', {
+                    currentSection: sectionId,
+                    previousSection: this.navigationState.previousSection,
+                    timestamp: Date.now()
+                });
+                
+                console.log(`✅ Navegação para ${sectionId} concluída`);
+            }
+            
+            // Limpar flag de transição
+            this.navigationState.transitionInProgress = false;
+            
+            return success;
+            
+        } catch (error) {
+            console.error('❌ Erro na navegação:', error);
+            this.navigationState.transitionInProgress = false;
+            return false;
+        }
+    }
+
+    /**
+     * Mostra seção específica com transição
+     * @private
+     * @param {string} sectionId - ID da seção
+     * @param {boolean} animate - Se deve animar a transição
+     * @returns {Promise<boolean>} True se bem-sucedida
+     */
+    async showSection(sectionId, animate = true) {
+        try {
+            // Verificar se seção existe
+            const targetSection = document.getElementById(sectionId);
+            if (!targetSection) {
+                console.error(`❌ Seção não encontrada: ${sectionId}`);
+                return false;
+            }
+            
+            // Esconder todas as seções
+            const allSections = document.querySelectorAll('.section');
+            
+            if (animate) {
+                // Animação de saída
+                allSections.forEach(section => {
+                    if (section.classList.contains('active')) {
+                        section.style.opacity = '0';
+                        setTimeout(() => {
+                            section.classList.remove('active');
+                        }, this.config.transitions.duration / 2);
+                    }
+                });
+                
+                // Aguardar animação de saída
+                await this.delay(this.config.transitions.duration / 2);
+            } else {
+                allSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+            }
+            
+            // Mostrar seção alvo
+            targetSection.classList.add('active');
+            
+            if (animate) {
+                // Animação de entrada
+                targetSection.style.opacity = '0';
+                requestAnimationFrame(() => {
+                    targetSection.style.transition = `opacity ${this.config.transitions.duration}ms ${this.config.transitions.easing}`;
+                    targetSection.style.opacity = '1';
+                });
+                
+                // Aguardar animação de entrada
+                await this.delay(this.config.transitions.duration);
+                
+                // Limpar estilos de transição
+                targetSection.style.transition = '';
+            }
+            
+            // Atualizar botões de navegação
+            this.updateNavigationButtons(sectionId);
+            
+            // Debug: verificar conteúdo da seção
+            this.debugSectionContent(sectionId);
+            
+            return true;
+            
+        } catch (error) {
+            console.error('❌ Erro ao mostrar seção:', error);
+            return false;
+        }
+    }
+
+    /**
+     * Atualiza estado dos botões de navegação
+     * @private
+     * @param {string} activeSectionId - ID da seção ativa
+     */
+    updateNavigationButtons(activeSectionId) {
+        try {
+            const navButtons = document.querySelectorAll('.nav-btn, [data-section]');
+            
+            navButtons.forEach(btn => {
+                btn.classList.remove('active', 'current');
+                
+                const btnSection = btn.getAttribute('data-section');
+                if (btnSection === activeSectionId) {
+                    btn.classList.add('active', 'current');
+                }
+            });
+        } catch (error) {
+            console.error('❌ Erro ao atualizar botões de navegação:', error);
+        }
+    }
+
+    /**
+     * Atualiza informações da empresa nas seções
+     * @public
+     */
+    updateCompanyInfo() {
+        try {
+            const spedData = this.stateManager?.getSpedData();
+            if (!spedData || !spedData.headerInfo) {
+                console.log('📍 Dados SPED não disponíveis para atualização da empresa');
+                return;
+            }
+            
+            // Elementos de UF da empresa
+            const companyUfElements = document.querySelectorAll('#company-uf, .company-uf');
+            companyUfElements.forEach(element => {
+                if (element) {
+                    element.textContent = spedData.headerInfo.uf || '-';
+                }
+            });
+            
+            // Elementos de nome da empresa
+            const companyNameElements = document.querySelectorAll('#company-name, .company-name');
+            companyNameElements.forEach(element => {
+                if (element) {
+                    const name = spedData.headerInfo.nomeEmpresa || '-';
+                    element.textContent = this.truncateText(name, 40);
+                    element.title = name; // Tooltip com nome completo
+                }
+            });
+            
+            // Elementos de CNPJ da empresa
+            const companyCnpjElements = document.querySelectorAll('#company-cnpj, .company-cnpj');
+            companyCnpjElements.forEach(element => {
+                if (element) {
+                    const cnpj = spedData.headerInfo.cnpj;
+                    element.textContent = cnpj ? this.formatCNPJ(cnpj) : '-';
+                }
+            });
+            
+            // Elementos de período
+            const periodElements = document.querySelectorAll('#company-period, .company-period');
+            periodElements.forEach(element => {
+                if (element) {
+                    element.textContent = spedData.headerInfo.periodo || '-';
+                }
+            });
+            
+            console.log('✅ Informações da empresa atualizadas');
+            
+        } catch (error) {
+            console.error('❌ Erro ao atualizar informações da empresa:', error);
+        }
+    }
+
+    // ========== GERENCIAMENTO DE HISTÓRICO ==========
+
+    /**
+     * Adiciona navegação ao histórico
+     * @private
+     * @param {string} fromSection - Seção de origem
+     * @param {string} toSection - Seção de destino
+     */
+    addToHistory(fromSection, toSection) {
+        this.navigationState.history.push({
+            from: fromSection,
+            to: toSection,
+            timestamp: Date.now()
+        });
+        
+        // Limitar tamanho do histórico
+        if (this.navigationState.history.length > this.navigationState.maxHistorySize) {
+            this.navigationState.history.shift();
+        }
+    }
+
+    /**
+     * Navega para seção anterior no histórico
+     * @public
+     * @returns {boolean} True se navegação foi possível
+     */
+    navigateBack() {
+        if (this.navigationState.history.length === 0) {
+            console.log('📍 Histórico de navegação vazio');
+            return false;
+        }
+        
+        const lastEntry = this.navigationState.history[this.navigationState.history.length - 1];
+        return this.navigateToSection(lastEntry.from, { updateHistory: false });
+    }
+
+    // ========== BREADCRUMBS ==========
+
+    /**
+     * Atualiza breadcrumbs de navegação
+     * @private
+     */
+    updateBreadcrumbs() {
+        if (!this.config.breadcrumbs.enabled) return;
+        
+        try {
+            const breadcrumbContainer = document.querySelector('.breadcrumb, #navigation-breadcrumb');
+            if (!breadcrumbContainer) return;
+            
+            const sectionNames = this.getSectionNames();
+            const currentSectionName = sectionNames[this.navigationState.currentSection] || this.navigationState.currentSection;
+            
+            breadcrumbContainer.innerHTML = `
+                <span class="breadcrumb-item">Sistema DIFAL</span>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-item active">${currentSectionName}</span>
+            `;
+        } catch (error) {
+            console.error('❌ Erro ao atualizar breadcrumbs:', error);
+        }
+    }
+
+    /**
+     * Obtém nomes amigáveis das seções
+     * @private
+     * @returns {Object} Mapeamento de IDs para nomes
+     */
+    getSectionNames() {
+        return {
+            'upload-section': 'Upload de Arquivo',
+            'analysis-section': 'Análise dos Dados',
+            'calculation-section': 'Configuração de Cálculo',
+            'results-section': 'Resultados',
+            'reports-section': 'Relatórios'
+        };
+    }
+
+    // ========== EVENT HANDLERS ==========
+
+    /**
+     * Manipula clique em botão de navegação
+     * @private
+     * @param {Event} event - Evento de clique
+     */
+    handleNavButtonClick(event) {
+        event.preventDefault();
+        
+        const button = event.currentTarget;
+        const sectionId = button.getAttribute('data-section');
+        
+        if (!sectionId) {
+            console.warn('⚠️ Botão de navegação sem data-section');
+            return;
+        }
+        
+        this.navigateToSection(sectionId);
+    }
+
+    /**
+     * Manipula requisição de mudança de seção via EventBus
+     * @private
+     * @param {Object} data - Dados da requisição
+     */
+    handleSectionChangeRequest(data) {
+        const { section, options = {} } = data;
+        this.navigateToSection(section, options);
+    }
+
+    /**
+     * Manipula carregamento de dados
+     * @private
+     */
+    onDataLoaded() {
+        // Navegar automaticamente para análise após carregamento
+        setTimeout(() => {
+            this.navigateToSection('analysis-section');
+        }, 500);
+    }
+
+    /**
+     * Manipula conclusão de cálculo
+     * @private
+     */
+    onCalculationCompleted() {
+        // Manter na seção atual para análise dos resultados
+        this.updateCompanyInfo();
+    }
+
+    // ========== VALIDAÇÃO E UTILITÁRIOS ==========
+
+    /**
+     * Valida se navegação para seção é permitida
+     * @private
+     * @param {string} sectionId - ID da seção
+     * @returns {boolean} True se navegação é válida
+     */
+    validateSectionNavigation(sectionId) {
+        // Verificar se seção existe
+        if (!this.config.sections.includes(sectionId)) {
+            console.warn(`⚠️ Seção não registrada: ${sectionId}`);
+            return false;
+        }
+        
+        // Validações específicas por seção
+        switch (sectionId) {
+            case 'analysis-section':
+                return this.hasSpedData();
+            case 'calculation-section':
+                return this.hasSpedData() && this.hasDifalItems();
+            case 'results-section':
+                return this.hasCalculationResults();
+            case 'reports-section':
+                return this.hasCalculationResults();
+            default:
+                return true;
+        }
+    }
+
+    /**
+     * Verifica se há dados SPED carregados
+     * @private
+     * @returns {boolean}
+     */
+    hasSpedData() {
+        const spedData = this.stateManager?.getSpedData();
+        return !!(spedData && spedData.headerInfo);
+    }
+
+    /**
+     * Verifica se há itens DIFAL
+     * @private
+     * @returns {boolean}
+     */
+    hasDifalItems() {
+        const spedData = this.stateManager?.getSpedData();
+        return !!(spedData && spedData.itensDifal && spedData.itensDifal.length > 0);
+    }
+
+    /**
+     * Verifica se há resultados de cálculo
+     * @private
+     * @returns {boolean}
+     */
+    hasCalculationResults() {
+        const calculationState = this.stateManager?.getState('calculation');
+        return !!(calculationState && calculationState.completed && calculationState.results);
+    }
+
+    /**
+     * Sincroniza com mudanças do StateManager
+     * @private
+     * @param {string} newSection - Nova seção
+     */
+    syncWithStateManager(newSection) {
+        if (newSection !== this.navigationState.currentSection) {
+            this.showSection(newSection, false);
+            this.navigationState.currentSection = newSection;
+            this.updateNavigationButtons(newSection);
+        }
+    }
+
+    /**
+     * Debug: verifica conteúdo da seção
+     * @private
+     * @param {string} sectionId - ID da seção
+     */
+    debugSectionContent(sectionId) {
+        if (sectionId === 'analysis-section') {
+            const summaryDiv = document.getElementById('sped-summary');
+            if (summaryDiv) {
+                console.log(`📊 Analysis section - summary content: ${summaryDiv.innerHTML.length} chars`);
+            }
+        }
+    }
+
+    // ========== MÉTODOS UTILITÁRIOS ==========
+
+    /**
+     * Trunca texto longo
+     * @private
+     * @param {string} text - Texto original
+     * @param {number} maxLength - Comprimento máximo
+     * @returns {string} Texto truncado
+     */
+    truncateText(text, maxLength = 50) {
+        if (!text || text.length <= maxLength) return text;
+        return text.substring(0, maxLength - 3) + '...';
+    }
+
+    /**
+     * Formata CNPJ
+     * @private
+     * @param {string} cnpj - CNPJ sem formatação
+     * @returns {string} CNPJ formatado
+     */
+    formatCNPJ(cnpj) {
+        if (!cnpj) return 'N/A';
+        
+        const cleaned = String(cnpj).replace(/\D/g, '');
+        if (cleaned.length !== 14) return cnpj;
+        
+        return cleaned.replace(
+            /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/,
+            '$1.$2.$3/$4-$5'
+        );
+    }
+
+    /**
+     * Delay helper para animações
+     * @private
+     * @param {number} ms - Milissegundos para aguardar
+     * @returns {Promise}
+     */
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // ========== MÉTODOS PÚBLICOS DE STATUS ==========
+
+    /**
+     * Obtém estado atual da navegação
+     * @public
+     * @returns {Object} Estado atual
+     */
+    getNavigationState() {
+        return {
+            ...this.navigationState,
+            isTransitioning: this.navigationState.transitionInProgress
+        };
+    }
+
+    /**
+     * Obtém histórico de navegação
+     * @public
+     * @returns {Array} Histórico de navegação
+     */
+    getNavigationHistory() {
+        return [...this.navigationState.history];
+    }
+
+    /**
+     * Limpa histórico de navegação
+     * @public
+     */
+    clearNavigationHistory() {
+        this.navigationState.history = [];
+        console.log('🗑️ Histórico de navegação limpo');
+    }
+
+    /**
+     * Redefine navegação para estado inicial
+     * @public
+     */
+    resetNavigation() {
+        this.clearNavigationHistory();
+        this.navigateToSection('upload-section', { updateHistory: false });
+        console.log('🔄 Navegação redefinida');
+    }
+}
+
+// ========== EXPORTAÇÃO DO MÓDULO ==========
+
+// Registrar globalmente
+if (typeof window !== 'undefined') {
+    window.NavigationManager = NavigationManager;
+}
+
+// Exportar para Node.js
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = NavigationManager;
+}

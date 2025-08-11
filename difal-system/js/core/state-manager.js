@@ -318,6 +318,22 @@ class StateManager {
     }
 
     /**
+     * Obtém configuração de item (alias para compatibilidade com DifalCalculator)
+     * @param {string} itemId - ID do item
+     * @returns {Object} - Configuração do item ou objeto vazio
+     */
+    getItemConfiguration(itemId) {
+        // Primeiro tenta buscar nas configurações do StateManager
+        const stateConfig = this.state.itemConfigs.get(itemId);
+        if (stateConfig) {
+            return stateConfig;
+        }
+
+        // Se não encontrou, busca nas configurações globais (localStorage)
+        return window.difalConfiguracoesItens?.[itemId] || {};
+    }
+
+    /**
      * Remove configuração de item
      * @param {string} itemId - ID do item
      */
@@ -606,6 +622,90 @@ class StateManager {
             ncmsUnicos: [...new Set(data.itensDifal.map(item => item.ncm))].length,
             periodoApuracao: data.periodoApuracao || null
         };
+    }
+
+    /**
+     * Configura configuração global do cálculo
+     * @param {Object} config - Configuração global
+     */
+    setGlobalConfiguration(config) {
+        this.setState({
+            calculation: {
+                settings: {
+                    ...this.state.calculation.settings,
+                    ...config
+                }
+            }
+        });
+
+        this.eventBus?.emit(window.DIFAL_CONSTANTS?.EVENTS?.CONFIG_CHANGED, config);
+        console.log('⚙️ Global configuration updated:', config);
+    }
+
+    /**
+     * Armazena resultados do cálculo
+     * @param {Object} results - Resultados do cálculo
+     */
+    setCalculationResults(results) {
+        this.setState({
+            calculation: {
+                completed: true,
+                results: results.resultados || results,
+                totals: results.totalizadores || results.totals,
+                ufOrigem: results.ufOrigem,
+                ufDestino: results.ufDestino
+            }
+        });
+
+        this.eventBus?.emit(window.DIFAL_CONSTANTS?.EVENTS?.CALCULATION_COMPLETED, results);
+        console.log('📊 Calculation results stored:', results);
+    }
+
+    /**
+     * Obtém dados SPED completos
+     * @returns {Object|null}
+     */
+    getSpedData() {
+        return this.getState('sped.data');
+    }
+
+    /**
+     * Obtém itens DIFAL dos dados SPED
+     * @returns {Array}
+     */
+    getDifalItems() {
+        const spedData = this.getSpedData();
+        return spedData?.itensDifal || [];
+    }
+
+    /**
+     * Limpa todos os dados
+     */
+    clearAllData() {
+        this.setState({
+            sped: {
+                file: null,
+                data: null,
+                processed: false,
+                summary: null
+            },
+            calculation: {
+                inProgress: false,
+                completed: false,
+                results: null,
+                totals: null,
+                settings: {
+                    metodologia: 'auto',
+                    cargaEfetiva: null,
+                    aliqOrigemEfetiva: null,
+                    aliqDestinoEfetiva: null,
+                    percentualDestinatario: 100
+                }
+            },
+            itemConfigs: new Map()
+        });
+
+        console.log('🗑️ All data cleared');
     }
 }
 

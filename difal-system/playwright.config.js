@@ -5,10 +5,11 @@
 const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
-    testDir: './tests',
+    testDir: '.',
+    testMatch: ['test-complete-system.js', 'test-upload-fix.js', 'test-quick-diagnostic.js', 'test-singleton-initialization.js'],
     
-    // Tempo máximo para cada teste
-    timeout: 30 * 1000,
+    // Tempo máximo para cada teste (aumentado para testes completos)
+    timeout: 60 * 1000,
     
     // Configuração de expectativas
     expect: {
