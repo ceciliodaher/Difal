@@ -129,11 +129,19 @@ class ExportManager {
             // Preparar dados
             const exportData = this.prepareExcelData(results);
             
-            // Escolher método de exportação
-            if (window.XlsxPopulate) {
+            // Verificar dependências e escolher método
+            console.log('📊 Verificando biblioteca XlsxPopulate...', !!window.XlsxPopulate);
+            
+            if (window.XlsxPopulate && typeof window.XlsxPopulate.fromBlankAsync === 'function') {
+                console.log('✅ XlsxPopulate disponível, usando biblioteca principal');
                 await this.exportWithXlsxPopulate(exportData);
             } else {
-                console.warn('⚠️ XlsxPopulate não disponível, usando fallback CSV');
+                console.warn('⚠️ XlsxPopulate indisponível ou incompatível, usando fallback CSV');
+                console.log('🔍 Debug XlsxPopulate:', {
+                    exists: !!window.XlsxPopulate,
+                    hasFromBlank: !!(window.XlsxPopulate?.fromBlankAsync),
+                    type: typeof window.XlsxPopulate
+                });
                 this.exportAsCSV(exportData);
             }
             
@@ -871,6 +879,501 @@ class ExportManager {
             default:
                 console.warn(`Formato de exportação não suportado: ${format}`);
         }
+    }
+
+    /**
+     * Obtém resultados de cálculo do StateManager
+     * @private
+     * @returns {Object|null} Resultados do cálculo
+     */
+    getCalculationResults() {
+        try {
+            const state = this.stateManager.getState();
+            if (!state.calculation || !state.calculation.results) {
+                return null;
+            }
+
+            return {
+                resultados: state.calculation.results,
+                totalizadores: state.calculation.totals
+            };
+        } catch (error) {
+            console.error('❌ Erro ao obter resultados de cálculo:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Prepara dados para exportação Excel
+     * @private
+     * @param {Object} results - Resultados do cálculo
+     * @returns {Object} Dados formatados para Excel
+     */
+    prepareExcelData(results) {
+        const cabecalhos = [
+            'Código Item',
+            'Descrição',
+            'NCM',
+            'CFOP',
+            'Base Cálculo',
+            'Metodologia',
+            'Alíq. Origem (%)',
+            'Alíq. Destino (%)',
+            'Alíq. FCP (%)',
+            'Valor DIFAL',
+            'Valor FCP',
+            'Total a Recolher',
+            'Benefício Aplicado'
+        ];
+
+        const dados = results.resultados.map(item => [
+            item.codItem || '',
+            item.descricaoItem || item.descItem || '',
+            item.ncm || 'N/A',
+            item.cfop || '',
+            item.baseCalculo || 0,
+            item.metodoCalculo || '',
+            item.aliqOrigem || 0,
+            item.aliqDestino || 0,
+            item.aliqFcp || 0,
+            item.valorDifal || 0,
+            item.valorFcp || 0,
+            (item.valorDifal || 0) + (item.valorFcp || 0),
+            item.beneficioAplicado?.tipo || ''
+        ]);
+
+        return {
+            cabecalhos,
+            dados,
+            totalRows: dados.length,
+            totalizadores: results.totalizadores
+        };
+    }
+
+    /**
+     * Prepara dados para exportação PDF
+     * @private
+     * @param {Object} results - Resultados do cálculo
+     * @returns {Object} Dados formatados para PDF
+     */
+    preparePDFData(results) {
+        console.log('📄 Preparando dados para PDF...');
+        
+        if (!results || !results.resultados) {
+            throw new Error('Dados de resultados não disponíveis');
+        }
+
+        const dadosPDF = results.resultados.map(item => [
+            item.codItem || '', // Código
+            item.descricaoItem || item.descItem || '', // Descrição
+            item.cfop || '', // CFOP
+            item.ncm || '', // NCM
+            this.formatCurrency(item.baseCalculo || 0), // Valor Base
+            this.formatCurrency(item.valorDifal || 0), // DIFAL
+            this.formatCurrency(item.valorFcp || 0), // FCP
+            item.configuracaoItem ? 'S' : 'N' // Benefício aplicado
+        ]);
+
+        console.log(`📄 PDF preparado: ${dadosPDF.length} itens`);
+
+        return {
+            cabecalhos: ['Código', 'Descrição', 'CFOP', 'NCM', 'Valor Base', 'DIFAL', 'FCP', 'Benefício'],
+            dados: dadosPDF,
+            totalRows: dadosPDF.length,
+            totalizadores: results.totalizadores
+        };
+    }
+
+    /**
+     * Exporta usando XlsxPopulate (se disponível)
+     * @private
+     * @param {Object} exportData - Dados preparados
+     */
+    async exportWithXlsxPopulate(exportData) {
+        if (!window.XlsxPopulate) {
+            throw new Error('XlsxPopulate não está disponível');
+        }
+
+        const workbook = await window.XlsxPopulate.fromBlankAsync();
+        const sheet = workbook.sheet(0);
+
+        // Adicionar cabeçalhos
+        exportData.cabecalhos.forEach((header, index) => {
+            sheet.cell(1, index + 1).value(header);
+        });
+
+        // Adicionar dados
+        exportData.dados.forEach((row, rowIndex) => {
+            row.forEach((value, colIndex) => {
+                sheet.cell(rowIndex + 2, colIndex + 1).value(value);
+            });
+        });
+
+        // Gerar arquivo
+        const filename = this.generateExcelFilename();
+        const blob = await workbook.outputAsync();
+        
+        // Download
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(new Blob([blob]));
+        link.download = filename;
+        link.click();
+        
+        URL.revokeObjectURL(link.href);
+    }
+
+    /**
+     * Exporta como CSV (fallback)
+     * @private
+     * @param {Object} exportData - Dados preparados
+     */
+    exportAsCSV(exportData) {
+        let csvContent = '';
+        
+        // Cabeçalhos
+        csvContent += exportData.cabecalhos.join(';') + '\n';
+        
+        // Dados
+        exportData.dados.forEach(row => {
+            csvContent += row.join(';') + '\n';
+        });
+
+        // Download
+        const filename = this.generateCSVFilename();
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        
+        URL.revokeObjectURL(link.href);
+    }
+
+    /**
+     * Exporta memória de cálculo para arquivo
+     * @public
+     * @param {string} itemId - ID do item
+     */
+    exportarMemoriaCalculo(itemId) {
+        try {
+            const state = this.stateManager.getState();
+            const resultados = state.calculation.results || [];
+            const resultado = resultados.find(r => r.codItem === itemId);
+            
+            if (!resultado || !resultado.memoriaCalculo) {
+                throw new Error('Memória de cálculo não disponível para este item');
+            }
+            
+            const texto = resultado.memoriaCalculo.join('\n');
+            const blob = new Blob([texto], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            
+            link.href = URL.createObjectURL(blob);
+            link.download = `memoria_calculo_${itemId}_${new Date().getTime()}.txt`;
+            link.click();
+            
+            URL.revokeObjectURL(link.href);
+            
+            console.log(`✅ Memória de cálculo exportada para item ${itemId}`);
+            
+        } catch (error) {
+            console.error('❌ Erro ao exportar memória de cálculo:', error);
+            if (this.progressManager) {
+                this.progressManager.showError(`Erro ao exportar memória: ${error.message}`);
+            }
+        }
+    }
+
+    /**
+     * Exporta resultados para PDF
+     * @async
+     * @public
+     * @returns {Promise<void>}
+     * @throws {Error} Se não houver dados para exportar
+     */
+    async exportToPdf() {
+        try {
+            console.log('📄 Iniciando exportação para PDF...');
+            
+            // Validar dados
+            const results = this.getCalculationResults();
+            if (!results || !results.resultados) {
+                throw new Error('Nenhum resultado de cálculo disponível para exportar');
+            }
+            
+            // Preparar dados
+            const exportData = this.preparePDFData(results);
+            
+            // Verificar se jsPDF está disponível
+            if (!window.jspdf || !window.jspdf.jsPDF) {
+                throw new Error('jsPDF não está disponível');
+            }
+            
+            // Criar PDF
+            await this.generatePDF(exportData);
+            
+            // Notificar sucesso
+            this.notifyExportSuccess('PDF', exportData.totalRows);
+            
+        } catch (error) {
+            this.handleExportError('PDF', error);
+        }
+    }
+
+    /**
+     * Gera arquivo PDF profissional
+     * @private
+     * @param {Object} exportData - Dados preparados
+     */
+    async generatePDF(exportData) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('landscape', 'mm', 'a4');
+
+        let currentY = 20;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 20;
+
+        // ========== CABEÇALHO PROFISSIONAL ==========
+        this.addPDFHeader(doc, exportData, currentY, pageWidth, margin);
+        currentY = 60;
+
+        // ========== RESUMO EXECUTIVO EM CARDS ==========
+        if (exportData.totalizadores) {
+            currentY = this.addPDFSummaryCards(doc, exportData.totalizadores, currentY, pageWidth, margin);
+            currentY += 15;
+        }
+
+        // ========== TABELA DE RESULTADOS ==========
+        if (window.jspdf && window.jspdf.jsPDF && doc.autoTable) {
+            this.addPDFTable(doc, exportData, currentY);
+        } else {
+            this.addPDFTableFallback(doc, exportData, currentY, margin);
+        }
+
+        // ========== RODAPÉ COM INFORMAÇÕES LEGAIS ==========
+        this.addPDFFooter(doc, exportData);
+
+        // Salvar arquivo
+        const filename = this.generatePDFFilename();
+        doc.save(filename);
+        
+        console.log(`✅ PDF profissional exportado: ${filename}`);
+    }
+
+    /**
+     * Adiciona cabeçalho profissional ao PDF
+     * @private
+     */
+    addPDFHeader(doc, exportData, y, pageWidth, margin) {
+        // Fundo do cabeçalho
+        doc.setFillColor(45, 55, 72); // Cor azul escura
+        doc.rect(0, 0, pageWidth, 45, 'F');
+
+        // Título principal
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(24);
+        doc.setFont(undefined, 'bold');
+        doc.text('RELATÓRIO DIFAL', pageWidth/2, 20, { align: 'center' });
+
+        // Subtítulo
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'normal');
+        doc.text('Diferencial de Alíquota do ICMS', pageWidth/2, 30, { align: 'center' });
+
+        // Data de geração
+        const agora = new Date().toLocaleString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit', 
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        doc.setFontSize(12);
+        doc.text(`Gerado em: ${agora}`, pageWidth - margin, 38, { align: 'right' });
+
+        // Informações da empresa (se disponíveis)
+        const state = this.stateManager?.getState();
+        if (state?.sped?.dadosEmpresa) {
+            const empresa = state.sped.dadosEmpresa;
+            doc.setFontSize(10);
+            doc.text(`${empresa.razaoSocial}`, margin, 38);
+            if (empresa.cnpj) {
+                doc.text(`CNPJ: ${empresa.cnpj}`, margin, 42);
+            }
+        }
+
+        // Reset cor do texto
+        doc.setTextColor(0, 0, 0);
+    }
+
+    /**
+     * Adiciona cards de resumo profissionais
+     * @private
+     */
+    addPDFSummaryCards(doc, totals, y, pageWidth, margin) {
+        const cardWidth = (pageWidth - 2 * margin - 30) / 4;
+        const cardHeight = 25;
+        const startX = margin;
+
+        // Dados dos cards
+        const cards = [
+            { label: 'Total Itens', value: totals.totalItens.toString(), color: [52, 152, 219] },
+            { label: 'DIFAL', value: this.formatCurrency(totals.totalDifal), color: [231, 76, 60] },
+            { label: 'FCP', value: this.formatCurrency(totals.totalFcp), color: [155, 89, 182] },
+            { label: 'A Recolher', value: this.formatCurrency(totals.totalRecolher), color: [46, 204, 113] }
+        ];
+
+        cards.forEach((card, index) => {
+            const x = startX + index * (cardWidth + 10);
+            
+            // Fundo do card
+            doc.setFillColor(card.color[0], card.color[1], card.color[2]);
+            doc.roundedRect(x, y, cardWidth, cardHeight, 3, 3, 'F');
+
+            // Label
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.text(card.label, x + cardWidth/2, y + 8, { align: 'center' });
+
+            // Valor
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text(card.value, x + cardWidth/2, y + 18, { align: 'center' });
+        });
+
+        doc.setTextColor(0, 0, 0);
+        return y + cardHeight + 10;
+    }
+
+    /**
+     * Adiciona tabela de dados profissional
+     * @private
+     */
+    addPDFTable(doc, exportData, startY) {
+        doc.autoTable({
+            startY: startY,
+            head: [['Código', 'Descrição', 'CFOP', 'NCM', 'Valor Base', 'DIFAL', 'FCP', 'Observações']],
+            body: exportData.dados.map(row => [
+                row[0] || '', // Código
+                this.truncateText(row[1] || '', 25), // Descrição truncada
+                row[2] || '', // CFOP  
+                row[3] || '', // NCM
+                row[4] || '', // Valor Base
+                row[5] || '', // DIFAL
+                row[6] || '', // FCP
+                row[7] ? 'Benefício aplicado' : '' // Observações
+            ]),
+            styles: {
+                fontSize: 9,
+                cellPadding: 3,
+                lineColor: [200, 200, 200],
+                lineWidth: 0.1
+            },
+            headStyles: {
+                fillColor: [45, 55, 72],
+                textColor: 255,
+                fontSize: 10,
+                fontStyle: 'bold',
+                halign: 'center'
+            },
+            columnStyles: {
+                0: { cellWidth: 25 }, // Código
+                1: { cellWidth: 50 }, // Descrição
+                2: { cellWidth: 20 }, // CFOP
+                3: { cellWidth: 25 }, // NCM
+                4: { cellWidth: 25, halign: 'right' }, // Valor Base
+                5: { cellWidth: 25, halign: 'right' }, // DIFAL
+                6: { cellWidth: 20, halign: 'right' }, // FCP
+                7: { cellWidth: 35 } // Observações
+            },
+            alternateRowStyles: {
+                fillColor: [248, 249, 250]
+            },
+            margin: { left: 20, right: 20 },
+            didParseCell: function(data) {
+                // Destacar valores de DIFAL > 0
+                if (data.column.index === 5 && parseFloat(data.cell.raw) > 0) {
+                    data.cell.styles.textColor = [231, 76, 60]; // Vermelho
+                    data.cell.styles.fontStyle = 'bold';
+                }
+            }
+        });
+    }
+
+    /**
+     * Adiciona tabela simples como fallback
+     * @private
+     */
+    addPDFTableFallback(doc, exportData, startY, margin) {
+        let y = startY;
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'bold');
+        
+        // Cabeçalho
+        doc.text('Código', margin, y);
+        doc.text('CFOP', margin + 40, y);
+        doc.text('Valor DIFAL', margin + 80, y);
+        doc.text('Valor FCP', margin + 130, y);
+        
+        y += 10;
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(9);
+        
+        // Dados (limitados)
+        exportData.dados.slice(0, 25).forEach(row => {
+            if (y > 180) return;
+            
+            doc.text(row[0] || '', margin, y);
+            doc.text(row[2] || '', margin + 40, y);
+            doc.text(row[5] || '', margin + 80, y);
+            doc.text(row[6] || '', margin + 130, y);
+            y += 8;
+        });
+        
+        if (exportData.dados.length > 25) {
+            doc.setFontSize(8);
+            doc.text(`... e mais ${exportData.dados.length - 25} itens`, margin, y + 10);
+        }
+    }
+
+    /**
+     * Adiciona rodapé informativo
+     * @private
+     */
+    addPDFFooter(doc, exportData) {
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const y = pageHeight - 30;
+        
+        // Linha separadora
+        doc.setDrawColor(200, 200, 200);
+        doc.line(20, y - 5, doc.internal.pageSize.getWidth() - 20, y - 5);
+        
+        // Informações legais
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text('Este relatório foi gerado automaticamente pelo Sistema DIFAL.', 20, y);
+        doc.text('Confira sempre os valores com sua contabilidade antes do recolhimento.', 20, y + 8);
+        
+        // Número da página
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.text(`Página ${i} de ${pageCount}`, doc.internal.pageSize.getWidth() - 40, y + 8);
+        }
+        
+        doc.setTextColor(0, 0, 0);
+    }
+
+    /**
+     * Trunca texto para caber na célula
+     * @private
+     */
+    truncateText(text, maxLength) {
+        if (!text || text.length <= maxLength) return text;
+        return text.substring(0, maxLength - 3) + '...';
     }
 }
 
