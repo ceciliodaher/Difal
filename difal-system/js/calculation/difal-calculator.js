@@ -308,19 +308,42 @@ class DifalCalculatorModular {
 
     /**
      * Obtém alíquota de origem
+     * SEMPRE usa alíquota do SPED, calculada com base no CST para casos especiais
      */
     obterAliquotaOrigem(item, config) {
-        // Prioridade: configuração individual > configuração global > alíquota padrão
+        // 1. Apenas configuração manual individual sobrescreve SPED
         if (config.aliqOrigemEfetiva !== undefined) {
             return config.aliqOrigemEfetiva;
         }
         
-        const configGlobal = this.stateManager?.getGlobalConfiguration() || {};
+        // 2. Apenas configuração global sobrescreve SPED
+        const configGlobal = this.stateManager?.getState('calculation.settings') || {};
         if (configGlobal.aliqOrigemEfetiva !== undefined) {
             return configGlobal.aliqOrigemEfetiva;
         }
         
-        return this.obterAliquotaPadrao(this.ufOrigem);
+        // 3. ✅ NOVA LÓGICA: Calcular alíquota efetiva baseada em CST
+        if (item.cstIcms && item.valorItem > 0) {
+            const aliqEfetiva = this.calcularAliquotaEfetiva(
+                item.cstIcms,           // CST
+                item.valorItem,         // VL_ITEM
+                item.valorIcms || 0,    // VL_ICMS
+                item.aliqIcms || 0      // ALIQ_ICMS (nominal)
+            );
+            
+            console.log(`🎯 Item ${item.codItem}: CST ${item.cstIcms} → Alíquota efetiva ${aliqEfetiva}%`);
+            return aliqEfetiva;
+        }
+        
+        // 4. Fallback: usar alíquota nominal se disponível
+        if (item.aliqOrigemNota !== undefined && item.aliqOrigemNota >= 0) {
+            console.log(`⚠️ Item ${item.codItem}: Usando alíquota nominal ${item.aliqOrigemNota}% (fallback)`);
+            return item.aliqOrigemNota;
+        }
+        
+        // 5. Erro: dados insuficientes
+        console.warn(`⚠️ Item ${item.codItem}: alíquota não pode ser calculada - CST: ${item.cstIcms}, VL_ITEM: ${item.valorItem}`);
+        return 0;
     }
 
     /**
@@ -332,7 +355,7 @@ class DifalCalculatorModular {
             return config.aliqDestinoEfetiva;
         }
         
-        const configGlobal = this.stateManager?.getGlobalConfiguration() || {};
+        const configGlobal = this.stateManager?.getState('calculation.settings') || {};
         if (configGlobal.aliqDestinoEfetiva !== undefined) {
             return configGlobal.aliqDestinoEfetiva;
         }
@@ -358,18 +381,22 @@ class DifalCalculatorModular {
     obterAliquotaPadrao(uf) {
         if (!uf || !window.EstadosUtil) return 18; // Alíquota padrão
         
-        const estado = window.EstadosUtil.obterPorSigla(uf);
+        const estado = window.EstadosUtil.obterPorUF(uf);
         return estado?.aliquotaInterna || 18;
     }
 
     /**
      * Obtém alíquota FCP padrão para um estado  
+     * Segue a lógica estabelecida:
+     * - Faixas (1% a 2%): usar limite MÍNIMO
+     * - "Até x%": usar ZERO
+     * - Fixo: usar valor FIXO
      */
     obterAliquotaFcpPadrao(uf) {
-        if (!uf || !window.EstadosUtil) return 0;
+        if (!uf || !window.DIFAL_CONSTANTS) return 0;
         
-        const estado = window.EstadosUtil.obterPorSigla(uf);
-        return estado?.aliquotaFcp || 0;
+        // Usar as constantes FCP definidas no constants.js (já corrigidas conforme documentação oficial)
+        return window.DIFAL_CONSTANTS.DIFAL.FCP_DEFAULT[uf.toUpperCase()] || 0;
     }
 
     /**
@@ -448,6 +475,62 @@ class DifalCalculatorModular {
      */
     obterTotalizadores() {
         return this.totalizadores;
+    }
+
+    /**
+     * Calcula alíquota efetiva baseada no CST (Código de Situação Tributária)
+     * @param {string} cst - Código de Situação Tributária
+     * @param {number} vlItem - Valor do item (VL_ITEM)
+     * @param {number} vlIcms - Valor do ICMS (VL_ICMS)
+     * @param {number} aliqNominal - Alíquota nominal (ALIQ_ICMS)
+     * @returns {number} - Alíquota efetiva calculada
+     */
+    calcularAliquotaEfetiva(cst, vlItem, vlIcms, aliqNominal) {
+        // Validações de segurança
+        if (!cst || vlItem <= 0) {
+            console.warn(`⚠️ Dados insuficientes para cálculo de alíquota: CST=${cst}, VL_ITEM=${vlItem}`);
+            return 0;
+        }
+
+        // Normalizar CST (remover origem se presente)
+        const cstNormalizado = cst.toString().slice(-2);
+        
+        console.log(`🔍 Calculando alíquota efetiva - CST: ${cst} (${cstNormalizado}), VL_ITEM: ${vlItem}, VL_ICMS: ${vlIcms}, ALIQ_NOMINAL: ${aliqNominal}`);
+
+        switch (cstNormalizado) {
+            case '00': // Tributada integralmente
+            case '90': // Outras
+                // Usar alíquota nominal
+                console.log(`📊 CST ${cstNormalizado}: Usando alíquota nominal ${aliqNominal}%`);
+                return aliqNominal;
+
+            case '10': // Tributada com ST
+            case '30': // Isenta com ST  
+            case '60': // ICMS cobrado anteriormente por ST
+                // Alíquota zero (ST substitui)
+                console.log(`📊 CST ${cstNormalizado}: Alíquota zero (Substituição Tributária)`);
+                return 0;
+
+            case '20': // Com redução da BC
+            case '70': // Com redução da BC e cobrança do ICMS por ST
+                // Calcular alíquota efetiva: (VL_ICMS / VL_ITEM) * 100
+                const aliqEfetiva = vlIcms > 0 ? (vlIcms / vlItem) * 100 : 0;
+                console.log(`📊 CST ${cstNormalizado}: Alíquota efetiva calculada ${aliqEfetiva.toFixed(2)}% (VL_ICMS: ${vlIcms} / VL_ITEM: ${vlItem})`);
+                return parseFloat(aliqEfetiva.toFixed(4));
+
+            case '40': // Isenta
+            case '41': // Não tributada
+            case '50': // Com suspensão
+            case '51': // Com diferimento
+                // Alíquota zero
+                console.log(`📊 CST ${cstNormalizado}: Alíquota zero (Isento/Suspenso/Diferido)`);
+                return 0;
+
+            default:
+                // CST não mapeado - usar alíquota nominal como fallback
+                console.warn(`⚠️ CST ${cstNormalizado} não mapeado, usando alíquota nominal ${aliqNominal}%`);
+                return aliqNominal;
+        }
     }
 
     /**
