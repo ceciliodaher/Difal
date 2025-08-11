@@ -164,19 +164,20 @@ class DifalAppModular {
      * Executa cálculo DIFAL (DELEGADO para DifalCalculatorModular)
      */
     async calculateDifal(configGeral = {}) {
-        if (!this.currentData || !this.currentData.itensDifal) {
+        const spedData = this.stateManager.getSpedData();
+        if (!spedData || !spedData.itensDifal) {
             throw new Error('Nenhum dado SPED disponível para cálculo');
         }
 
         console.log('🧮 Orquestrando cálculo DIFAL...');
         
-        const ufOrigem = this.currentData.dadosEmpresa?.uf || 'SP';
-        const ufDestino = configGeral.ufDestino || ufOrigem;
+        const ufOrigem = spedData.dadosEmpresa?.uf || 'SP';
+        const ufDestino = configGeral.ufDestino || 'SP';  // Default sempre SP para gerar operação interestadual
         
         this.stateManager.setGlobalConfiguration(configGeral);
         
         this.difalCalculator.configurarUFs(ufOrigem, ufDestino);
-        this.difalCalculator.carregarItens(this.currentData.itensDifal);
+        this.difalCalculator.carregarItens(spedData.itensDifal);
         
         const resultados = this.difalCalculator.calcularTodos();
         const totalizadores = this.difalCalculator.obterTotalizadores();

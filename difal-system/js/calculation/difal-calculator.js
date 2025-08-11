@@ -311,6 +311,7 @@ class DifalCalculatorModular {
      * SEMPRE usa alíquota do SPED, calculada com base no CST para casos especiais
      */
     obterAliquotaOrigem(item, config) {
+        console.log(`🔍 obterAliquotaOrigem - Item ${item.codItem}: CST=${item.cstIcms}, VL_ITEM=${item.valorItem}, VL_ICMS=${item.valorIcms}, ALIQ=${item.aliqIcms}`);
         // 1. Apenas configuração manual individual sobrescreve SPED
         if (config.aliqOrigemEfetiva !== undefined) {
             return config.aliqOrigemEfetiva;
