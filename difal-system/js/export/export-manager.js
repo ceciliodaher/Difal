@@ -699,7 +699,20 @@ class ExportManager {
      */
     generateExcelFilename(exportData) {
         const timestamp = new Date().toISOString().slice(0, 10);
-        const uf = exportData.configuracao.ufOrigem;
+        
+        // Tentar obter UF do StateManager ou usar padrão
+        let uf = 'GO'; // Padrão
+        try {
+            const state = this.stateManager?.getState();
+            if (state?.global?.ufDestino) {
+                uf = state.global.ufDestino;
+            } else if (exportData?.configuracao?.ufOrigem) {
+                uf = exportData.configuracao.ufOrigem;
+            }
+        } catch (error) {
+            console.warn('⚠️ Não foi possível obter UF, usando padrão:', error);
+        }
+        
         return `DIFAL_${uf}_${timestamp}.xlsx`;
     }
 
@@ -1010,7 +1023,7 @@ class ExportManager {
         });
 
         // Gerar arquivo
-        const filename = this.generateExcelFilename();
+        const filename = this.generateExcelFilename(exportData);
         const blob = await workbook.outputAsync();
         
         // Download
