@@ -426,6 +426,12 @@ class UIManager {
                     </div>
                 `;
             }
+        } catch (error) {
+            console.error('❌ Erro ao exibir análise SPED:', error);
+            if (summaryDiv) {
+                summaryDiv.innerHTML = '<div class="error-message">Erro ao carregar dados de análise</div>';
+            }
+        }
         }
         
         // Exibir tabela de itens
@@ -512,13 +518,6 @@ class UIManager {
         
         // Adicionar badge CSS se não existe
         this.ensureBadgeStyles();
-        
-        } catch (error) {
-            console.error('❌ Erro em showSpedAnalysis:', error);
-            summaryDiv.classList.remove('hidden');
-            summaryDiv.innerHTML = '<p class="error">Erro ao processar dados SPED</p>';
-        }
-        }
     }
 
     /**

@@ -42,8 +42,8 @@ class DifalAppModular {
         try {
             console.log('🔧 Inicializando Sistema DIFAL Modular...');
             
-            this.checkModularDependencies();
             await this.waitForDOM();
+            await this.checkModularDependencies();
             
             // Inicializar infraestrutura modular
             this.initializeInfrastructure();
@@ -150,21 +150,32 @@ class DifalAppModular {
     }
 
     /**
-     * Verifica dependências modulares necessárias
+     * Verifica dependências modulares necessárias com retry
      */
-    checkModularDependencies() {
+    async checkModularDependencies(maxRetries = 10, retryDelay = 100) {
         const required = [
             'StateManager', 'ConfigurationManager', 'UIManager',
             'SpedParserModular', 'DifalCalculatorSimple', 
             'Utils', 'EstadosUtil'
         ];
         
-        const missing = required.filter(className => !window[className]);
-        if (missing.length > 0) {
-            throw new Error(`Dependências modulares não encontradas: ${missing.join(', ')}`);
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+            const missing = required.filter(className => !window[className]);
+            
+            if (missing.length === 0) {
+                console.log('✅ Dependências modulares verificadas');
+                return;
+            }
+            
+            console.log(`🔄 Tentativa ${attempt}/${maxRetries} - Dependências faltando:`, missing);
+            
+            if (attempt === maxRetries) {
+                throw new Error(`Dependências modulares não encontradas após ${maxRetries} tentativas: ${missing.join(', ')}`);
+            }
+            
+            // Aguardar um pouco antes de tentar novamente
+            await new Promise(resolve => setTimeout(resolve, retryDelay));
         }
-        
-        console.log('✅ Dependências modulares verificadas');
     }
 
     // === MÉTODOS DE ORQUESTRAÇÃO (DELEGAÇÃO) ===
