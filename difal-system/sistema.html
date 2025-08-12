@@ -1083,7 +1083,7 @@
                 console.log('🎯 Configurando handlers da seleção de modo...');
                 
                 modeSelectButtons.forEach(button => {
-                    button.addEventListener('click', function() {
+                    button.addEventListener('click', async function() {
                         const selectedMode = this.getAttribute('data-mode');
                         console.log(`🎯 Modo selecionado: ${selectedMode}`);
                         
@@ -1094,20 +1094,27 @@
                             return;
                         }
                         
-                        // Definir modo no ModeManager
-                        window.modeManager.setMode(selectedMode).then(() => {
-                            // Esconder seleção de modo
-                            modeSelectionSection.classList.add('hidden');
-                            modeSelectionSection.classList.remove('active');
+                        console.log('🔧 ModeManager disponível, definindo modo...');
+                        
+                        try {
+                            // Definir modo no ModeManager
+                            const result = await window.modeManager.setMode(selectedMode);
+                            console.log(`🔧 Resultado do setMode: ${result}`);
                             
-                            // Mostrar navegação
-                            navigation.classList.remove('hidden');
-                            
-                            console.log(`✅ Interface mudou para modo: ${selectedMode}`);
-                        }).catch(error => {
+                            if (result) {
+                                // Esconder seleção de modo
+                                modeSelectionSection.classList.add('hidden');
+                                modeSelectionSection.classList.remove('active');
+                                
+                                // Mostrar navegação
+                                navigation.classList.remove('hidden');
+                                
+                                console.log(`✅ Interface mudou para modo: ${selectedMode}`);
+                            }
+                        } catch (error) {
                             console.error('❌ Erro ao definir modo:', error);
                             alert(`Erro ao carregar modo ${selectedMode}: ${error.message}`);
-                        });
+                        }
                     });
                 });
                 

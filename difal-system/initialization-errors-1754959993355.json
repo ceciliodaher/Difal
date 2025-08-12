@@ -1,0 +1,513 @@
+{
+  "summary": {
+    "totalErrors": 1,
+    "totalWarnings": 2,
+    "timestamp": "2025-08-12T00:53:13.355Z"
+  },
+  "initStatus": {
+    "difalApp": true,
+    "difalAppInitialized": true,
+    "eventBus": true,
+    "stateManager": true,
+    "modeManager": true,
+    "singlePeriodManager": true,
+    "multiPeriodManager": true,
+    "uiManager": true,
+    "navigationManager": true,
+    "progressManager": true,
+    "fileUploadManager": true,
+    "exportManager": true,
+    "spedParser": true,
+    "difalCalculator": true,
+    "utils": true,
+    "estadosUtil": true,
+    "modeSelectionVisible": true,
+    "navigationHidden": true
+  },
+  "errors": [
+    {
+      "type": "error",
+      "text": "❌ Navegação bloqueada para: upload-section",
+      "timestamp": "2025-08-12T00:53:08.143Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/navigation-manager.js",
+        "lineNumber": 288,
+        "columnNumber": 24
+      }
+    }
+  ],
+  "warnings": [
+    {
+      "type": "warning",
+      "text": "⚠️ Seletor de modo não encontrado na interface",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js",
+        "lineNumber": 1720,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "warning",
+      "text": "⚠️ Seção não registrada para modo single: upload-section",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/navigation-manager.js",
+        "lineNumber": 650,
+        "columnNumber": 20
+      }
+    }
+  ],
+  "allLogs": [
+    {
+      "type": "log",
+      "text": "📋 DIFAL Constants loaded successfully",
+      "timestamp": "2025-08-12T00:53:08.135Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/constants.js",
+        "lineNumber": 263,
+        "columnNumber": 8
+      }
+    },
+    {
+      "type": "log",
+      "text": "🚀 DifalAppModular - Orquestrador Limpo (Singleton)",
+      "timestamp": "2025-08-12T00:53:08.138Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js",
+        "lineNumber": 34,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🔧 Inicializando Sistema DIFAL Modular...",
+      "timestamp": "2025-08-12T00:53:08.138Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js",
+        "lineNumber": 42,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "log",
+      "text": "✅ Dependências modulares verificadas",
+      "timestamp": "2025-08-12T00:53:08.138Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js",
+        "lineNumber": 166,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🏪 StateManager initialized",
+      "timestamp": "2025-08-12T00:53:08.139Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/state-manager.js",
+        "lineNumber": 77,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "✅ StateManager ready",
+      "timestamp": "2025-08-12T00:53:08.139Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/state-manager.js",
+        "lineNumber": 88,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🏪 StateManager initialized",
+      "timestamp": "2025-08-12T00:53:08.139Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/single-period-manager.js",
+        "lineNumber": 79,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📅 MultiPeriodManager inicializado",
+      "timestamp": "2025-08-12T00:53:08.140Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/periods/multi-period-manager.js",
+        "lineNumber": 37,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🎛️ ModeManager inicializado",
+      "timestamp": "2025-08-12T00:53:08.140Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/mode-manager.js",
+        "lineNumber": 42,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🎛️ ModeManager inicializado no modo: single",
+      "timestamp": "2025-08-12T00:53:08.140Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/core/mode-manager.js",
+        "lineNumber": 64,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "⚙️ Configuration Manager initialized",
+      "timestamp": "2025-08-12T00:53:08.140Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/config/configuration-manager.js",
+        "lineNumber": 17,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📂 Carregando todas as configurações do localStorage...",
+      "timestamp": "2025-08-12T00:53:08.140Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/config/configuration-manager.js",
+        "lineNumber": 472,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "log",
+      "text": "ℹ️ Nenhuma configuração encontrada no localStorage",
+      "timestamp": "2025-08-12T00:53:08.140Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/config/configuration-manager.js",
+        "lineNumber": 500,
+        "columnNumber": 24
+      }
+    },
+    {
+      "type": "log",
+      "text": "🔄 Configurações carregadas do localStorage: {}",
+      "timestamp": "2025-08-12T00:53:08.140Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/config/configuration-manager.js",
+        "lineNumber": 39,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📊 ProgressManager inicializado com sucesso",
+      "timestamp": "2025-08-12T00:53:08.141Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/progress-manager.js",
+        "lineNumber": 84,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📍 15 botões de navegação configurados",
+      "timestamp": "2025-08-12T00:53:08.141Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/navigation-manager.js",
+        "lineNumber": 224,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "log",
+      "text": "🧭 Interface atualizada para modo: single",
+      "timestamp": "2025-08-12T00:53:08.141Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/navigation-manager.js",
+        "lineNumber": 177,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🧭 NavigationManager inicializado com sucesso",
+      "timestamp": "2025-08-12T00:53:08.141Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/navigation-manager.js",
+        "lineNumber": 77,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📁 Elementos de upload configurados",
+      "timestamp": "2025-08-12T00:53:08.141Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/file/file-upload-manager.js",
+        "lineNumber": 105,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📋 Dependências do FileUploadManager: {spedParser: true, utils: true, stateManager: true, eventBus: true}",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/file/file-upload-manager.js",
+        "lineNumber": 600,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📂 FileUploadManager inicializado com sucesso",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/file/file-upload-manager.js",
+        "lineNumber": 69,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🏗️ FileUploadManager: Nova instância singleton criada",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/file/file-upload-manager.js",
+        "lineNumber": 58,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📊 Dependências de exportação: {xlsxPopulate: true, jsPDF: true, jsPDFAutoTable: false, utils: true}",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js",
+        "lineNumber": 120,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📤 ExportManager inicializado com sucesso",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js",
+        "lineNumber": 68,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📄 PaginationManager inicializado com sucesso",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/pagination-manager.js",
+        "lineNumber": 37,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🎭 ModalManager inicializado com sucesso",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/modal/modal-manager.js",
+        "lineNumber": 69,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📊 ResultsRenderer inicializado com sucesso",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/results/results-renderer.js",
+        "lineNumber": 67,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "log",
+      "text": "📅 PeriodsManager inicializado",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/periods/periods-manager.js",
+        "lineNumber": 36,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📊 AnalyticsManager inicializado",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/analytics/analytics-manager.js",
+        "lineNumber": 43,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📈 ParetoAnalyzer inicializado com thresholds: [70, 75, 80, 85, 90]",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/analytics/pareto-analyzer.js",
+        "lineNumber": 30,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📈 ChartsManager inicializado",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/charts/charts-manager.js",
+        "lineNumber": 49,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📅 PeriodsManager configurado (modo controlado pelo usuário)",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/file/file-upload-manager.js",
+        "lineNumber": 213,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📊 Managers de análise configurados no ExportManager",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js",
+        "lineNumber": 79,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🎯 Módulos especializados inicializados com sucesso",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js",
+        "lineNumber": 68,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "warning",
+      "text": "⚠️ Seletor de modo não encontrado na interface",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js",
+        "lineNumber": 1720,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "log",
+      "text": "📍 15 botões de navegação configurados",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/navigation-manager.js",
+        "lineNumber": 224,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "warning",
+      "text": "⚠️ Seção não registrada para modo single: upload-section",
+      "timestamp": "2025-08-12T00:53:08.142Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/navigation-manager.js",
+        "lineNumber": 650,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "error",
+      "text": "❌ Navegação bloqueada para: upload-section",
+      "timestamp": "2025-08-12T00:53:08.143Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui/navigation-manager.js",
+        "lineNumber": 288,
+        "columnNumber": 24
+      }
+    },
+    {
+      "type": "log",
+      "text": "🎭 UI Manager Refatorado inicializado",
+      "timestamp": "2025-08-12T00:53:08.143Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js",
+        "lineNumber": 85,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🔗 UI Manager integrado com Configuration Manager",
+      "timestamp": "2025-08-12T00:53:08.143Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js",
+        "lineNumber": 816,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "📄 SPED Parser Modular initialized",
+      "timestamp": "2025-08-12T00:53:08.143Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/parsing/sped-parser.js",
+        "lineNumber": 17,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "🧮 DIFAL Calculator Simple initialized",
+      "timestamp": "2025-08-12T00:53:08.143Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/calculation/difal-calculator-simple.js",
+        "lineNumber": 18,
+        "columnNumber": 16
+      }
+    },
+    {
+      "type": "log",
+      "text": "✅ Sistema DIFAL Modular pronto!",
+      "timestamp": "2025-08-12T00:53:08.143Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js",
+        "lineNumber": 60,
+        "columnNumber": 20
+      }
+    },
+    {
+      "type": "log",
+      "text": "🎯 Configurando handlers da seleção de modo...",
+      "timestamp": "2025-08-12T00:53:09.145Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html",
+        "lineNumber": 1082,
+        "columnNumber": 24
+      }
+    },
+    {
+      "type": "log",
+      "text": "✅ 2 botões de seleção de modo configurados",
+      "timestamp": "2025-08-12T00:53:09.145Z",
+      "location": {
+        "url": "file:///Users/ceciliodaher/Documents/git/difal/difal-system/sistema.html",
+        "lineNumber": 1113,
+        "columnNumber": 24
+      }
+    }
+  ]
+}

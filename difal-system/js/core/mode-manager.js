@@ -84,7 +84,7 @@ class ModeManager {
 
         if (mode === this.activeMode) {
             console.log(`🎛️ Modo ${mode} já está ativo`);
-            return true;
+            return Promise.resolve(true);
         }
 
         // Verificar se há dados que serão perdidos

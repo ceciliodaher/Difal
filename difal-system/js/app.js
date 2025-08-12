@@ -98,7 +98,14 @@ class DifalAppModular {
             multi: this.multiPeriodManager
         });
         
+        // IMPORTANTE: Expor ModeManager globalmente ANTES de inicializar UIManager
+        window.modeManager = this.modeManager;
+        window.stateManager = this.stateManager;
+        window.singlePeriodManager = this.singlePeriodManager;
+        window.multiPeriodManager = this.multiPeriodManager;
+        
         this.configurationManager = new ConfigurationManager(this.eventBus, this.stateManager);
+        window.configurationManager = this.configurationManager;
     }
 
     /**
@@ -117,11 +124,8 @@ class DifalAppModular {
      * Expõe módulos globalmente para compatibilidade
      */
     exposeGlobally() {
-        window.modeManager = this.modeManager;
-        window.stateManager = this.stateManager;
-        window.singlePeriodManager = this.singlePeriodManager;
-        window.multiPeriodManager = this.multiPeriodManager;
-        window.configurationManager = this.configurationManager;
+        // ModeManager e StateManager já foram expostos em initializeInfrastructure
+        // Aqui apenas adicionamos UIManager após sua criação
         window.uiManager = this.uiManager;
     }
 
