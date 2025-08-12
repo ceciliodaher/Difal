@@ -160,9 +160,6 @@ class ExportManager {
                 this.exportAsCSV(exportData);
             }
             
-            // Notificar sucesso
-            this.notifyExportSuccess('Excel', exportData.totalRows);
-            
         } catch (error) {
             this.handleExportError('Excel', error);
         }
@@ -315,6 +312,9 @@ class ExportManager {
         // Gerar arquivo
         const blob = await workbook.outputAsync('blob');
         this.downloadFile(blob, this.generateExcelFilename(exportData), 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        
+        // Notificar sucesso
+        this.notifyExportSuccess('Excel XLSX', exportData.totalRows);
     }
 
     /**

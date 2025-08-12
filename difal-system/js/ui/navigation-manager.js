@@ -16,34 +16,40 @@
 class NavigationManager {
     /**
      * @constructor
-     * @param {StateManager} stateManager - Instância do gerenciador de estado
+     * @param {ModeManager} modeManager - Instância do gerenciador de modo
      * @param {EventBus} eventBus - Instância do barramento de eventos
      */
-    constructor(stateManager, eventBus) {
-        if (!stateManager) {
-            throw new Error('NavigationManager requer uma instância de StateManager');
+    constructor(modeManager, eventBus) {
+        if (!modeManager) {
+            throw new Error('NavigationManager requer uma instância de ModeManager');
         }
         
-        this.stateManager = stateManager;
+        this.modeManager = modeManager;
         this.eventBus = eventBus;
         
         // Estado da navegação
         this.navigationState = {
-            currentSection: 'upload-section',
+            currentSection: 'single-upload-section', // Start with single mode
             previousSection: null,
             history: [],
             transitionInProgress: false,
-            maxHistorySize: 20
+            maxHistorySize: 20,
+            activeMode: 'single'
         };
         
-        // Configurações de navegação
+        // Configurações de navegação por modo
         this.config = {
-            sections: [
-                'upload-section',
-                'periods-section',
-                'analysis-section', 
-                'calculation-section',
-                'analytics-section'
+            singleSections: [
+                'single-upload-section',
+                'single-analysis-section', 
+                'single-calculation-section',
+                'single-results-section'
+            ],
+            multiSections: [
+                'multi-upload-section',
+                'multi-periods-section',
+                'multi-analytics-section',
+                'multi-reports-section'
             ],
             transitions: {
                 duration: 300,
@@ -65,9 +71,111 @@ class NavigationManager {
     init() {
         this.setupEventListeners();
         this.setupNavigationButtons();
+        this.setupModeChangeListener();
         this.initializeCurrentSection();
+        this.updateNavigationForMode('single'); // Initialize with single mode
         this.setupBreadcrumbs();
         console.log('🧭 NavigationManager inicializado com sucesso');
+    }
+
+    /**
+     * Configura listener para mudanças de modo
+     * @private
+     */
+    setupModeChangeListener() {
+        if (this.eventBus) {
+            this.eventBus.on('mode:changed', (data) => {
+                this.handleModeChange(data.activeMode, data.previousMode);
+            });
+        }
+    }
+
+    /**
+     * Manipula mudança de modo
+     * @param {string} newMode - Novo modo ('single' | 'multi')
+     * @param {string} previousMode - Modo anterior
+     * @private
+     */
+    handleModeChange(newMode, previousMode) {
+        console.log(`🧭 Mudança de modo detectada: ${previousMode} → ${newMode}`);
+        
+        // Atualizar estado interno
+        this.navigationState.activeMode = newMode;
+        
+        // Atualizar navegação para o novo modo
+        this.updateNavigationForMode(newMode);
+        
+        // Navegar para primeira seção do novo modo
+        const firstSection = newMode === 'single' ? 
+            this.config.singleSections[0] : 
+            this.config.multiSections[0];
+        
+        this.navigateToSection(firstSection);
+    }
+
+    /**
+     * Atualiza navegação baseada no modo ativo
+     * @param {string} mode - Modo ativo ('single' | 'multi')
+     */
+    updateNavigationForMode(mode) {
+        const singleTabs = document.querySelectorAll('.nav-btn.mode-single');
+        const multiTabs = document.querySelectorAll('.nav-btn.mode-multi');
+        
+        const singleSections = document.querySelectorAll('.section.mode-single');
+        const multiSections = document.querySelectorAll('.section.mode-multi');
+        
+        if (mode === 'single') {
+            // Mostrar tabs single-period
+            singleTabs.forEach(tab => {
+                tab.classList.remove('hidden');
+                tab.style.display = '';
+            });
+            
+            // Esconder tabs multi-period
+            multiTabs.forEach(tab => {
+                tab.classList.add('hidden');
+                tab.style.display = 'none';
+            });
+            
+            // Mostrar seções single-period
+            singleSections.forEach(section => {
+                section.classList.remove('hidden');
+                section.style.display = '';
+            });
+            
+            // Esconder seções multi-period
+            multiSections.forEach(section => {
+                section.classList.add('hidden');
+                section.style.display = 'none';
+            });
+            
+        } else if (mode === 'multi') {
+            // Esconder tabs single-period
+            singleTabs.forEach(tab => {
+                tab.classList.add('hidden');
+                tab.style.display = 'none';
+            });
+            
+            // Mostrar tabs multi-period
+            multiTabs.forEach(tab => {
+                tab.classList.remove('hidden');
+                tab.style.display = '';
+            });
+            
+            // Esconder seções single-period
+            singleSections.forEach(section => {
+                section.classList.add('hidden');
+                section.style.display = 'none';
+            });
+            
+            // Mostrar seções multi-period
+            multiSections.forEach(section => {
+                section.classList.remove('hidden');
+                section.style.display = '';
+            });
+        }
+        
+        console.log(`🧭 Interface atualizada para modo: ${mode}`);
     }
 
     /**
@@ -533,14 +641,19 @@ class NavigationManager {
      * @returns {boolean} True se navegação é válida
      */
     validateSectionNavigation(sectionId) {
-        // Verificar se seção existe
-        if (!this.config.sections.includes(sectionId)) {
-            console.warn(`⚠️ Seção não registrada: ${sectionId}`);
+        const activeMode = this.navigationState.activeMode;
+        const validSections = activeMode === 'single' ? 
+            this.config.singleSections : 
+            this.config.multiSections;
+        
+        // Verificar se seção existe no modo ativo
+        if (!validSections.includes(sectionId)) {
+            console.warn(`⚠️ Seção não registrada para modo ${activeMode}: ${sectionId}`);
             return false;
         }
         
         // Debug: log validation attempts
-        console.log(`🧭 Validando navegação para: ${sectionId}`);
+        console.log(`🧭 Validando navegação para: ${sectionId} (modo: ${activeMode})`);
         
         // Validações específicas por seção - MODO PERMISSIVO
         switch (sectionId) {
@@ -729,8 +842,17 @@ class NavigationManager {
      * @public
      */
     resetNavigation() {
+        // Determinar seção inicial baseada no modo
+        const activeMode = this.modeManager?.getActiveMode() || 'single';
+        const initialSection = activeMode === 'single' ? 
+            'single-upload-section' : 
+            'multi-upload-section';
+            
         this.clearNavigationHistory();
-        this.navigateToSection('upload-section', { updateHistory: false });
+        this.navigationState.currentSection = initialSection;
+        this.navigationState.activeMode = activeMode;
+        
+        this.navigateToSection(initialSection, { updateHistory: false });
         console.log('🔄 Navegação redefinida');
     }
 }

@@ -1,10 +1,60 @@
 # Sistema DIFAL - Documentação Técnica
 
-## 🚀 Arquitetura Modular Completa com Suporte a Múltiplos Períodos
+## 🚀 Arquitetura Modular Separada: Single-Period vs Multi-Period
 
-### ✨ Funcionalidades Principais Implementadas
+### ✨ Nova Arquitetura Modular Implementada
 
-#### 1. **Sistema de Múltiplos Períodos SPED**
+#### **Separação Completa de Modos**
+O sistema agora possui **dois workflows completamente independentes** baseados na seleção inicial do usuário:
+
+- **Modo Período Único** → Workflow simplificado para análise de um arquivo SPED
+- **Modo Múltiplos Períodos** → Workflow avançado para análise consolidada de múltiplos arquivos
+
+### 🏗️ **Arquitetura Central**
+
+```
+DifalApp (Main Orchestrator)
+├── ModeManager (Coordenador Central de Modos)
+│   ├── SinglePeriodManager (Gerenciamento de Período Único)
+│   └── MultiPeriodManager (Gerenciamento de Múltiplos Períodos)
+├── NavigationManager (Navegação Condicional por Modo)
+├── UIManager (Interface Específica por Modo) 
+├── FileUploadManager (Processamento Específico por Modo)
+├── AnalyticsManager (Analytics Específicas por Modo)
+└── ExportManager (Exportações Específicas por Modo)
+```
+
+### 🎯 **Workflow Single-Period (Período Único)**
+
+**Seções Específicas:**
+1. **Upload** → Parse SPED único → Validação
+2. **Analysis** → Tabela de itens → Estatísticas básicas  
+3. **Calculation** → Configuração DIFAL → Execução de cálculo
+4. **Results** → Resultados detalhados → Export Excel/PDF
+
+**Características:**
+- ✅ **Interface simplificada** focada em análise de um arquivo
+- ✅ **Navegação linear** Upload → Analysis → Calculation → Export
+- ✅ **Processamento direto** sem consolidação de períodos
+- ✅ **Exports tradicionais** Excel e PDF de resultados
+
+### 📊 **Workflow Multi-Period (Múltiplos Períodos)**
+
+**Seções Específicas:**
+1. **Upload** → Parse múltiplos SPEDs → Validação de consistência
+2. **Periods** → Gestão de períodos → Consolidação de dados
+3. **Analytics** → Análise de Pareto → Estatísticas avançadas
+4. **Reports** → Dashboards → Relatórios executivos
+
+**Características:**
+- ✅ **Interface avançada** com gestão de múltiplos períodos
+- ✅ **Navegação específica** Upload → Periods → Analytics → Reports
+- ✅ **Consolidação inteligente** de dados entre períodos
+- ✅ **Analytics avançadas** com Pareto e visualizações
+
+### 🔧 **Componentes Principais Implementados**
+
+#### 1. **Sistema de Múltiplos Períodos SPED** (Multi-Period Mode)
 - **Upload sequencial** de arquivos SPED da mesma empresa em períodos distintos
 - **Validação automática** de CNPJ consistente entre arquivos
 - **Prevenção de sobreposição** de períodos com validação inteligente

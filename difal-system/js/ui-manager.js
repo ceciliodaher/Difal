@@ -23,6 +23,7 @@ class UIManager {
     constructor(eventBus, stateManager) {
         this.eventBus = eventBus;
         this.stateManager = stateManager;
+        this.modeManager = window.modeManager; // Obter ModeManager global
         this.currentSection = 'upload-section';
         this.progressCallback = null;
         this.statusCallback = null;
@@ -41,7 +42,9 @@ class UIManager {
         try {
             // Módulos de UI
             this.progressManager = new ProgressManager(this.stateManager, this.eventBus);
-            this.navigationManager = new NavigationManager(this.stateManager, this.eventBus);
+            this.navigationManager = new NavigationManager(this.modeManager, this.eventBus);
+            // Adicionar referência do StateManager ao NavigationManager
+            this.navigationManager.stateManager = this.stateManager;
             this.fileUploadManager = new FileUploadManager(this.stateManager, this.eventBus);
             this.exportManager = new ExportManager(this.stateManager, this.eventBus);
             this.paginationManager = new PaginationManager(this.stateManager, this.eventBus);
@@ -1532,7 +1535,9 @@ class UIManager {
                     <tbody>
         `;
         
-        ncmAnalysis.forEach((ncm, index) => {
+        // Extrair array do objeto ncmAnalysis
+        const ncmArray = ncmAnalysis.top10 || ncmAnalysis.all || [];
+        ncmArray.forEach((ncm, index) => {
             html += `
                 <tr>
                     <td>${index + 1}º</td>

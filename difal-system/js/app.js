@@ -14,7 +14,10 @@ class DifalAppModular {
         
         // Infraestrutura modular
         this.eventBus = null;
+        this.modeManager = null;
         this.stateManager = null;
+        this.singlePeriodManager = null;
+        this.multiPeriodManager = null;
         this.configurationManager = null;
         
         // Módulos modulares especializados
@@ -79,8 +82,22 @@ class DifalAppModular {
      */
     initializeInfrastructure() {
         this.eventBus = window.eventBus;
+        
+        // Inicializar StateManager primeiro
         this.stateManager = new StateManager(this.eventBus);
         this.stateManager.init();
+        
+        // Inicializar gerenciadores específicos por modo
+        this.singlePeriodManager = new SinglePeriodManager(this.eventBus);
+        this.multiPeriodManager = new MultiPeriodManager(this.stateManager, this.eventBus);
+        
+        // Inicializar ModeManager como coordenador central
+        this.modeManager = new ModeManager(this.eventBus);
+        this.modeManager.initialize({
+            single: this.singlePeriodManager,
+            multi: this.multiPeriodManager
+        });
+        
         this.configurationManager = new ConfigurationManager(this.eventBus, this.stateManager);
     }
 
@@ -88,19 +105,22 @@ class DifalAppModular {
      * Inicializa módulos especializados
      */
     initializeModules() {
-        // UI Manager (responsável por toda interface)
+        // UI Manager (responsável por toda interface) - usa StateManager
         this.uiManager = new UIManager(this.eventBus, this.stateManager);
         
         // Parsers e Calculators modulares
-        this.spedParser = new SpedParserModular(this.eventBus, this.stateManager);
-        this.difalCalculator = new DifalCalculatorSimple(this.eventBus, this.stateManager);
+        this.spedParser = new SpedParserModular(this.eventBus, this.modeManager);
+        this.difalCalculator = new DifalCalculatorSimple(this.eventBus, this.modeManager);
     }
 
     /**
      * Expõe módulos globalmente para compatibilidade
      */
     exposeGlobally() {
+        window.modeManager = this.modeManager;
         window.stateManager = this.stateManager;
+        window.singlePeriodManager = this.singlePeriodManager;
+        window.multiPeriodManager = this.multiPeriodManager;
         window.configurationManager = this.configurationManager;
         window.uiManager = this.uiManager;
     }

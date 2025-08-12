@@ -1,5 +1,212 @@
 /* Sections CSS - Estilos Específicos das Seções do Sistema DIFAL */
 
+/* =========================== MODE SELECTION SECTION =========================== */
+
+/* Controle de visibilidade das seções */
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+#mode-selection-section {
+    display: block !important;
+}
+
+.section.hidden {
+    display: none !important;
+}
+
+.nav-container.hidden {
+    display: none !important;
+}
+
+/* Mode Selection Hero */
+.mode-selection-hero {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.mode-selection-title {
+    font-size: 2.5rem;
+    color: var(--text-primary, #1f2937);
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.mode-selection-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary, #6b7280);
+}
+
+/* Mode Selection Grid */
+.mode-selector-main {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.mode-options-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+/* Mode Cards */
+.mode-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.mode-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    border-color: var(--expertzy-red, #ef4444);
+}
+
+.mode-card-header {
+    margin-bottom: 1rem;
+}
+
+.mode-card-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.mode-card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0;
+    color: var(--text-primary, #1f2937);
+}
+
+.mode-card-content {
+    margin: 1rem 0;
+}
+
+.mode-card-desc {
+    color: var(--text-secondary, #6b7280);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.mode-card-features {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.mode-card-features li {
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+    color: var(--text-tertiary, #374151);
+}
+
+.mode-card-footer {
+    margin-top: 1.5rem;
+}
+
+/* Mode Selection Info */
+.mode-selection-info {
+    margin-top: 2rem;
+}
+
+.info-box {
+    background: var(--bg-light, #f8fafc);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid var(--expertzy-red, #ef4444);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.info-box h4 {
+    margin: 0 0 1rem 0;
+    color: var(--text-primary, #1f2937);
+    font-size: 1.1rem;
+}
+
+.info-box p {
+    margin: 0.5rem 0;
+    color: var(--text-secondary, #6b7280);
+    font-size: 0.9rem;
+}
+
+.info-box strong {
+    color: var(--text-primary, #1f2937);
+    font-weight: 600;
+}
+
+/* Mode Indicators */
+.mode-indicator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-light, #f8fafc);
+    border-radius: 6px;
+}
+
+.mode-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.mode-badge.single {
+    background: var(--bg-blue-light, #dbeafe);
+    color: var(--text-blue, #1e40af);
+}
+
+.mode-badge.multi {
+    background: var(--bg-green-light, #dcfce7);
+    color: var(--text-green, #166534);
+}
+
+/* Button Large Variant */
+.btn-large {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    width: 100%;
+    margin-top: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mode-options-main {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .mode-selection-title {
+        font-size: 2rem;
+    }
+    
+    .mode-card {
+        padding: 1.5rem;
+    }
+    
+    .mode-card-icon {
+        font-size: 2.5rem;
+    }
+}
+
 /* Seção Upload */
 #upload-section {
     /* Animações específicas da seção */

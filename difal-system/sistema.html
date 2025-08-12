@@ -36,25 +36,40 @@
         </header>
 
         <!-- Navegação -->
-        <nav class="nav-container">
-            <button class="nav-btn active" data-section="upload-section">
+        <nav class="nav-container hidden" id="main-navigation" style="display: none;">
+            <!-- Single-Period Mode Navigation -->
+            <button class="nav-btn active mode-single" data-section="single-upload-section">
                 <span class="nav-icon">📁</span>
                 <span class="nav-label">Upload</span>
             </button>
-            <button class="nav-btn" data-section="periods-section">
-                <span class="nav-icon">📅</span>
-                <span class="nav-label">Períodos</span>
-            </button>
-            <button class="nav-btn" data-section="analysis-section">
+            <button class="nav-btn mode-single" data-section="single-analysis-section">
                 <span class="nav-icon">🔍</span>
                 <span class="nav-label">Análise</span>
             </button>
-            <button class="nav-btn" data-section="calculation-section">
+            <button class="nav-btn mode-single" data-section="single-calculation-section">
                 <span class="nav-icon">⚙️</span>
                 <span class="nav-label">Cálculo</span>
             </button>
-            <button class="nav-btn" data-section="analytics-section">
+            <button class="nav-btn mode-single" data-section="single-results-section">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">Resultados</span>
+            </button>
+            
+            <!-- Multi-Period Mode Navigation -->
+            <button class="nav-btn mode-multi hidden" data-section="multi-upload-section">
+                <span class="nav-icon">📁</span>
+                <span class="nav-label">Upload</span>
+            </button>
+            <button class="nav-btn mode-multi hidden" data-section="multi-periods-section">
+                <span class="nav-icon">📅</span>
+                <span class="nav-label">Períodos</span>
+            </button>
+            <button class="nav-btn mode-multi hidden" data-section="multi-analytics-section">
                 <span class="nav-icon">📊</span>
+                <span class="nav-label">Analytics</span>
+            </button>
+            <button class="nav-btn mode-multi hidden" data-section="multi-reports-section">
+                <span class="nav-icon">📈</span>
                 <span class="nav-label">Relatórios</span>
             </button>
         </nav>
@@ -62,36 +77,87 @@
         <!-- Conteúdo Principal -->
         <main class="main-content">
             
-            <!-- Seção 1: Upload de Arquivo -->
-            <section id="upload-section" class="section active">
+            <!-- =========================== MODE SELECTION SCREEN =========================== -->
+            
+            <!-- Initial Mode Selection -->
+            <section id="mode-selection-section" class="section active" style="display: block !important;">
                 <div class="section-card">
-                    <h2 class="section-title">📁 Upload do Arquivo SPED</h2>
+                    <div class="mode-selection-hero">
+                        <h2 class="mode-selection-title">🚀 Sistema DIFAL</h2>
+                        <p class="mode-selection-subtitle">Escolha o modo de processamento para começar</p>
+                    </div>
                     
-                    <!-- Seletor de Modo de Processamento -->
-                    <div class="mode-selector">
-                        <h3 class="mode-selector-title">Modo de Processamento</h3>
-                        <div class="mode-options">
-                            <label class="mode-option active" data-mode="single">
-                                <input type="radio" name="processing-mode" value="single" checked>
-                                <div class="mode-content">
-                                    <span class="mode-icon">📄</span>
-                                    <div class="mode-text">
-                                        <span class="mode-title">Período Único</span>
-                                        <span class="mode-desc">Upload e análise de um arquivo SPED</span>
-                                    </div>
+                    <!-- Seletor de Modo Principal -->
+                    <div class="mode-selector-main">
+                        <div class="mode-options-main">
+                            <div class="mode-card" data-mode="single" id="single-mode-card">
+                                <div class="mode-card-header">
+                                    <span class="mode-card-icon">📄</span>
+                                    <h3 class="mode-card-title">Período Único</h3>
                                 </div>
-                            </label>
-                            <label class="mode-option" data-mode="multiple">
-                                <input type="radio" name="processing-mode" value="multiple">
-                                <div class="mode-content">
-                                    <span class="mode-icon">📅</span>
-                                    <div class="mode-text">
-                                        <span class="mode-title">Múltiplos Períodos</span>
-                                        <span class="mode-desc">Upload de vários arquivos da mesma empresa</span>
-                                    </div>
+                                <div class="mode-card-content">
+                                    <p class="mode-card-desc">Upload e análise de um arquivo SPED</p>
+                                    <ul class="mode-card-features">
+                                        <li>✅ Upload de arquivo SPED único</li>
+                                        <li>✅ Análise básica de itens DIFAL</li>  
+                                        <li>✅ Configuração e cálculo tradicional</li>
+                                        <li>✅ Exportação Excel/PDF</li>
+                                    </ul>
                                 </div>
-                            </label>
+                                <div class="mode-card-footer">
+                                    <button class="btn btn-primary btn-large mode-select-btn" data-mode="single">
+                                        Selecionar Período Único
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="mode-card" data-mode="multi" id="multi-mode-card">
+                                <div class="mode-card-header">
+                                    <span class="mode-card-icon">📅</span>
+                                    <h3 class="mode-card-title">Múltiplos Períodos</h3>
+                                </div>
+                                <div class="mode-card-content">
+                                    <p class="mode-card-desc">Upload de vários arquivos da mesma empresa</p>
+                                    <ul class="mode-card-features">
+                                        <li>✅ Upload sequencial de múltiplos SPEDs</li>
+                                        <li>✅ Consolidação automática de dados</li>
+                                        <li>✅ Análise de Pareto (80/20)</li>
+                                        <li>✅ Relatórios executivos avançados</li>
+                                    </ul>
+                                </div>
+                                <div class="mode-card-footer">
+                                    <button class="btn btn-success btn-large mode-select-btn" data-mode="multi">
+                                        Selecionar Múltiplos Períodos
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                    
+                    <!-- Mode Selection Info -->
+                    <div class="mode-selection-info">
+                        <div class="info-box">
+                            <h4>💡 Como escolher?</h4>
+                            <p><strong>Período Único:</strong> Ideal para análise pontual de um arquivo SPED específico</p>
+                            <p><strong>Múltiplos Períodos:</strong> Ideal para análise temporal e insights estratégicos consolidados</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- =========================== SINGLE-PERIOD SECTIONS =========================== -->
+            
+            <!-- Single-Period: Upload de Arquivo -->
+            <section id="single-upload-section" class="section mode-single hidden" style="display: none;">
+                <div class="section-card">
+                    <h2 class="section-title">📁 Upload do Arquivo SPED - Período Único</h2>
+                    
+                    <!-- Mode Indicator -->
+                    <div class="mode-indicator">
+                        <span class="mode-badge single">📄 Período Único</span>
+                        <button class="btn btn-outline btn-sm" onclick="window.modeManager?.handleModeSwitch()">
+                            🔄 Trocar Modo
+                        </button>
                     </div>
                     
                     <!-- Drop Zone -->
@@ -126,15 +192,15 @@
 
                     <!-- Botão Prosseguir -->
                     <div class="action-buttons">
-                        <button id="proceed-calculation" class="btn btn-primary btn-large hidden">
+                        <button id="single-proceed-analysis" class="btn btn-primary btn-large hidden">
                             Prosseguir para Análise →
                         </button>
                     </div>
                 </div>
             </section>
 
-            <!-- Seção 2: Análise dos Dados -->
-            <section id="analysis-section" class="section">
+            <!-- Single-Period: Análise dos Dados -->
+            <section id="single-analysis-section" class="section mode-single">
                 <div class="section-card">
                     <h2 class="section-title">🔍 Análise dos Itens DIFAL</h2>
                     
@@ -143,6 +209,343 @@
                         <div class="info-grid">
                             <div class="info-item">
                                 <span class="info-label">Empresa:</span>
+                                <span id="single-company-name" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">UF:</span>
+                                <span id="single-company-uf" class="info-value">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabela de Itens DIFAL -->
+                    <div id="single-difal-items-table" class="table-container">
+                        <!-- Tabela será inserida via JavaScript -->
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="action-buttons">
+                        <button id="single-calculate-difal" class="btn btn-primary btn-large">
+                            🎯 Configurar e Calcular DIFAL
+                        </button>
+                        <button id="single-proceed-to-calculation" class="btn btn-info">
+                            Prosseguir para Cálculo →
+                        </button>
+                        <button class="btn btn-secondary nav-btn" data-section="single-upload-section">
+                            ← Voltar para Upload
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Single-Period: Configuração e Cálculo -->
+            <section id="single-calculation-section" class="section mode-single">
+                <div class="section-card">
+                    <h2 class="section-title">⚙️ Configuração e Cálculo</h2>
+                    
+                    <!-- Progress Section -->
+                    <div id="single-progress-section" class="progress-section hidden">
+                        <div class="progress-container">
+                            <div id="single-progress-bar" class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p id="single-status-message" class="status-message">Processando...</p>
+                        </div>
+                    </div>
+
+                    <!-- Resultados do Cálculo -->
+                    <div id="single-calculation-results" class="calculation-results hidden">
+                        <div id="single-results-summary" class="results-summary">
+                            <!-- Resumo será inserido via JavaScript -->
+                        </div>
+                        
+                        <div id="single-results-detail" class="results-detail">
+                            <!-- Detalhes serão inseridos via JavaScript -->
+                        </div>
+
+                        <!-- Botões de Exportação -->
+                        <div class="export-buttons">
+                            <button id="single-export-excel" class="btn btn-success">
+                                📥 Exportar para Excel
+                            </button>
+                            <button id="single-export-pdf" class="btn btn-info">
+                                📄 Exportar para PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Single-Period: Resultados -->
+            <section id="single-results-section" class="section mode-single">
+                <div class="section-card">
+                    <h2 class="section-title">📋 Resultados do Cálculo DIFAL</h2>
+                    
+                    <div id="single-final-results" class="final-results">
+                        <!-- Resultados finais serão inseridos via JavaScript -->
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary nav-btn" data-section="single-calculation-section">
+                            ← Voltar para Cálculo
+                        </button>
+                        <button id="single-new-calculation" class="btn btn-primary">
+                            🔄 Novo Cálculo
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================== MULTI-PERIOD SECTIONS =========================== -->
+
+            <!-- Multi-Period: Upload de Arquivos -->
+            <section id="multi-upload-section" class="section mode-multi hidden">
+                <div class="section-card">
+                    <h2 class="section-title">📁 Upload de Múltiplos Arquivos SPED - Múltiplos Períodos</h2>
+                    
+                    <!-- Mode Indicator -->
+                    <div class="mode-indicator">
+                        <span class="mode-badge multi">📅 Múltiplos Períodos</span>
+                        <button class="btn btn-outline btn-sm" onclick="window.modeManager?.handleModeSwitch()">
+                            🔄 Trocar Modo
+                        </button>
+                    </div>
+                    
+                    <!-- Upload para Múltiplos Períodos -->
+                    <div class="multi-period-upload">
+                        <div class="upload-instructions">
+                            <h3>📁 Upload de Arquivos SPED por Período</h3>
+                            <p>Faça upload de múltiplos arquivos SPED da mesma empresa em períodos diferentes para análise consolidada.</p>
+                            <ul class="instructions-list">
+                                <li>✅ Todos os arquivos devem ser da mesma empresa (mesmo CNPJ)</li>
+                                <li>✅ Períodos não podem sobrepor</li>
+                                <li>✅ Máximo de 12 períodos por empresa</li>
+                                <li>✅ Sistema detecta automaticamente empresa e período</li>
+                            </ul>
+                        </div>
+                        
+                        <div id="multi-period-drop-zone" class="drop-zone">
+                            <div class="drop-zone-content">
+                                <svg class="drop-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <p class="drop-text">Arraste arquivos SPED aqui ou clique para selecionar múltiplos arquivos</p>
+                                <p class="drop-hint">Arquivos TXT do SPED Fiscal - Mesmo CNPJ, períodos distintos</p>
+                                <input type="file" id="multi-period-file-input" accept=".txt" multiple style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="action-buttons">
+                        <button id="multi-proceed-periods" class="btn btn-primary btn-large hidden">
+                            Prosseguir para Períodos →
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Multi-Period: Gestão de Períodos -->
+            <section id="multi-periods-section" class="section mode-multi hidden">
+                <div class="section-card">
+                    <h2 class="section-title">📅 Gestão de Múltiplos Períodos</h2>
+                    
+                    <!-- Informações da Empresa Atual -->
+                    <div id="multi-current-company-info" class="company-info hidden">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Empresa:</span>
+                                <span id="multi-current-company-name" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">CNPJ:</span>
+                                <span id="multi-current-company-cnpj" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">UF:</span>
+                                <span id="multi-current-company-uf" class="info-value">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Períodos:</span>
+                                <span id="multi-current-company-periods" class="info-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de Períodos Carregados -->
+                    <div id="multi-periods-list" class="periods-list hidden">
+                        <h3>📊 Períodos Carregados</h3>
+                        <div id="multi-periods-table" class="table-container">
+                            <!-- Tabela de períodos será inserida via JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Estatísticas Consolidadas -->
+                    <div id="multi-consolidated-stats" class="consolidated-stats hidden">
+                        <h3>📈 Estatísticas Consolidadas</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="multi-consolidated-total-items">0</div>
+                                <div class="stat-label">Total de Itens</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="multi-consolidated-total-value">R$ 0</div>
+                                <div class="stat-label">Valor Total</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="multi-consolidated-unique-ncms">0</div>
+                                <div class="stat-label">NCMs Únicos</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="multi-consolidated-periods-count">0</div>
+                                <div class="stat-label">Períodos</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="action-buttons">
+                        <button id="multi-clear-all-periods" class="btn btn-secondary">
+                            🧹 Limpar Todos os Períodos
+                        </button>
+                        <button id="multi-generate-analytics" class="btn btn-primary">
+                            📊 Gerar Análises Estatísticas
+                        </button>
+                        <button id="multi-proceed-to-analytics" class="btn btn-success">
+                            📈 Ver Analytics →
+                        </button>
+                        <button class="btn btn-secondary nav-btn" data-section="multi-upload-section">
+                            ← Voltar para Upload
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Multi-Period: Analytics -->
+            <section id="multi-analytics-section" class="section mode-multi hidden">
+                <div class="section-card">
+                    <h2 class="section-title">📊 Analytics Estatísticas Consolidadas</h2>
+                    
+                    <!-- Resumo das Análises -->
+                    <div id="multi-analytics-summary" class="analytics-summary hidden">
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-value" id="multi-analytics-total-value">R$ 0</div>
+                                <div class="summary-label">Valor Total Analisado</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="multi-analytics-pareto-ncms">0</div>
+                                <div class="summary-label">NCMs Pareto (80%)</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="multi-analytics-concentration">0%</div>
+                                <div class="summary-label">Taxa de Concentração</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="multi-analytics-top-ncm">-</div>
+                                <div class="summary-label">NCM Principal</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Abas de Analytics -->
+                    <div id="multi-analytics-tabs" class="tabs-container hidden">
+                        <div class="tabs-header">
+                            <button class="tab-btn active" data-tab="multi-pareto-tab">📈 Análise Pareto</button>
+                            <button class="tab-btn" data-tab="multi-ncm-tab">🏷️ Ranking NCM</button>
+                            <button class="tab-btn" data-tab="multi-trends-tab">📊 Tendências</button>
+                            <button class="tab-btn" data-tab="multi-charts-tab">📉 Gráficos</button>
+                        </div>
+                        
+                        <!-- Aba: Análise Pareto -->
+                        <div id="multi-pareto-tab" class="tab-content active">
+                            <div id="multi-pareto-analysis" class="analysis-content">
+                                <!-- Conteúdo da análise Pareto será inserido via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Aba: Ranking NCM -->
+                        <div id="multi-ncm-tab" class="tab-content">
+                            <div id="multi-ncm-ranking" class="analysis-content">
+                                <!-- Ranking de NCMs será inserido via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Aba: Tendências -->
+                        <div id="multi-trends-tab" class="tab-content">
+                            <div id="multi-trends-analysis" class="analysis-content">
+                                <!-- Análise de tendências será inserida via JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Aba: Gráficos -->
+                        <div id="multi-charts-tab" class="tab-content">
+                            <div id="multi-charts-dashboard" class="analysis-content">
+                                <!-- Dashboard de gráficos será inserido via JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Section para Analytics -->
+                    <div id="multi-analytics-progress-section" class="progress-section hidden">
+                        <div class="progress-container">
+                            <div id="multi-analytics-progress-bar" class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <p id="multi-analytics-status-message" class="status-message">Processando análises...</p>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="action-buttons">
+                        <button id="multi-proceed-to-reports" class="btn btn-success">
+                            📈 Ver Relatórios →
+                        </button>
+                        <button class="btn btn-secondary nav-btn" data-section="multi-periods-section">
+                            ← Voltar para Períodos
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Multi-Period: Relatórios -->
+            <section id="multi-reports-section" class="section mode-multi hidden">
+                <div class="section-card">
+                    <h2 class="section-title">📈 Relatórios Executivos</h2>
+                    
+                    <!-- Botões de Exportação de Relatórios -->
+                    <div id="multi-reports-export-buttons" class="export-buttons">
+                        <button id="multi-export-analytics-excel" class="btn btn-success">
+                            📥 Exportar Análises (Excel)
+                        </button>
+                        <button id="multi-export-analytics-pdf" class="btn btn-info">
+                            📄 Relatório Pareto (PDF)
+                        </button>
+                        <button id="multi-export-consolidated-report" class="btn btn-primary">
+                            📊 Relatório Consolidado
+                        </button>
+                    </div>
+
+                    <!-- Dashboard de Relatórios -->
+                    <div id="multi-reports-dashboard" class="reports-dashboard">
+                        <!-- Dashboard será inserido via JavaScript -->
+                    </div>
+
+                    <!-- Botões de Navegação -->
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary nav-btn" data-section="multi-analytics-section">
+                            ← Voltar para Analytics
+                        </button>
+                        <button id="multi-refresh-reports" class="btn btn-info">
+                            🔄 Atualizar Relatórios
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- =========================== LEGACY SECTIONS (TO REMOVE) =========================== -->
                                 <span id="company-name" class="info-value">-</span>
                             </div>
                             <div class="info-item">
@@ -632,6 +1035,8 @@
     <script src="js/core/constants.js"></script>
     <script src="js/core/event-bus.js"></script>
     <script src="js/core/state-manager.js"></script>
+    <script src="js/core/single-period-manager.js"></script>
+    <script src="js/core/mode-manager.js"></script>
     <script src="js/core/logger.js"></script>
     
     <!-- Módulos de Configuração -->
@@ -654,6 +1059,7 @@
     
     <!-- Módulos de Múltiplos Períodos e Analytics -->
     <script src="js/periods/periods-manager.js"></script>
+    <script src="js/periods/multi-period-manager.js"></script>
     <script src="js/analytics/analytics-manager.js"></script>
     <script src="js/analytics/pareto-analyzer.js"></script>
     <script src="js/charts/charts-manager.js"></script>
@@ -663,6 +1069,84 @@
     
     <!-- App Principal -->
     <script src="js/app.js"></script>
+    
+    <!-- Mode Selection Handler -->
+    <script>
+        // Mode Selection Event Handlers
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aguardar inicialização da aplicação
+            setTimeout(function() {
+                const modeSelectButtons = document.querySelectorAll('.mode-select-btn');
+                const modeSelectionSection = document.getElementById('mode-selection-section');
+                const navigation = document.getElementById('main-navigation');
+                
+                console.log('🎯 Configurando handlers da seleção de modo...');
+                
+                modeSelectButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const selectedMode = this.getAttribute('data-mode');
+                        console.log(`🎯 Modo selecionado: ${selectedMode}`);
+                        
+                        // Verificar se ModeManager está disponível
+                        if (!window.modeManager) {
+                            console.error('❌ ModeManager não disponível');
+                            alert('Sistema ainda não foi inicializado. Tente novamente em alguns segundos.');
+                            return;
+                        }
+                        
+                        // Definir modo no ModeManager
+                        window.modeManager.setMode(selectedMode).then(() => {
+                            // Esconder seleção de modo
+                            modeSelectionSection.classList.add('hidden');
+                            modeSelectionSection.classList.remove('active');
+                            
+                            // Mostrar navegação
+                            navigation.classList.remove('hidden');
+                            
+                            console.log(`✅ Interface mudou para modo: ${selectedMode}`);
+                        }).catch(error => {
+                            console.error('❌ Erro ao definir modo:', error);
+                            alert(`Erro ao carregar modo ${selectedMode}: ${error.message}`);
+                        });
+                    });
+                });
+                
+                console.log(`✅ ${modeSelectButtons.length} botões de seleção de modo configurados`);
+            }, 1000); // Aguardar 1 segundo para garantir inicialização
+        });
+        
+        // Global mode switch handler for "Trocar Modo" buttons
+        window.handleModeSwitch = function() {
+            console.log('🔄 Iniciando troca de modo...');
+            
+            if (!window.modeManager) {
+                console.error('❌ ModeManager não disponível para troca de modo');
+                return;
+            }
+            
+            // Esconder navegação
+            const navigation = document.getElementById('main-navigation');
+            if (navigation) {
+                navigation.classList.add('hidden');
+            }
+            
+            // Esconder todas as seções
+            const allSections = document.querySelectorAll('.section:not(#mode-selection-section)');
+            allSections.forEach(section => {
+                section.classList.remove('active');
+                section.classList.add('hidden');
+            });
+            
+            // Mostrar seleção de modo
+            const modeSelectionSection = document.getElementById('mode-selection-section');
+            if (modeSelectionSection) {
+                modeSelectionSection.classList.remove('hidden');
+                modeSelectionSection.classList.add('active');
+            }
+            
+            console.log('✅ Voltou para seleção de modo');
+        };
+    </script>
     
 </body>
 </html>

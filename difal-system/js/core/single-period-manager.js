@@ -1,17 +1,19 @@
 /**
- * StateManager - Gerenciamento de estado centralizado
- * Implementa padrão State com EventBus para sincronização
+ * SinglePeriodManager - Gerenciamento de período único
+ * Especialização focada em dados de um único arquivo SPED
  */
 
-class StateManager {
+class SinglePeriodManager {
     constructor(eventBus) {
         this.eventBus = eventBus || window.eventBus;
+        this.mode = 'single'; // Identificador do modo
         this.state = {
             // Estado da aplicação
             app: {
                 initialized: false,
-                currentSection: 'upload-section',
-                version: window.DIFAL_CONSTANTS?.VERSION || '3.0.0'
+                currentSection: 'single-upload-section',
+                version: window.DIFAL_CONSTANTS?.VERSION || '3.0.0',
+                mode: 'single'
             },
             
             // Estado dos dados SPED
@@ -876,10 +878,10 @@ class StateManager {
 
 // Expor globalmente para uso no browser
 if (typeof window !== 'undefined') {
-    window.StateManager = StateManager;
+    window.SinglePeriodManager = SinglePeriodManager;
 }
 
 // Exportar classe para uso se necessário
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = StateManager;
+    module.exports = SinglePeriodManager;
 }
