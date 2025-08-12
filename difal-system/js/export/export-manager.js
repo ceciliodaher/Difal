@@ -85,17 +85,28 @@ class ExportManager {
      * @private
      */
     setupEventListeners() {
-        // Listener para botões de exportação
-        const exportExcelBtn = document.getElementById('export-excel');
-        const exportPdfBtn = document.getElementById('export-pdf');
+        // Listener para botões de exportação (suporte a IDs genéricos e específicos por modo)
+        const exportExcelBtns = [
+            document.getElementById('export-excel'),
+            document.getElementById('single-export-excel'),
+            document.getElementById('multi-export-excel')
+        ].filter(btn => btn !== null);
         
-        if (exportExcelBtn) {
+        exportExcelBtns.forEach(exportExcelBtn => {
             exportExcelBtn.addEventListener('click', () => this.exportToExcel());
-        }
+            console.log(`✅ Event listener adicionado para botão Excel: #${exportExcelBtn.id}`);
+        });
         
-        if (exportPdfBtn) {
+        const exportPdfBtns = [
+            document.getElementById('export-pdf'),
+            document.getElementById('single-export-pdf'),
+            document.getElementById('multi-export-pdf')
+        ].filter(btn => btn !== null);
+        
+        exportPdfBtns.forEach(exportPdfBtn => {
             exportPdfBtn.addEventListener('click', () => this.exportToPdf());
-        }
+            console.log(`✅ Event listener adicionado para botão PDF: #${exportPdfBtn.id}`);
+        });
         
         // Listener para eventos do EventBus
         if (this.eventBus) {

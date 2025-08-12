@@ -158,16 +158,26 @@ class UIManager {
             });
         });
 
-        // Export buttons - DELEGADOS para ExportManager
-        const exportExcel = document.getElementById('export-excel');
-        if (exportExcel) {
+        // Export buttons - DELEGADOS para ExportManager (suporte a IDs genéricos e específicos)
+        const exportExcelBtns = [
+            document.getElementById('export-excel'),
+            document.getElementById('single-export-excel'),
+            document.getElementById('multi-export-excel')
+        ].filter(btn => btn !== null);
+        
+        exportExcelBtns.forEach(exportExcel => {
             exportExcel.addEventListener('click', () => this.exportToExcel());
-        }
+        });
 
-        const exportPdf = document.getElementById('export-pdf');
-        if (exportPdf) {
+        const exportPdfBtns = [
+            document.getElementById('export-pdf'),
+            document.getElementById('single-export-pdf'),
+            document.getElementById('multi-export-pdf')
+        ].filter(btn => btn !== null);
+        
+        exportPdfBtns.forEach(exportPdf => {
             exportPdf.addEventListener('click', () => this.exportToPdf());
-        }
+        });
     }
 
     // ========== DELEGAÇÃO PARA MÓDULOS ESPECIALIZADOS ==========
