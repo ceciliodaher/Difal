@@ -176,6 +176,22 @@ class ResultsRenderer {
                 console.log('⚠️ Nenhum resultado para renderizar detalhes');
             }
             
+            // Também popular container da aba Results dedicada (fix mínimo)
+            const finalResultsDiv = document.getElementById('single-final-results');
+            if (finalResultsDiv && totalizadores) {
+                const simpleHTML = `
+                    <div class="simple-results">
+                        <h3>💰 Resumo do Cálculo DIFAL</h3>
+                        <div class="total-difal">
+                            <strong>Total DIFAL a Recolher: R$ ${this.formatCurrency(totalizadores.totalRecolher || 0)}</strong>
+                        </div>
+                        <p>Cálculo realizado para ${totalizadores.totalItens || 0} itens (${totalizadores.itensComDifal || 0} com DIFAL)</p>
+                    </div>
+                `;
+                finalResultsDiv.innerHTML = simpleHTML;
+                console.log('✅ Resultados copiados para aba Results dedicada');
+            }
+            
             // Emitir evento de resultados exibidos
             if (this.eventBus) {
                 this.eventBus.emit('RESULTS_DISPLAYED', { resultados, totalizadores });
