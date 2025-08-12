@@ -302,13 +302,20 @@ class NavigationManager {
                 updateCompanyInfo = true
             } = options;
             
+            // Mapear seção para o modo ativo
+            const activeMode = this.navigationState.activeMode;
+            const mappedSectionId = this.mapSectionForMode(sectionId, activeMode);
+            
             // Validar seção
-            if (!skipValidation && !this.validateSectionNavigation(sectionId)) {
-                console.error(`❌ Navegação bloqueada para: ${sectionId}`);
+            if (!skipValidation && !this.validateSectionNavigation(mappedSectionId)) {
+                console.error(`❌ Navegação bloqueada para: ${mappedSectionId} (original: ${sectionId})`);
                 return false;
             }
             
-            console.log(`🧭 Navegando para: ${sectionId}`);
+            console.log(`🧭 Navegando para: ${mappedSectionId} (original: ${sectionId})`);
+            
+            // Usar o ID mapeado daqui em diante
+            sectionId = mappedSectionId;
             
             // Marcar transição em progresso
             this.navigationState.transitionInProgress = true;
@@ -326,8 +333,10 @@ class NavigationManager {
                 this.navigationState.previousSection = this.navigationState.currentSection;
                 this.navigationState.currentSection = sectionId;
                 
-                // Atualizar StateManager
-                this.stateManager?.navigateToSection(sectionId);
+                // Atualizar StateManager (usar window.stateManager se disponível)
+                if (window.stateManager) {
+                    window.stateManager.navigateToSection(sectionId);
+                }
                 
                 // Atualizar informações da empresa se necessário
                 if (updateCompanyInfo) {
@@ -657,6 +666,33 @@ class NavigationManager {
     // ========== VALIDAÇÃO E UTILITÁRIOS ==========
 
     /**
+     * Mapeia nomes genéricos de seção para o modo específico
+     * @private
+     * @param {string} sectionId - ID da seção (pode ser genérico ou específico)
+     * @param {string} mode - Modo ativo ('single' | 'multi')
+     * @returns {string} ID da seção mapeado para o modo
+     */
+    mapSectionForMode(sectionId, mode) {
+        // Se já tem o prefixo correto, retornar como está
+        if (sectionId.startsWith('single-') || sectionId.startsWith('multi-')) {
+            return sectionId;
+        }
+        
+        // Mapa de seções genéricas para específicas
+        const sectionMap = {
+            'upload-section': mode === 'single' ? 'single-upload-section' : 'multi-upload-section',
+            'analysis-section': mode === 'single' ? 'single-analysis-section' : 'multi-analytics-section',
+            'calculation-section': mode === 'single' ? 'single-calculation-section' : 'multi-calculation-section',
+            'results-section': mode === 'single' ? 'single-results-section' : 'multi-reports-section',
+            'periods-section': 'multi-periods-section',
+            'analytics-section': 'multi-analytics-section',
+            'reports-section': 'multi-reports-section'
+        };
+        
+        return sectionMap[sectionId] || sectionId;
+    }
+
+    /**
      * Valida se navegação para seção é permitida
      * @private
      * @param {string} sectionId - ID da seção
@@ -664,13 +700,17 @@ class NavigationManager {
      */
     validateSectionNavigation(sectionId) {
         const activeMode = this.navigationState.activeMode;
+        
+        // Mapear seções genéricas para específicas do modo
+        const mappedSectionId = this.mapSectionForMode(sectionId, activeMode);
+        
         const validSections = activeMode === 'single' ? 
             this.config.singleSections : 
             this.config.multiSections;
         
         // Verificar se seção existe no modo ativo
-        if (!validSections.includes(sectionId)) {
-            console.warn(`⚠️ Seção não registrada para modo ${activeMode}: ${sectionId}`);
+        if (!validSections.includes(mappedSectionId)) {
+            console.warn(`⚠️ Seção não registrada para modo ${activeMode}: ${mappedSectionId} (original: ${sectionId})`);
             return false;
         }
         

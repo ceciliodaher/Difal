@@ -141,9 +141,16 @@ class SpedParserModular {
         // Processar itens para DIFAL
         await this.processarItensDifal();
 
+        // Formatar período de apuração
+        const periodoApuracao = this.dadosEmpresa ? 
+            this.formatarPeriodoApuracao(this.dadosEmpresa.dtInicio, this.dadosEmpresa.dtFim) : 
+            'Período não informado';
+
         return {
             nomeArquivo: 'sped_processado.txt',
             dadosEmpresa: this.dadosEmpresa,
+            periodoApuracao: periodoApuracao,
+            empresa: this.dadosEmpresa, // Alias para compatibilidade
             registros: this.registros,
             itensDifal: this.itensDifal,
             estatisticas: {
@@ -151,7 +158,8 @@ class SpedParserModular {
                 linhasProcessadas: processadas,
                 linhasIgnoradas: ignoradas,
                 totalRegistros: Object.keys(this.registros).length,
-                itensDifal: this.itensDifal.length
+                itensDifal: this.itensDifal.length,
+                periodoApuracao: periodoApuracao
             }
         };
     }
@@ -519,6 +527,37 @@ class SpedParserModular {
             valido: erros.length === 0,
             erros
         };
+    }
+
+    /**
+     * Formatar período de apuração
+     * @private
+     * @param {string} dtInicio - Data início no formato DDMMAAAA
+     * @param {string} dtFim - Data fim no formato DDMMAAAA
+     * @returns {string} - Período formatado "DD/MM/AAAA a DD/MM/AAAA"
+     */
+    formatarPeriodoApuracao(dtInicio, dtFim) {
+        if (!dtInicio || !dtFim) return 'Período não informado';
+        
+        const formatarData = (data) => {
+            if (!data || data.length !== 8) return '';
+            const dia = data.substring(0, 2);
+            const mes = data.substring(2, 4);
+            const ano = data.substring(4, 8);
+            return `${dia}/${mes}/${ano}`;
+        };
+        
+        const inicio = formatarData(dtInicio);
+        const fim = formatarData(dtFim);
+        
+        if (!inicio || !fim) return 'Período inválido';
+        
+        // Se mesmo período, mostrar apenas uma data
+        if (dtInicio === dtFim) {
+            return inicio;
+        }
+        
+        return `${inicio} a ${fim}`;
     }
 
     /**

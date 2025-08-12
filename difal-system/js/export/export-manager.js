@@ -175,13 +175,16 @@ class ExportManager {
         const { resultados, totalizadores } = results;
         const spedData = this.stateManager.getSpedData();
         
-        // Cabeçalho com informações da empresa
+        // Cabeçalho com informações da empresa e período detalhado
         const header = {
-            empresa: spedData?.dadosEmpresa?.razaoSocial || 'N/A',
-            cnpj: this.formatCNPJ(spedData?.dadosEmpresa?.cnpj),
+            empresa: spedData?.dadosEmpresa?.razaoSocial || spedData?.empresa?.NOME || 'N/A',
+            cnpj: this.formatCNPJ(spedData?.dadosEmpresa?.cnpj || spedData?.empresa?.CNPJ),
             periodo: spedData?.periodoApuracao || 'N/A',
-            ufOrigem: spedData?.dadosEmpresa?.uf || 'N/A',
-            dataExportacao: new Date().toLocaleString('pt-BR')
+            periodoInicio: spedData?.dadosEmpresa?.dtInicio || spedData?.empresa?.DT_INI || '',
+            periodoFim: spedData?.dadosEmpresa?.dtFim || spedData?.empresa?.DT_FIN || '',
+            ufOrigem: spedData?.dadosEmpresa?.uf || spedData?.empresa?.UF || 'N/A',
+            dataExportacao: new Date().toLocaleString('pt-BR'),
+            tipoRelatorio: 'Período Único'
         };
         
         // Dados detalhados
@@ -254,8 +257,16 @@ class ExportManager {
         sheet.cell(currentRow, 2).value(exportData.header.cnpj);
         currentRow++;
         
-        sheet.cell(currentRow, 1).value('Período:');
+        sheet.cell(currentRow, 1).value('UF Origem:');
+        sheet.cell(currentRow, 2).value(exportData.header.ufOrigem);
+        currentRow++;
+        
+        sheet.cell(currentRow, 1).value('Período de Apuração:');
         sheet.cell(currentRow, 2).value(exportData.header.periodo);
+        currentRow++;
+        
+        sheet.cell(currentRow, 1).value('Tipo de Relatório:');
+        sheet.cell(currentRow, 2).value(exportData.header.tipoRelatorio);
         currentRow++;
         
         sheet.cell(currentRow, 1).value('Data Exportação:');
@@ -406,18 +417,31 @@ class ExportManager {
         doc.text('RELATÓRIO DE CÁLCULO DIFAL', 105, yPosition, { align: 'center' });
         yPosition += 15;
         
-        // Informações da empresa
+        // Informações da empresa e período
         doc.setFontSize(10);
         doc.setTextColor(52, 73, 94);
         
-        if (spedData?.dadosEmpresa) {
-            doc.text(`Empresa: ${spedData.dadosEmpresa.razaoSocial}`, 20, yPosition);
+        if (spedData?.dadosEmpresa || spedData?.empresa) {
+            const empresa = spedData.dadosEmpresa || spedData.empresa;
+            const nomeEmpresa = empresa.razaoSocial || empresa.NOME || 'N/A';
+            const cnpjEmpresa = empresa.cnpj || empresa.CNPJ || '';
+            const ufEmpresa = empresa.uf || empresa.UF || 'N/A';
+            
+            doc.text(`Empresa: ${nomeEmpresa}`, 20, yPosition);
             yPosition += 6;
-            doc.text(`CNPJ: ${this.formatCNPJ(spedData.dadosEmpresa.cnpj)}`, 20, yPosition);
+            doc.text(`CNPJ: ${this.formatCNPJ(cnpjEmpresa)}`, 20, yPosition);
             yPosition += 6;
-            doc.text(`UF: ${spedData.dadosEmpresa.uf}`, 20, yPosition);
+            doc.text(`UF de Origem: ${ufEmpresa}`, 20, yPosition);
             yPosition += 6;
-            doc.text(`Período: ${spedData.periodoApuracao || 'N/A'}`, 20, yPosition);
+            
+            // Período de apuração com mais detalhes
+            const periodo = spedData.periodoApuracao || 'N/A';
+            doc.text(`Período de Apuração: ${periodo}`, 20, yPosition);
+            yPosition += 6;
+            
+            // Tipo de relatório
+            const tipoRelatorio = spedData.tipoRelatorio || 'Período Único';
+            doc.text(`Tipo de Relatório: ${tipoRelatorio}`, 20, yPosition);
             yPosition += 10;
         }
         
@@ -1559,6 +1583,159 @@ class ExportManager {
             console.error('❌ Erro ao exportar relatório consolidado:', error);
             throw error;
         }
+    }
+
+    // ========== MÉTODOS AUXILIARES PARA RELATÓRIOS CONSOLIDADOS ==========
+
+    /**
+     * Cria aba de capa do relatório consolidado
+     * @private
+     * @param {Object} workbook - Workbook do Excel
+     * @param {Object} reportData - Dados do relatório
+     */
+    async createReportCoverSheet(workbook, reportData) {
+        const sheet = workbook.sheet(0).name('Capa do Relatório');
+        
+        // Título principal
+        sheet.cell('A1').value('RELATÓRIO CONSOLIDADO DIFAL')
+            .style({ bold: true, fontSize: 20, horizontalAlignment: 'center' });
+        sheet.range('A1:F1').merged(true);
+        
+        // Subtítulo
+        sheet.cell('A2').value('Análise Estatística Multi-Período')
+            .style({ fontSize: 14, horizontalAlignment: 'center', italic: true });
+        sheet.range('A2:F2').merged(true);
+        
+        let row = 4;
+        
+        // Informações da empresa
+        sheet.cell(`A${row}`).value('DADOS DA EMPRESA').style({ bold: true, fontSize: 14 });
+        row++;
+        
+        sheet.cell(`A${row}`).value('Empresa:').style({ bold: true });
+        sheet.cell(`B${row}`).value(reportData.company?.nome || reportData.company?.NOME || 'N/A');
+        row++;
+        
+        sheet.cell(`A${row}`).value('CNPJ:').style({ bold: true });
+        sheet.cell(`B${row}`).value(this.formatCNPJ(reportData.company?.cnpj || reportData.company?.CNPJ));
+        row++;
+        
+        sheet.cell(`A${row}`).value('UF:').style({ bold: true });
+        sheet.cell(`B${row}`).value(reportData.company?.uf || reportData.company?.UF || 'N/A');
+        row += 2;
+        
+        // Informações dos períodos
+        sheet.cell(`A${row}`).value('PERÍODOS ANALISADOS').style({ bold: true, fontSize: 14 });
+        row++;
+        
+        if (reportData.periods && reportData.periods.length > 0) {
+            sheet.cell(`A${row}`).value('Total de Períodos:').style({ bold: true });
+            sheet.cell(`B${row}`).value(reportData.periods.length);
+            row++;
+            
+            // Listar períodos
+            reportData.periods.forEach((period, index) => {
+                const periodLabel = period.periodo?.label || period.id || `Período ${index + 1}`;
+                const periodRange = this.formatPeriodRange(period.periodo?.inicio, period.periodo?.fim);
+                
+                sheet.cell(`A${row}`).value(`${index + 1}. ${periodLabel}:`);
+                sheet.cell(`B${row}`).value(periodRange);
+                row++;
+            });
+            
+            // Período total consolidado
+            const firstPeriod = reportData.periods[0];
+            const lastPeriod = reportData.periods[reportData.periods.length - 1];
+            const periodoConsolidado = this.formatConsolidatedPeriodRange(firstPeriod, lastPeriod);
+            
+            row++;
+            sheet.cell(`A${row}`).value('Período Consolidado:').style({ bold: true });
+            sheet.cell(`B${row}`).value(periodoConsolidado).style({ bold: true });
+        } else {
+            sheet.cell(`A${row}`).value('Nenhum período encontrado');
+        }
+        
+        row += 2;
+        
+        // Informações do relatório
+        sheet.cell(`A${row}`).value('INFORMAÇÕES DO RELATÓRIO').style({ bold: true, fontSize: 14 });
+        row++;
+        
+        sheet.cell(`A${row}`).value('Data de Geração:').style({ bold: true });
+        sheet.cell(`B${row}`).value(new Date().toLocaleString('pt-BR'));
+        row++;
+        
+        sheet.cell(`A${row}`).value('Sistema:').style({ bold: true });
+        sheet.cell(`B${row}`).value('Sistema DIFAL - Expertzy v3.0');
+        row++;
+        
+        sheet.cell(`A${row}`).value('Tipo:').style({ bold: true });
+        sheet.cell(`B${row}`).value('Relatório Multi-Período');
+        row += 2;
+        
+        // Resumo estatístico
+        if (reportData.analytics) {
+            sheet.cell(`A${row}`).value('RESUMO ESTATÍSTICO').style({ bold: true, fontSize: 14 });
+            row++;
+            
+            const analytics = reportData.analytics;
+            
+            sheet.cell(`A${row}`).value('Total de Itens:').style({ bold: true });
+            sheet.cell(`B${row}`).value(analytics.totalItems || 0);
+            row++;
+            
+            sheet.cell(`A${row}`).value('Valor Total:').style({ bold: true });
+            sheet.cell(`B${row}`).value(this.formatNumber(analytics.totalValue));
+            row++;
+            
+            sheet.cell(`A${row}`).value('NCMs Únicos:').style({ bold: true });
+            sheet.cell(`B${row}`).value(analytics.uniqueNCMs || 0);
+            row++;
+        }
+        
+        // Ajustar largura das colunas
+        sheet.column('A').width(25);
+        sheet.column('B').width(40);
+    }
+
+    /**
+     * Formatar intervalo de período
+     * @private
+     * @param {string} inicio - Data início DDMMAAAA
+     * @param {string} fim - Data fim DDMMAAAA
+     * @returns {string} - Período formatado
+     */
+    formatPeriodRange(inicio, fim) {
+        if (!inicio || !fim) return 'Período não informado';
+        
+        const formatDate = (date) => {
+            if (!date || date.length !== 8) return '';
+            return `${date.substring(0,2)}/${date.substring(2,4)}/${date.substring(4,8)}`;
+        };
+        
+        const inicioFormatado = formatDate(inicio);
+        const fimFormatado = formatDate(fim);
+        
+        if (inicio === fim) return inicioFormatado;
+        return `${inicioFormatado} a ${fimFormatado}`;
+    }
+
+    /**
+     * Formatar período consolidado de múltiplos períodos
+     * @private
+     * @param {Object} firstPeriod - Primeiro período
+     * @param {Object} lastPeriod - Último período
+     * @returns {string} - Período consolidado formatado
+     */
+    formatConsolidatedPeriodRange(firstPeriod, lastPeriod) {
+        if (!firstPeriod || !lastPeriod) return 'Período não definido';
+        
+        const inicio = firstPeriod.periodo?.inicio;
+        const fim = lastPeriod.periodo?.fim;
+        
+        if (!inicio || !fim) return 'Datas não disponíveis';
+        
+        return this.formatPeriodRange(inicio, fim);
     }
 
     // ========== MÉTODOS AUXILIARES PARA ANÁLISES ==========

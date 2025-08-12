@@ -316,6 +316,9 @@ class FileUploadManager {
                 throw new Error(`Erro ao armazenar dados: ${stateError.message}`);
             }
             
+            // Atualizar informações do arquivo com dados do SPED processados
+            this.showFileInfo(file, resultado);
+            
             // Notificar sucesso
             const processingTime = Date.now() - this.uploadStartTime;
             this.notifyProgress('Arquivo processado com sucesso!', 100);
@@ -426,42 +429,92 @@ class FileUploadManager {
     }
 
     /**
-     * Mostra informações do arquivo selecionado
+     * Exibe informações do período e do arquivo SPED
      * @private
      * @param {File} file - Arquivo selecionado
+     * @param {Object} [spedData] - Dados processados do SPED (se disponível)
      */
-    showFileInfo(file) {
+    showFileInfo(file, spedData = null) {
         const fileInfo = document.getElementById('file-info');
         const fileDetails = document.getElementById('file-details');
         
         if (!fileInfo || !fileDetails) return;
         
         const fileSizeFormatted = this.formatFileSize(file.size);
-        const lastModifiedFormatted = new Date(file.lastModified).toLocaleString('pt-BR');
         
-        fileDetails.innerHTML = `
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <div class="summary-value">${file.name}</div>
-                    <div class="summary-label">Nome do Arquivo</div>
+        // Se temos dados do SPED, priorizar informações do período
+        if (spedData && spedData.empresa) {
+            const empresa = spedData.empresa;
+            const periodoInicial = empresa.DT_INI ? this.formatDate(empresa.DT_INI) : '-';
+            const periodoFinal = empresa.DT_FIN ? this.formatDate(empresa.DT_FIN) : '-';
+            const periodoFormatado = (periodoInicial !== '-' && periodoFinal !== '-') 
+                ? `${periodoInicial} a ${periodoFinal}` 
+                : `${periodoInicial}${periodoFinal !== '-' ? ' a ' + periodoFinal : ''}`;
+            
+            fileDetails.innerHTML = `
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value">${periodoFormatado}</div>
+                        <div class="summary-label">📅 Período de Apuração</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">${empresa.NOME || 'Nome não informado'}</div>
+                        <div class="summary-label">🏢 Empresa</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">${empresa.CNPJ || 'CNPJ não informado'}</div>
+                        <div class="summary-label">🆔 CNPJ</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">${fileSizeFormatted}</div>
+                        <div class="summary-label">📁 Tamanho do Arquivo</div>
+                    </div>
                 </div>
-                <div class="summary-item">
-                    <div class="summary-value">${fileSizeFormatted}</div>
-                    <div class="summary-label">Tamanho</div>
+            `;
+        } else {
+            // Fallback para quando ainda não temos dados do SPED
+            const lastModifiedFormatted = new Date(file.lastModified).toLocaleString('pt-BR');
+            
+            fileDetails.innerHTML = `
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-value">Processando...</div>
+                        <div class="summary-label">📅 Período de Apuração</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">${file.name}</div>
+                        <div class="summary-label">📁 Nome do Arquivo</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">${fileSizeFormatted}</div>
+                        <div class="summary-label">📏 Tamanho</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-value">${lastModifiedFormatted}</div>
+                        <div class="summary-label">🕒 Última Modificação</div>
+                    </div>
                 </div>
-                <div class="summary-item">
-                    <div class="summary-value">${lastModifiedFormatted}</div>
-                    <div class="summary-label">Última Modificação</div>
-                </div>
-                <div class="summary-item">
-                    <div class="summary-value">${file.type || 'text/plain'}</div>
-                    <div class="summary-label">Tipo MIME</div>
-                </div>
-            </div>
-        `;
+            `;
+        }
         
         fileInfo.classList.remove('hidden');
-        console.log('📋 Informações do arquivo exibidas');
+        console.log('📋 Informações do período exibidas');
+    }
+    
+    /**
+     * Formatar data para exibição
+     * @private
+     * @param {string} dateString - Data no formato DDMMAAAA
+     * @returns {string} - Data formatada DD/MM/AAAA
+     */
+    formatDate(dateString) {
+        if (!dateString || dateString.length !== 8) return '-';
+        
+        const day = dateString.substring(0, 2);
+        const month = dateString.substring(2, 4);
+        const year = dateString.substring(4, 8);
+        
+        return `${day}/${month}/${year}`;
     }
 
     // ========== NOTIFICAÇÕES E FEEDBACK ==========
