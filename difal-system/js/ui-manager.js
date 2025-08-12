@@ -1733,7 +1733,7 @@ class UIManager {
         
         // Atualizar FileUploadManager
         if (this.fileUploadManager) {
-            this.fileUploadManager.setMultiPeriodMode(mode === 'multi');
+            this.fileUploadManager.setProcessingMode(mode === 'multi' ? 'multiple' : 'single');
         }
         
         // NavigationManager irá automaticamente lidar com a navegação
