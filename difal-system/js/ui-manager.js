@@ -314,7 +314,7 @@ class UIManager {
         });
         
         const summaryDiv = document.getElementById('sped-summary');
-        const tableDiv = document.getElementById('difal-items-table');
+        const tableDiv = document.getElementById('single-difal-items-table');
         
         console.log('🔍 DEBUG DOM elements:', {
             summaryDiv: !!summaryDiv,

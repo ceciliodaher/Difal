@@ -22,8 +22,8 @@ class ModeManager {
     constructor(eventBus) {
         this.eventBus = eventBus;
         
-        // Estado do modo ativo
-        this.activeMode = 'single'; // 'single' | 'multi'
+        // Estado do modo ativo - iniciar sem modo selecionado
+        this.activeMode = null; // null | 'single' | 'multi'
         
         // Gerenciadores específicos por modo
         this.singleManager = null;
@@ -149,11 +149,15 @@ class ModeManager {
 
     /**
      * Obtém o gerenciador do modo ativo
-     * @returns {SinglePeriodManager|MultiPeriodManager} Gerenciador ativo
+     * @returns {SinglePeriodManager|MultiPeriodManager|null} Gerenciador ativo ou null se nenhum modo selecionado
      */
     getActiveManager() {
         if (!this.initialized) {
             throw new Error('ModeManager não foi inicializado. Chame initialize() primeiro.');
+        }
+        
+        if (!this.activeMode) {
+            return null; // Nenhum modo selecionado
         }
         
         return this.activeMode === 'single' ? this.singleManager : this.multiManager;
@@ -181,12 +185,27 @@ class ModeManager {
     }
 
     /**
+     * Verifica se nenhum modo está selecionado
+     * @returns {boolean} True se está na seleção de modo
+     */
+    isInModeSelection() {
+        return this.activeMode === null;
+    }
+
+    /**
      * Verifica se há dados ativos no modo atual
      * @returns {boolean} True se há dados
      */
     hasActiveData() {
         try {
+            if (!this.activeMode) {
+                return false; // Nenhum modo ativo, sem dados
+            }
+            
             const activeManager = this.getActiveManager();
+            if (!activeManager) {
+                return false;
+            }
             
             if (this.activeMode === 'single') {
                 const state = activeManager.getState();
@@ -233,14 +252,19 @@ class ModeManager {
         return new Promise((resolve) => {
             const modeNames = {
                 single: 'Período Único',
-                multi: 'Múltiplos Períodos'
+                multi: 'Múltiplos Períodos',
+                selection: 'Seleção de Modo'
             };
             
-            const confirmed = confirm(
-                `Você está prestes a mudar para o modo "${modeNames[newMode]}".\n\n` +
-                'ATENÇÃO: Todos os dados do modo atual serão perdidos!\n\n' +
-                'Deseja continuar?'
-            );
+            const message = newMode === 'selection' 
+                ? 'Você está prestes a voltar para a seleção de modo.\n\n' +
+                  'ATENÇÃO: Todos os dados do modo atual serão perdidos!\n\n' +
+                  'Deseja continuar?'
+                : `Você está prestes a mudar para o modo "${modeNames[newMode]}".\n\n` +
+                  'ATENÇÃO: Todos os dados do modo atual serão perdidos!\n\n' +
+                  'Deseja continuar?';
+            
+            const confirmed = confirm(message);
             
             resolve(confirmed);
         });
@@ -279,10 +303,67 @@ class ModeManager {
     }
 
     /**
+     * Retorna para a seleção de modo (reset para estado não selecionado)
+     * @param {boolean} clearData - Limpar dados atuais
+     * @returns {Promise<boolean>} True se bem-sucedida
+     */
+    async returnToModeSelection(clearData = true) {
+        if (!this.activeMode) {
+            console.log('🎛️ Já está na seleção de modo');
+            return true;
+        }
+
+        if (clearData && this.hasActiveData()) {
+            const confirmed = await this.confirmModeSwitch('selection');
+            if (!confirmed) {
+                console.log('🎛️ Retorno à seleção de modo cancelado pelo usuário');
+                return false;
+            }
+            
+            // Limpar dados do modo atual
+            await this.clearModeData(this.activeMode);
+        }
+
+        const previousMode = this.activeMode;
+        this.activeMode = null;
+
+        // Salvar no localStorage
+        if (this.config.persistMode) {
+            localStorage.removeItem('difal_active_mode');
+        }
+
+        // Adicionar ao histórico
+        this.modeHistory.push({
+            from: previousMode,
+            to: null,
+            timestamp: Date.now()
+        });
+
+        console.log(`🎛️ Retornando à seleção de modo (de: ${previousMode})`);
+
+        // Emitir evento
+        this.eventBus.emit('mode:return_to_selection', {
+            previousMode,
+            timestamp: Date.now()
+        });
+
+        return true;
+    }
+
+    /**
+     * Handler para botão "Trocar Modo" - retorna à seleção de modo
+     * @returns {Promise<boolean>} True se bem-sucedida
+     */
+    async handleModeSwitch() {
+        console.log('🔄 Handler "Trocar Modo" acionado');
+        return await this.returnToModeSelection(true);
+    }
+
+    /**
      * Reseta o ModeManager para estado inicial
      */
     reset() {
-        this.activeMode = 'single';
+        this.activeMode = null;
         this.modeHistory = [];
         this.initialized = false;
         

@@ -87,6 +87,10 @@ class NavigationManager {
             this.eventBus.on('mode:changed', (data) => {
                 this.handleModeChange(data.activeMode, data.previousMode);
             });
+            
+            this.eventBus.on('mode:return_to_selection', (data) => {
+                this.handleReturnToModeSelection(data.previousMode);
+            });
         }
     }
 
@@ -129,6 +133,41 @@ class NavigationManager {
         
         console.log(`🧭 Navegando para primeira seção: ${firstSection}`);
         this.navigateToSection(firstSection);
+    }
+
+    /**
+     * Manipula retorno para seleção de modo
+     * @param {string} previousMode - Modo anterior
+     * @private
+     */
+    handleReturnToModeSelection(previousMode) {
+        console.log(`🧭 Retornando para seleção de modo (de: ${previousMode})`);
+        
+        // Atualizar estado interno
+        this.navigationState.activeMode = null;
+        
+        // Esconder navegação principal
+        const mainNav = document.getElementById('main-navigation');
+        if (mainNav) {
+            mainNav.classList.add('hidden');
+            console.log('🧭 Navegação escondida');
+        }
+        
+        // Esconder todas as seções
+        const allSections = document.querySelectorAll('.section');
+        allSections.forEach(section => {
+            section.classList.remove('active');
+            section.classList.add('hidden');
+        });
+        
+        // Mostrar tela de seleção de modo
+        const modeSelectionSection = document.getElementById('mode-selection-section');
+        if (modeSelectionSection) {
+            modeSelectionSection.classList.remove('hidden');
+            modeSelectionSection.classList.add('active');
+            this.navigationState.currentSection = 'mode-selection-section';
+            console.log('🧭 Tela de seleção de modo mostrada');
+        }
     }
 
     /**
@@ -255,8 +294,11 @@ class NavigationManager {
         const modeSelectionSection = document.getElementById('mode-selection-section');
         const savedMode = localStorage.getItem('difal_active_mode');
         
-        // Se não há modo salvo, mostrar tela de seleção
-        if (!savedMode && modeSelectionSection) {
+        // Verificar ModeManager se disponível
+        const modeManagerState = this.modeManager ? this.modeManager.isInModeSelection() : !savedMode;
+        
+        // Se não há modo salvo OU ModeManager indica seleção de modo, mostrar tela de seleção
+        if ((modeManagerState || !savedMode) && modeSelectionSection) {
             this.navigationState.currentSection = 'mode-selection-section';
             this.showSection('mode-selection-section', false);
             console.log('🧭 Mostrando tela de seleção de modo');
