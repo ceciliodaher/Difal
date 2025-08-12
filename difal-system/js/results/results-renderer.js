@@ -145,13 +145,20 @@ class ResultsRenderer {
                             document.getElementById('single-results-detail') ||
                             document.getElementById('multi-results-detail');
             
+            // Também procurar container de resultados finais (usado na aba Results dedicada)
+            const finalResultsDiv = document.getElementById('final-results') ||
+                                  document.getElementById('single-final-results') ||
+                                  document.getElementById('multi-final-results');
+            
             console.log('🔍 Elementos DOM encontrados:', {
                 resultsDiv: !!resultsDiv,
                 resultsDivId: resultsDiv?.id || 'not found',
                 summaryDiv: !!summaryDiv,
                 summaryDivId: summaryDiv?.id || 'not found',
                 detailDiv: !!detailDiv,
-                detailDivId: detailDiv?.id || 'not found'
+                detailDivId: detailDiv?.id || 'not found',
+                finalResultsDiv: !!finalResultsDiv,
+                finalResultsDivId: finalResultsDiv?.id || 'not found'
             });
             
             // Mostrar seção de resultados
@@ -174,6 +181,14 @@ class ResultsRenderer {
                 this.renderResultsDetail(detailDiv, resultados);
             } else if (detailDiv) {
                 console.log('⚠️ Nenhum resultado para renderizar detalhes');
+            }
+            
+            // Renderizar resultados finais na aba Results dedicada
+            if (finalResultsDiv && resultados.length > 0) {
+                console.log('📊 Renderizando resultados finais para aba Results:', resultados.length, 'itens');
+                this.renderFinalResults(finalResultsDiv, resultados, totalizadores);
+            } else if (finalResultsDiv) {
+                console.log('⚠️ Container final-results encontrado mas nenhum resultado para renderizar');
             }
             
             // Emitir evento de resultados exibidos
@@ -722,6 +737,80 @@ ${memoriaCalculo.join('\n')}
                 state.calculation.results.resultados,
                 state.calculation.totals
             );
+        }
+    }
+
+    /**
+     * Renderiza resultados finais na aba Results dedicada
+     * @private
+     * @param {HTMLElement} container - Container para os resultados finais
+     * @param {Array} resultados - Array de resultados calculados
+     * @param {Object} totalizadores - Totalizadores do cálculo
+     */
+    renderFinalResults(container, resultados, totalizadores) {
+        try {
+            // Criar estrutura HTML para resultados finais
+            const html = `
+                <div class="final-results-content">
+                    <div class="results-header">
+                        <h3>💰 Resumo DIFAL Calculado</h3>
+                    </div>
+                    
+                    <div class="totals-grid">
+                        <div class="total-item highlight">
+                            <span class="total-label">💵 Total DIFAL a Recolher:</span>
+                            <span class="total-value">R$ ${this.formatCurrency(totalizadores.totalRecolher || 0)}</span>
+                        </div>
+                        <div class="total-item">
+                            <span class="total-label">📦 Total de Itens:</span>
+                            <span class="total-value">${totalizadores.totalItens || 0}</span>
+                        </div>
+                        <div class="total-item">
+                            <span class="total-label">✅ Itens com DIFAL:</span>
+                            <span class="total-value">${totalizadores.itensComDifal || 0}</span>
+                        </div>
+                        <div class="total-item">
+                            <span class="total-label">💸 Base de Cálculo:</span>
+                            <span class="total-value">R$ ${this.formatCurrency(totalizadores.totalBase || 0)}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="results-actions">
+                        <div class="export-section">
+                            <h4>📤 Exportar Resultados</h4>
+                            <div class="export-buttons">
+                                <button id="single-export-excel" class="btn btn-success">
+                                    📥 Exportar Excel
+                                </button>
+                                <button id="single-export-pdf" class="btn btn-info">
+                                    📄 Exportar PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="calculation-details">
+                        <h4>📊 Detalhamento dos Cálculos</h4>
+                        <p class="results-info">
+                            Cálculo realizado para ${resultados.length} itens DIFAL conforme legislação vigente.
+                            ${totalizadores.percentualComDifal ? `${totalizadores.percentualComDifal.toFixed(1)}% dos itens possuem DIFAL a recolher.` : ''}
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            
+            console.log('✅ Resultados finais renderizados com sucesso');
+            
+        } catch (error) {
+            console.error('❌ Erro ao renderizar resultados finais:', error);
+            container.innerHTML = `
+                <div class="error-message">
+                    <h3>❌ Erro ao Exibir Resultados</h3>
+                    <p>Ocorreu um erro ao renderizar os resultados. Tente recalcular.</p>
+                </div>
+            `;
         }
     }
 
