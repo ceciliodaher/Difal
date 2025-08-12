@@ -741,8 +741,26 @@ class NavigationManager {
      * @private
      */
     onCalculationCompleted() {
+        // Garantir que a navegação permaneça visível após cálculo
+        this.ensureNavigationVisible();
+        
         // Manter na seção atual para análise dos resultados
         this.updateCompanyInfo();
+    }
+
+    /**
+     * Garante que a navegação permaneça visível
+     * @public
+     */
+    ensureNavigationVisible() {
+        const navigation = document.getElementById('main-navigation');
+        if (navigation) {
+            navigation.classList.remove('hidden');
+            navigation.style.display = '';
+            console.log('🧭 Navegação garantida como visível pós-cálculo');
+        } else {
+            console.warn('⚠️ Elemento #main-navigation não encontrado');
+        }
     }
 
     // ========== VALIDAÇÃO E UTILITÁRIOS ==========
