@@ -102,6 +102,23 @@ class NavigationManager {
         // Atualizar estado interno
         this.navigationState.activeMode = newMode;
         
+        // IMPORTANTE: Esconder tela de seleção de modo primeiro
+        const modeSelectionSection = document.getElementById('mode-selection-section');
+        if (modeSelectionSection) {
+            modeSelectionSection.classList.remove('active');
+            modeSelectionSection.classList.add('hidden');
+            modeSelectionSection.style.display = 'none';
+            console.log('🧭 Tela de seleção de modo escondida');
+        }
+        
+        // Mostrar navegação
+        const navigation = document.getElementById('main-navigation');
+        if (navigation) {
+            navigation.classList.remove('hidden');
+            navigation.style.display = '';
+            console.log('🧭 Navegação mostrada');
+        }
+        
         // Atualizar navegação para o novo modo
         this.updateNavigationForMode(newMode);
         
@@ -110,6 +127,7 @@ class NavigationManager {
             this.config.singleSections[0] : 
             this.config.multiSections[0];
         
+        console.log(`🧭 Navegando para primeira seção: ${firstSection}`);
         this.navigateToSection(firstSection);
     }
 
@@ -367,6 +385,7 @@ class NavigationManager {
                         section.style.opacity = '0';
                         setTimeout(() => {
                             section.classList.remove('active');
+                            section.classList.add('hidden');
                         }, this.config.transitions.duration / 2);
                     }
                 });
@@ -376,11 +395,14 @@ class NavigationManager {
             } else {
                 allSections.forEach(section => {
                     section.classList.remove('active');
+                    section.classList.add('hidden');
                 });
             }
             
             // Mostrar seção alvo
+            targetSection.classList.remove('hidden');
             targetSection.classList.add('active');
+            targetSection.style.display = 'block';
             
             if (animate) {
                 // Animação de entrada

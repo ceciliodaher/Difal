@@ -82,7 +82,7 @@ class ModeManager {
             throw new Error(`Modo inválido: ${mode}. Use 'single' ou 'multi'.`);
         }
 
-        if (mode === this.activeMode) {
+        if (mode === this.activeMode && this.isInitialized) {
             console.log(`🎛️ Modo ${mode} já está ativo`);
             return Promise.resolve(true);
         }
@@ -123,6 +123,12 @@ class ModeManager {
                 activeMode: mode,
                 managers: this.getManagers()
             });
+            
+            // Marcar como inicializado após primeira mudança de modo
+            if (!this.isInitialized) {
+                this.isInitialized = true;
+                console.log('🎛️ ModeManager marcado como inicializado');
+            }
             
             return true;
             

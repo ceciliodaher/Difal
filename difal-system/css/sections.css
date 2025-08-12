@@ -8,10 +8,11 @@
 }
 
 .section.active {
-    display: block;
+    display: block !important;
 }
 
-#mode-selection-section {
+/* Tela de seleção de modo - visível inicialmente */
+#mode-selection-section:not(.hidden) {
     display: block !important;
 }
 
@@ -21,6 +22,14 @@
 
 .nav-container.hidden {
     display: none !important;
+}
+
+/* Garantir que modais escondidos não bloqueiem interação */
+.modal.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1 !important;
 }
 
 /* Mode Selection Hero */
