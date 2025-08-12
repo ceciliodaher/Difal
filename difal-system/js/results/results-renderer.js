@@ -132,22 +132,34 @@ class ResultsRenderer {
                 itensSemDifal: resultados?.filter(r => (r.valorDifal || 0) === 0).length || 0
             });
             
-            const resultsDiv = document.getElementById('calculation-results');
-            const summaryDiv = document.getElementById('results-summary');
-            const detailDiv = document.getElementById('results-detail');
+            // Suporte a IDs genéricos e específicos por modo
+            const resultsDiv = document.getElementById('calculation-results') ||
+                             document.getElementById('single-calculation-results') ||
+                             document.getElementById('multi-calculation-results');
+            
+            const summaryDiv = document.getElementById('results-summary') ||
+                             document.getElementById('single-results-summary') ||
+                             document.getElementById('multi-results-summary');
+            
+            const detailDiv = document.getElementById('results-detail') ||
+                            document.getElementById('single-results-detail') ||
+                            document.getElementById('multi-results-detail');
             
             console.log('🔍 Elementos DOM encontrados:', {
                 resultsDiv: !!resultsDiv,
+                resultsDivId: resultsDiv?.id || 'not found',
                 summaryDiv: !!summaryDiv,
-                detailDiv: !!detailDiv
+                summaryDivId: summaryDiv?.id || 'not found',
+                detailDiv: !!detailDiv,
+                detailDivId: detailDiv?.id || 'not found'
             });
             
             // Mostrar seção de resultados
             if (resultsDiv) {
                 resultsDiv.classList.remove('hidden');
-                console.log('✅ Classe "hidden" removida de #calculation-results');
+                console.log(`✅ Classe "hidden" removida de #${resultsDiv.id}`);
             } else {
-                console.error('❌ Elemento #calculation-results não encontrado');
+                console.error('❌ Elemento de resultados não encontrado (testou: #calculation-results, #single-calculation-results, #multi-calculation-results)');
             }
             
             // Renderizar resumo
