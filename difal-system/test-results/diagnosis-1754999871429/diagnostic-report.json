@@ -1,0 +1,1863 @@
+{
+  "timestamp": "2025-08-12T11:57:51.430Z",
+  "issues": [
+    {
+      "severity": "critical",
+      "component": "navigation",
+      "issue": "Navegação não está visível",
+      "details": {},
+      "timestamp": "2025-08-12T11:57:55.598Z"
+    },
+    {
+      "severity": "critical",
+      "component": "processing",
+      "issue": "Seção de resumo SPED não aparece",
+      "details": {},
+      "timestamp": "2025-08-12T11:58:01.828Z"
+    }
+  ],
+  "successes": [
+    {
+      "component": "mode-selection",
+      "test": "Tela de seleção visível na inicialização",
+      "details": {},
+      "timestamp": "2025-08-12T11:57:55.597Z"
+    },
+    {
+      "component": "navigation",
+      "test": "13 botões de navegação encontrados",
+      "details": {},
+      "timestamp": "2025-08-12T11:57:55.599Z"
+    },
+    {
+      "component": "mode-selection",
+      "test": "Card single-period visível",
+      "details": {},
+      "timestamp": "2025-08-12T11:57:55.599Z"
+    },
+    {
+      "component": "navigation",
+      "test": "Navegação aparece após seleção de modo",
+      "details": {},
+      "timestamp": "2025-08-12T11:57:57.724Z"
+    },
+    {
+      "component": "upload",
+      "test": "Seção de upload single-period visível",
+      "details": {},
+      "timestamp": "2025-08-12T11:57:57.725Z"
+    },
+    {
+      "component": "upload",
+      "test": "Input de arquivo existe",
+      "details": {},
+      "timestamp": "2025-08-12T11:57:57.726Z"
+    },
+    {
+      "component": "upload",
+      "test": "Zona de drop visível",
+      "details": {},
+      "timestamp": "2025-08-12T11:57:57.726Z"
+    },
+    {
+      "component": "upload",
+      "test": "Arquivo SPED enviado com sucesso",
+      "details": {},
+      "timestamp": "2025-08-12T11:58:01.827Z"
+    },
+    {
+      "component": "processing",
+      "test": "Informações da empresa extraídas",
+      "details": {
+        "text": "\n                        Nome não informado\n                        🏢 Empresa\n                    "
+      },
+      "timestamp": "2025-08-12T11:58:01.831Z"
+    },
+    {
+      "component": "navigation",
+      "test": "Botão de análise visível",
+      "details": {},
+      "timestamp": "2025-08-12T11:58:01.831Z"
+    },
+    {
+      "component": "navigation",
+      "test": "Navegação para seção de análise funciona",
+      "details": {},
+      "timestamp": "2025-08-12T11:58:03.869Z"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01-initial-load.png",
+      "description": "Estado inicial da aplicação"
+    },
+    {
+      "name": "02-mode-selected.png",
+      "description": "Após seleção do modo single-period"
+    },
+    {
+      "name": "03-file-uploaded.png",
+      "description": "Após upload do arquivo SPED"
+    },
+    {
+      "name": "04-analysis-section.png",
+      "description": "Seção de análise"
+    },
+    {
+      "name": "error-state.png",
+      "description": "Estado de erro"
+    }
+  ],
+  "consoleLogs": [
+    {
+      "type": "log",
+      "message": "📋 DIFAL Constants loaded successfully",
+      "timestamp": "2025-08-12T11:57:52.207Z"
+    },
+    {
+      "type": "log",
+      "message": "🚀 DifalAppModular - Orquestrador Limpo (Singleton)",
+      "timestamp": "2025-08-12T11:57:52.211Z"
+    },
+    {
+      "type": "log",
+      "message": "🔧 Inicializando Sistema DIFAL Modular...",
+      "timestamp": "2025-08-12T11:57:52.247Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Dependências modulares verificadas",
+      "timestamp": "2025-08-12T11:57:52.247Z"
+    },
+    {
+      "type": "log",
+      "message": "🏪 StateManager initialized",
+      "timestamp": "2025-08-12T11:57:52.247Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ StateManager ready",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "🏪 StateManager initialized",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "📅 MultiPeriodManager inicializado",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "🎛️ ModeManager inicializado",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "🎛️ ModeManager inicializado no modo: single",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "⚙️ Configuration Manager initialized",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "📂 Carregando todas as configurações do localStorage...",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "ℹ️ Nenhuma configuração encontrada no localStorage",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "🔄 Configurações carregadas do localStorage: {}",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "warning",
+      "message": "⚠️ Elemento progress-section não encontrado",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "warning",
+      "message": "⚠️ Elemento progress-bar não encontrado",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "warning",
+      "message": "⚠️ Elemento status-message não encontrado",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 ProgressManager inicializado com sucesso",
+      "timestamp": "2025-08-12T11:57:52.248Z"
+    },
+    {
+      "type": "log",
+      "message": "📍 13 botões de navegação configurados",
+      "timestamp": "2025-08-12T11:57:52.249Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Mostrando tela de seleção de modo",
+      "timestamp": "2025-08-12T11:57:52.249Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Interface atualizada para modo: single",
+      "timestamp": "2025-08-12T11:57:52.249Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 NavigationManager inicializado com sucesso",
+      "timestamp": "2025-08-12T11:57:52.249Z"
+    },
+    {
+      "type": "log",
+      "message": "📁 Elementos de upload configurados",
+      "timestamp": "2025-08-12T11:57:52.249Z"
+    },
+    {
+      "type": "log",
+      "message": "📋 Dependências do FileUploadManager: {spedParser: true, utils: true, stateManager: true, eventBus: true}",
+      "timestamp": "2025-08-12T11:57:52.249Z"
+    },
+    {
+      "type": "log",
+      "message": "📂 FileUploadManager inicializado com sucesso",
+      "timestamp": "2025-08-12T11:57:52.249Z"
+    },
+    {
+      "type": "log",
+      "message": "🏗️ FileUploadManager: Nova instância singleton criada",
+      "timestamp": "2025-08-12T11:57:52.249Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 Dependências de exportação: {xlsxPopulate: true, jsPDF: true, jsPDFAutoTable: false, utils: true}",
+      "timestamp": "2025-08-12T11:57:52.250Z"
+    },
+    {
+      "type": "log",
+      "message": "📤 ExportManager inicializado com sucesso",
+      "timestamp": "2025-08-12T11:57:52.250Z"
+    },
+    {
+      "type": "log",
+      "message": "📄 PaginationManager inicializado com sucesso",
+      "timestamp": "2025-08-12T11:57:52.250Z"
+    },
+    {
+      "type": "log",
+      "message": "🎭 ModalManager inicializado com sucesso",
+      "timestamp": "2025-08-12T11:57:52.250Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 ResultsRenderer inicializado com sucesso",
+      "timestamp": "2025-08-12T11:57:52.250Z"
+    },
+    {
+      "type": "log",
+      "message": "📅 PeriodsManager inicializado",
+      "timestamp": "2025-08-12T11:57:52.250Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 AnalyticsManager inicializado",
+      "timestamp": "2025-08-12T11:57:52.250Z"
+    },
+    {
+      "type": "log",
+      "message": "📈 ParetoAnalyzer inicializado com thresholds: [70, 75, 80, 85, 90]",
+      "timestamp": "2025-08-12T11:57:52.250Z"
+    },
+    {
+      "type": "log",
+      "message": "📈 ChartsManager inicializado",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "📅 PeriodsManager configurado (modo controlado pelo usuário)",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 Managers de análise configurados no ExportManager",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "🎯 Módulos especializados inicializados com sucesso",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ 2 botões de seleção de modo configurados",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "🔧 Modo de processamento definido: single (multiPeriodMode: false)",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "🎯 Seletor de modo configurado - Modo inicial: single",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "📍 13 botões de navegação configurados",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "🎭 UI Manager Refatorado inicializado",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "🔗 UI Manager integrado com Configuration Manager",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "📄 SPED Parser Modular initialized",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "🧮 DIFAL Calculator Simple initialized",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Sistema DIFAL Modular pronto!",
+      "timestamp": "2025-08-12T11:57:52.251Z"
+    },
+    {
+      "type": "log",
+      "message": "🎯 Configurando handlers da seleção de modo...",
+      "timestamp": "2025-08-12T11:57:53.252Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ 2 botões de seleção de modo configurados",
+      "timestamp": "2025-08-12T11:57:53.252Z"
+    },
+    {
+      "type": "log",
+      "message": "🎯 Configurando handlers da seleção de modo...",
+      "timestamp": "2025-08-12T11:57:55.627Z"
+    },
+    {
+      "type": "log",
+      "message": "🎯 Modo selecionado: single",
+      "timestamp": "2025-08-12T11:57:55.627Z"
+    },
+    {
+      "type": "log",
+      "message": "🗑️ All data cleared",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🧹 Dados do modo single limpos",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🔧 Modo de processamento definido: single (multiPeriodMode: false)",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🎛️ Modo alterado: single → single",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Mudança de modo detectada: single → single",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Tela de seleção de modo escondida",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Navegação mostrada",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Interface atualizada para modo: single",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Navegando para primeira seção: single-upload-section",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Validando navegação para: single-upload-section (modo: single)",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Navegando para: single-upload-section (original: single-upload-section)",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "🎛️ ModeManager marcado como inicializado",
+      "timestamp": "2025-08-12T11:57:55.628Z"
+    },
+    {
+      "type": "log",
+      "message": "📍 Dados SPED não disponíveis para atualização da empresa",
+      "timestamp": "2025-08-12T11:57:56.086Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Navegação para single-upload-section concluída",
+      "timestamp": "2025-08-12T11:57:56.086Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG: Verificando window.uiManager... {windowUiManager: true, hasHandleFileUpload: true, fileName: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt}",
+      "timestamp": "2025-08-12T11:57:57.731Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Chamando window.uiManager.handleFileUpload()",
+      "timestamp": "2025-08-12T11:57:57.731Z"
+    },
+    {
+      "type": "log",
+      "message": "🔧 Modo de processamento definido: single (multiPeriodMode: false)",
+      "timestamp": "2025-08-12T11:57:57.731Z"
+    },
+    {
+      "type": "log",
+      "message": "📁 Iniciando upload do arquivo: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt",
+      "timestamp": "2025-08-12T11:57:57.731Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Arquivo validado: {name: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt, size: 53.51 KB, type: text/plain}",
+      "timestamp": "2025-08-12T11:57:57.731Z"
+    },
+    {
+      "type": "log",
+      "message": "📋 Informações do período exibidas",
+      "timestamp": "2025-08-12T11:57:57.736Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 Progresso: 5% - Iniciando processamento...",
+      "timestamp": "2025-08-12T11:57:57.737Z"
+    },
+    {
+      "type": "log",
+      "message": "📄 SPED Parser Modular initialized",
+      "timestamp": "2025-08-12T11:57:57.737Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 Progresso: 20% - Analisando registros SPED...",
+      "timestamp": "2025-08-12T11:57:57.737Z"
+    },
+    {
+      "type": "log",
+      "message": "📂 Processando arquivo SPED: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt",
+      "timestamp": "2025-08-12T11:57:57.737Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 Parsing concluído (evento coordenado): {fileName: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt, fileSize: 54795}",
+      "timestamp": "2025-08-12T11:57:57.737Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 642 linhas encontradas no arquivo",
+      "timestamp": "2025-08-12T11:57:57.737Z"
+    },
+    {
+      "type": "log",
+      "message": "🔄 Iniciando processamento das linhas...",
+      "timestamp": "2025-08-12T11:57:57.737Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG 0000 - Campos recebidos: [0000, 019, 1, 01012025, 31012025, THE FIBER PROVEDORA DE INTERNET LTDA, 13158698000110, , GO, 106379704, 5208707, 4]",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "🏢 Empresa identificada: {razaoSocial: THE FIBER PROVEDORA DE INTERNET LTDA, cnpj: 13158698000110, uf: GO, ie: 106379704, dtInicio: 01012025}",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 209 - Campos: [C170, 1, 200.0052, , 66, 65, 1718,64, 0, 0, 000, 1949, 64, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "📦 Item 1: {codigo: 200.0052, ncm: 200.0052, cfop: 1949, valor: 1718, linha: 209}",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 210 - Campos: [C170, 2, 100.0700, , 80, 42, 1911,2, 0, 0, 000, 1949, 64, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "📦 Item 2: {codigo: 100.0700, ncm: 100.0700, cfop: 1949, valor: 1911, linha: 210}",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 216 - Campos: [C170, 1, 2267, , 1, 65, 3,9, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "📦 Item 3: {codigo: 2267, ncm: 2267, cfop: 1556, valor: 3, linha: 216}",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 217 - Campos: [C170, 2, 150038, , 5, 65, 29,5, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "📦 Item 4: {codigo: 150038, ncm: 150038, cfop: 1556, valor: 29, linha: 217}",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 218 - Campos: [C170, 3, 161086, , 6, 65, 17,4, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "📦 Item 5: {codigo: 161086, ncm: 161086, cfop: 1556, valor: 17, linha: 218}",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 219 - Campos: [C170, 4, 157398, , 5, 65, 49,5, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 220 - Campos: [C170, 5, 6211, , 25, 65, 222,5, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.738Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 221 - Campos: [C170, 6, 157975, , 2, 65, 35,8, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 222 - Campos: [C170, 7, 160875, , 5, 65, 29,5, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 223 - Campos: [C170, 8, 140669, , 3, 65, 74,7, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 224 - Campos: [C170, 9, 151652, , 100, 65, 50, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 225 - Campos: [C170, 10, 70483, , 2, 65, 17,8, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 226 - Campos: [C170, 11, 74080, , 4, 65, 15,6, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 229 - Campos: [C170, 1, ZT866, , 10, 114, 2362,2, 0, 0, 500, 2551, 22, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 232 - Campos: [C170, 1, 2203, , 500, 1, 114990, 0, 0, 400, 2551, 22, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 236 - Campos: [C170, 1, 35505001, , 100, 10, 2041,74, 0, 0, 100, 2551, 22, 0, 4, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 239 - Campos: [C170, 1, 400-BLLG, , 1, 1, 2046,3, 0, 0, 600, 2551, 22, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 244 - Campos: [C170, 1, 1879, , 8014, 64, 19788,57, 0, 0, 400, 2551, 22, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 245 - Campos: [C170, 2, 713, , 6029, 64, 17578,88, 0, 0, 400, 2551, 22, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 246 - Campos: [C170, 3, 1623, , 12061, 64, 51101,25, 0, 0, 400, 2551, 22, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 247 - Campos: [C170, 4, A144SMSASC0811051C, , 1042, 64, 9285,43, 0, 0, 400, 2551, 22, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 250 - Campos: [C170, 1, 4752, , 1, 61, 240, 0, 0, 101, 1949, 64, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 254 - Campos: [C170, 1, 4752, , 1, 61, 240, 0, 0, 101, 1949, 64, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.739Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 258 - Campos: [C170, 1, 2160, , 1, 61, 3260, 0, 0, 101, 1908, 26, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 262 - Campos: [C170, 1, 6297, , 2, 61, 758, 0, 0, 101, 1949, 64, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 263 - Campos: [C170, 2, 6747, , 1, 1, 129, 0, 0, 101, 1949, 64, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 267 - Campos: [C170, 1, 6299, , 1, 61, 4496, 0, 0, 101, 1908, 26, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 272 - Campos: [C170, 1, 87899028801349, , 100, 1, 975, 0, 0, 000, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 273 - Campos: [C170, 2, 10740, , 1, 1, 1876,62, 0, 0, 000, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 276 - Campos: [C170, 1, 987, , 21,658, 17, 139,47, 0, 0, 061, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 280 - Campos: [C170, 1, 987, , 46,868, 17, 301,82, 0, 0, 061, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 281 - Campos: [C170, 2, 991, , 336,3568, 17, 1527,06, 0, 0, 060, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 286 - Campos: [C170, 1, 987, , 85,9922, 17, 553,79, 0, 0, 061, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 287 - Campos: [C170, 2, 991, , 342,5881, 17, 1555,35, 0, 0, 060, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 292 - Campos: [C170, 1, 991, , 43,381, 17, 196,94, 0, 0, 060, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 296 - Campos: [C170, 1, 987, , 62,9425, 17, 405,35, 0, 0, 061, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 297 - Campos: [C170, 2, 991, , 255,1894, 17, 1158,56, 0, 0, 060, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 302 - Campos: [C170, 1, 980, , 41,35, 17, 266,29, 0, 0, 061, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 306 - Campos: [C170, 1, 980, , 41,754, 17, 268,89, 0, 0, 061, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 310 - Campos: [C170, 1, 980, , 332,6553, 17, 2142,3, 0, 0, 061, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 314 - Campos: [C170, 1, 1450, , 1, 1, 30, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 315 - Campos: [C170, 2, 87899028801312, , 1, 1, 270, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.740Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 316 - Campos: [C170, 3, 37897534831623, , 2, 1, 80, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 319 - Campos: [C170, 1, 37897534831623, , 1, 1, 40, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 320 - Campos: [C170, 2, 1451, , 1, 1, 35, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 323 - Campos: [C170, 1, 78989184006260, , 1, 1, 35, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 324 - Campos: [C170, 2, 1089, , 1, 1, 35, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 325 - Campos: [C170, 3, 37897534831623, , 1, 1, 40, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 328 - Campos: [C170, 1, 78989184006272, , 1, 1, 20, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 329 - Campos: [C170, 2, 1089, , 1, 1, 35, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 330 - Campos: [C170, 3, 1451, , 1, 1, 35, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 333 - Campos: [C170, 1, 17898940671329, , 22, 1, 3850, 0, 0, 220, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 336 - Campos: [C170, 1, 509273, , 5, 61, 675, 0, 0, 101, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 339 - Campos: [C170, 1, 1662, , 150000, 64, 56700, 0, 0, 400, 2551, 22, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 342 - Campos: [C170, 1, 1662, , 1325, 64, 500,85, 0, 0, 400, 2556, 16, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 345 - Campos: [C170, 1, 12000045774, , 2, 1, 168,2, 0, 0, 220, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 348 - Campos: [C170, 1, ACCE203-20, , 1000, 10, 1930,3, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 352 - Campos: [C170, 1, 20031521, , 1, 10, 53,72, 0, 0, 000, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 353 - Campos: [C170, 2, 20027131, , 1, 10, 35,62, 0, 0, 000, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.741Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 356 - Campos: [C170, 1, 7897203427924, , 13, 10, 96,46, 0, 0, 000, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 357 - Campos: [C170, 2, 7898094331871, , 3, 10, 22,53, 0, 0, 200, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 358 - Campos: [C170, 3, 22852631, , 100, 14, 138, 0, 0, 000, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 362 - Campos: [C170, 1, 5696, , 2, 10, 570, 0, 0, 020, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 363 - Campos: [C170, 2, 4913, , 2, 10, 321,11, 0, 0, 020, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 364 - Campos: [C170, 3, 2777, , 5, 74, 85, 0, 0, 020, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 365 - Campos: [C170, 4, 2739, , 5, 74, 12,85, 0, 0, 220, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 370 - Campos: [C170, 1, 7891065000165, , 1, 1, 23,9, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 371 - Campos: [C170, 2, 25092, , 1, 14, 6,9, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 372 - Campos: [C170, 3, 21813, , 1, 1, 19,9, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 376 - Campos: [C170, 1, 37897534831743, , 72, 1, 299,9, 0, 0, 103, 2556, 16, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 380 - Campos: [C170, 1, CB20002, , 400, 140, 2292, 0, 0, 400, 1551, 20, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 381 - Campos: [C170, 2, AGG0001, , 6000, 140, 3000, 0, 0, 400, 1551, 20, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 382 - Campos: [C170, 3, FA0001, , 60, 61, 1410, 0, 0, 400, 1551, 20, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 386 - Campos: [C170, 1, SOG0001, , 1500, 2, 4500, 0, 0, 400, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 389 - Campos: [C170, 1, 87899028801341, , 1, 10, 435, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 392 - Campos: [C170, 1, 78YT780, , 2, 131, 2000, 0, 0, 400, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 393 - Campos: [C170, 2, 986542, , 1, 131, 1500, 0, 0, 400, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 396 - Campos: [C170, 1, 87899028801288, , 40, 1, 2240, 205,33, 0, 000, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 397 - Campos: [C170, 2, 87899028801289, , 10, 8, 160, 14,67, 0, 000, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.742Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 400 - Campos: [C170, 1, 11950-ADR, , 216, 1, 837, 0, 0, 000, 2556, 16, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 403 - Campos: [C170, 1, 11950-ADR, , 216, 1, 837, 0, 0, 000, 2556, 16, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 406 - Campos: [C170, 1, EAFV19, , 3, 1, 1995, 0, 0, 000, 2556, 16, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 407 - Campos: [C170, 2, EAFV23, , 2, 1, 1740, 0, 0, 000, 2556, 16, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 408 - Campos: [C170, 3, TEAF6X10, , 3, 1, 1590, 0, 0, 000, 2556, 16, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 411 - Campos: [C170, 1, EAFP19, , 3, 1, 1995, 0, 0, 000, 2556, 16, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 412 - Campos: [C170, 2, EAFP23, , 2, 1, 1740, 0, 0, 000, 2556, 16, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 413 - Campos: [C170, 3, TEAFP6X10, , 3, 1, 1590, 0, 0, 000, 2556, 16, 0, 7, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 417 - Campos: [C170, 1, 87899028801308, , 500, 1, 250, 0, 0, 102, 2556, 16, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 418 - Campos: [C170, 2, 87899028801308, , 150, 1, 75, 0, 0, 102, 2556, 16, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 422 - Campos: [C170, 1, 123, , 2, 65, 139,8, 0, 0, 102, 2556, 16, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 425 - Campos: [C170, 1, M34, , 1, 1, 3300, 0, 0, 102, 2551, 22, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 428 - Campos: [C170, 1, 87899028801310, , 100, 1, 3200, 0, 0, 400, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 431 - Campos: [C170, 1, 87899028801344, , 3, 5, 451,5, 0, 0, 020, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 432 - Campos: [C170, 2, 2100, , 5, 5, 655, 0, 0, 020, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 433 - Campos: [C170, 3, 87899028801343, , 3, 5, 373,8, 0, 0, 020, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.743Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 436 - Campos: [C170, 1, 87899028801343, , 3, 5, 374,4, 0, 0, 020, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 437 - Campos: [C170, 2, 87899028801344, , 3, 5, 451,5, 0, 0, 020, 1556, 12, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 440 - Campos: [C170, 1, ARMTZ-BRINDE, , 1000, 151, 1500, 0, 0, 040, 2556, 16, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 444 - Campos: [C170, 1, 79, , 20, 1, 40, 0, 0, 101, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 448 - Campos: [C170, 1, 87899028801342, , 500, 165, 7169,04, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 451 - Campos: [C170, 1, 87899028801345, , 1, 1, 79, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 452 - Campos: [C170, 2, 87899028801346, , 1, 1, 98, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 455 - Campos: [C170, 1, 87899028801347, , 1, 1, 3500, 0, 0, 101, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 458 - Campos: [C170, 1, 87899028801347, , 1, 1, 3500, 0, 0, 101, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 463 - Campos: [C170, 1, 87899028801348, , 1, 1, 850, 0, 0, 101, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 466 - Campos: [C170, 1, 2886, , 1, 1, 773,85, 0, 0, 102, 1551, 20, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 469 - Campos: [C170, 1, 7899660105148, , 2, 8, 42, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.744Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 472 - Campos: [C170, 1, 87899028801350, , 100, 1, 280, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 475 - Campos: [C170, 1, 87899028801351, , 12, 1, 12850,08, 0,08, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 478 - Campos: [C170, 1, TC001, , 100, 1, 269, 0, 0, 102, 1556, 12, 0, 0, 0]",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 482 - Campos: [C170, 1, 265056, , 1, 1, 1924,51, 0, 0, 220, 1551, 20, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 483 - Campos: [C170, 2, 265166, , 2, 1, 6375, 0, 0, 720, 1551, 20, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG C170 - Linha 484 - Campos: [C170, 3, 265208, , 2, 1, 1610,62, 0, 0, 220, 1551, 20, 0, 19, 0]",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Processamento concluído: 604 processadas, 10 ignoradas",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "📚 Criando catálogo de produtos do registro 0200...",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "📦 Processando 94 registros 0200",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Catálogo criado: 94 produtos",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔗 Enriquecendo itens C170 com dados do catálogo...",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ 113 itens enriquecidos com dados do catálogo",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🎯 Processando itens para cálculo DIFAL...",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1949: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1949: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.745Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1949: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1949: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1908: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1949: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1949: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1908: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.746Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.747Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Itens DIFAL processados: 113 → 24 (filtrados)",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 NCMs únicos encontrados (12): [85176299, SEM NCM, 85176259, 84717010, 85447010, 85447090, 48114110, 76169900, 48239099, 39269090]",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 Parsing concluído (evento coordenado): {totalLinhas: 642, totalRegistros: 50, itensDifal: 24}",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 Progresso: 80% - Extraindo itens DIFAL...",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 Parsing concluído (evento coordenado): {nomeArquivo: sped_processado.txt, dadosEmpresa: Object, periodoApuracao: 01/01/2025 a 31/01/2025, empresa: Object, registros: Object}",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 SPED Data stored in StateManager: {nomeArquivo: sped_processado.txt, dadosEmpresa: Object, periodoApuracao: 01/01/2025 a 31/01/2025, empresa: Object, registros: Object}",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Dados SPED armazenados no StateManager",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "📋 Informações do período exibidas",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "📊 Progresso: 100% - Arquivo processado com sucesso!",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Upload realizado com sucesso: {fileName: 13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt, fileSize: 54795, totalItens: 24, empresa: THE FIBER PROVEDORA DE INTERNET LTDA, processingTime: 0.01s}",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Arquivo \"13158698000110-106379704-20250101-20250131-1-DED4E284399363BC7F1F48E5A39EE85261E47B67-SPED-EFD.txt\" processado com sucesso!",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Upload concluído em 13ms: {nomeArquivo: sped_processado.txt, dadosEmpresa: Object, periodoApuracao: 01/01/2025 a 31/01/2025, empresa: Object, registros: Object}",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🔄 Flag isProcessing resetada para false",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG showSpedAnalysis: {hasSpedData: true, dataKeys: Array(8), hasDadosEmpresa: true, empresa: Object}",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🔍 DEBUG DOM elements: {summaryDiv: true, summaryDivClasses: sped-summary hidden, tableDiv: false}",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Validando navegação para: single-analysis-section (modo: single)",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Navegando para: single-analysis-section (original: analysis-section)",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Informações da empresa atualizadas",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Arquivo processado. Modal de configuração disponível via botão.",
+      "timestamp": "2025-08-12T11:57:57.748Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Informações da empresa atualizadas",
+      "timestamp": "2025-08-12T11:57:58.205Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Navegação para single-analysis-section concluída",
+      "timestamp": "2025-08-12T11:57:58.206Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Validando navegação para: single-analysis-section (modo: single)",
+      "timestamp": "2025-08-12T11:58:01.859Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Navegando para: single-analysis-section (original: single-analysis-section)",
+      "timestamp": "2025-08-12T11:58:01.860Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Validando navegação para: single-analysis-section (modo: single)",
+      "timestamp": "2025-08-12T11:58:01.860Z"
+    },
+    {
+      "type": "log",
+      "message": "🧭 Navegando para: single-analysis-section (original: single-analysis-section)",
+      "timestamp": "2025-08-12T11:58:01.860Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Informações da empresa atualizadas",
+      "timestamp": "2025-08-12T11:58:02.315Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Navegação para single-analysis-section concluída",
+      "timestamp": "2025-08-12T11:58:02.315Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Informações da empresa atualizadas",
+      "timestamp": "2025-08-12T11:58:02.317Z"
+    },
+    {
+      "type": "log",
+      "message": "✅ Navegação para single-analysis-section concluída",
+      "timestamp": "2025-08-12T11:58:02.317Z"
+    }
+  ],
+  "errors": [
+    {
+      "error": "locator.isVisible: Error: strict mode violation: locator('[data-section=\"single-calculation-section\"]') resolved to 2 elements:\n    1) <button class=\"nav-btn mode-single\" data-section=\"single-calculation-section\">…</button> aka getByRole('button', { name: '⚙️ Cálculo' })\n    2) <button class=\"btn btn-secondary nav-btn\" data-section=\"single-calculation-section\">↵                            ← Voltar para Cálcul…</button> aka getByText('← Voltar para Cálculo')\n\nCall log:\n\u001b[2m    - checking visibility of locator('[data-section=\"single-calculation-section\"]')\u001b[22m\n",
+      "stack": "locator.isVisible: Error: strict mode violation: locator('[data-section=\"single-calculation-section\"]') resolved to 2 elements:\n    1) <button class=\"nav-btn mode-single\" data-section=\"single-calculation-section\">…</button> aka getByRole('button', { name: '⚙️ Cálculo' })\n    2) <button class=\"btn btn-secondary nav-btn\" data-section=\"single-calculation-section\">↵                            ← Voltar para Cálcul…</button> aka getByText('← Voltar para Cálculo')\n\nCall log:\n\u001b[2m    - checking visibility of locator('[data-section=\"single-calculation-section\"]')\u001b[22m\n\n    at runFullSystemDiagnosis (/Users/ceciliodaher/Documents/git/difal/difal-system/test-full-system-diagnosis.js:314:66)",
+      "context": "system-diagnosis",
+      "timestamp": "2025-08-12T11:58:03.984Z"
+    }
+  ],
+  "summary": {
+    "totalIssues": 2,
+    "criticalIssues": 2,
+    "systemStatus": "broken",
+    "successRate": 84.61538461538461,
+    "totalTests": 13
+  }
+}

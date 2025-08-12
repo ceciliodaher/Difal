@@ -120,7 +120,14 @@ class FileUploadManager {
             const files = event.target.files;
             if (files && files.length > 0) {
                 // CORREÇÃO: Chamar UIManager.handleFileUpload() em vez do próprio
+                console.log('🔍 DEBUG: Verificando window.uiManager...', {
+                    windowUiManager: !!window.uiManager,
+                    hasHandleFileUpload: !!(window.uiManager && window.uiManager.handleFileUpload),
+                    fileName: files[0].name
+                });
+                
                 if (window.uiManager && window.uiManager.handleFileUpload) {
+                    console.log('✅ Chamando window.uiManager.handleFileUpload()');
                     window.uiManager.handleFileUpload(files[0]);
                 } else {
                     console.warn('⚠️ UIManager não disponível, usando fallback');

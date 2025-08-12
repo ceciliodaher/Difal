@@ -306,27 +306,53 @@ class UIManager {
      * @param {Object} spedData - Dados SPED processados
      */
     showSpedAnalysis(spedData) {
+        console.log('🔍 DEBUG showSpedAnalysis:', {
+            hasSpedData: !!spedData,
+            dataKeys: spedData ? Object.keys(spedData) : null,
+            hasDadosEmpresa: !!(spedData && spedData.dadosEmpresa),
+            empresa: spedData?.dadosEmpresa || null
+        });
+        
         const summaryDiv = document.getElementById('sped-summary');
         const tableDiv = document.getElementById('difal-items-table');
         
+        console.log('🔍 DEBUG DOM elements:', {
+            summaryDiv: !!summaryDiv,
+            summaryDivClasses: summaryDiv?.className,
+            tableDiv: !!tableDiv
+        });
+        
         if (summaryDiv) {
-            // Verificar se estamos em modo multi-período
-            let displayData = spedData;
-            let isMultiPeriod = false;
-            
-            // Se não há dados ou é multi-período, tentar obter do PeriodsManager
-            if (!spedData || !spedData.dadosEmpresa) {
-                const periodsState = this.stateManager?.getPeriodsState();
-                if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
-                    isMultiPeriod = true;
-                    const firstPeriod = periodsState.periods[0];
-                    displayData = firstPeriod.dados;
-                    console.log('📅 Usando dados do modo multi-período para análise');
+            try {
+                console.log('🔍 DEBUG: Dentro do if summaryDiv - iniciando processamento');
+                
+                // Verificar se estamos em modo multi-período
+                let displayData = spedData;
+                let isMultiPeriod = false;
+                
+                console.log('🔍 DEBUG: Verificando dados antes do if da linha 331:', {
+                    hasSpedData: !!spedData,
+                    hasDadosEmpresa: !!(spedData && spedData.dadosEmpresa)
+                });
+                
+                // Se não há dados ou é multi-período, tentar obter do PeriodsManager
+                if (!spedData || !spedData.dadosEmpresa) {
+                    console.log('🔍 DEBUG: Entrando na condição de multi-período');
+                    const periodsState = this.stateManager?.getPeriodsState();
+                    if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                        isMultiPeriod = true;
+                        const firstPeriod = periodsState.periods[0];
+                        displayData = firstPeriod.dados;
+                        console.log('📅 Usando dados do modo multi-período para análise');
+                    }
+                } else {
+                    console.log('🔍 DEBUG: Usando dados single-period, não entrando na condição multi');
                 }
-            }
-            
-            // Remover classe hidden e mostrar o div
-            summaryDiv.classList.remove('hidden');
+                
+                // Remover classe hidden e mostrar o div
+                console.log('🔍 DEBUG: Removendo classe hidden do summaryDiv');
+                summaryDiv.classList.remove('hidden');
+                console.log('🔍 DEBUG: Classes após remoção:', summaryDiv.className);
             
             const stats = displayData?.estatisticasDifal || {};
             
@@ -486,6 +512,13 @@ class UIManager {
         
         // Adicionar badge CSS se não existe
         this.ensureBadgeStyles();
+        
+        } catch (error) {
+            console.error('❌ Erro em showSpedAnalysis:', error);
+            summaryDiv.classList.remove('hidden');
+            summaryDiv.innerHTML = '<p class="error">Erro ao processar dados SPED</p>';
+        }
+        }
     }
 
     /**
