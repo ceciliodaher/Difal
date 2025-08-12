@@ -6,7 +6,7 @@ const { defineConfig, devices } = require('@playwright/test');
 
 module.exports = defineConfig({
     testDir: '.',
-    testMatch: ['test-final-functionality.js', 'test-mode-selection.js', 'test-freeze-diagnostic.js', 'test-initialization-errors.js', 'test-complete-system.js', 'test-upload-fix.js', 'test-quick-diagnostic.js', 'test-singleton-initialization.js'],
+    testMatch: ['test-final-functionality.js', 'test-mode-selection.js', 'test-freeze-diagnostic.js', 'test-initialization-errors.js', 'test-complete-system.js', 'test-upload-fix.js', 'test-quick-diagnostic.js', 'test-singleton-initialization.js', 'test-complete-single-workflow.js'],
     
     // Tempo máximo para cada teste (aumentado para testes completos)
     timeout: 60 * 1000,

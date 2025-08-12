@@ -547,16 +547,31 @@ class NavigationManager {
                 return;
             }
             
-            // Elementos de UF da empresa
-            const companyUfElements = document.querySelectorAll('#company-uf, .company-uf');
+            // Determinar modo ativo para usar seletores específicos
+            const activeMode = this.navigationState.activeMode;
+            
+            // Elementos de UF da empresa (incluindo seletores específicos por modo)
+            const ufSelectors = activeMode === 'single' ? 
+                '#company-uf, .company-uf, #single-company-uf' :
+                activeMode === 'multi' ?
+                '#company-uf, .company-uf, #multi-current-company-uf' :
+                '#company-uf, .company-uf';
+            
+            const companyUfElements = document.querySelectorAll(ufSelectors);
             companyUfElements.forEach(element => {
                 if (element) {
                     element.textContent = spedData.dadosEmpresa.uf || '-';
                 }
             });
             
-            // Elementos de nome da empresa
-            const companyNameElements = document.querySelectorAll('#company-name, .company-name');
+            // Elementos de nome da empresa (incluindo seletores específicos por modo)
+            const nameSelectors = activeMode === 'single' ? 
+                '#company-name, .company-name, #single-company-name' :
+                activeMode === 'multi' ?
+                '#company-name, .company-name, #multi-current-company-name' :
+                '#company-name, .company-name';
+            
+            const companyNameElements = document.querySelectorAll(nameSelectors);
             companyNameElements.forEach(element => {
                 if (element) {
                     const name = spedData.dadosEmpresa.razaoSocial || '-';
@@ -565,8 +580,14 @@ class NavigationManager {
                 }
             });
             
-            // Elementos de CNPJ da empresa
-            const companyCnpjElements = document.querySelectorAll('#company-cnpj, .company-cnpj');
+            // Elementos de CNPJ da empresa (incluindo seletores específicos por modo)
+            const cnpjSelectors = activeMode === 'single' ? 
+                '#company-cnpj, .company-cnpj, #single-company-cnpj' :
+                activeMode === 'multi' ?
+                '#company-cnpj, .company-cnpj, #multi-current-company-cnpj' :
+                '#company-cnpj, .company-cnpj';
+            
+            const companyCnpjElements = document.querySelectorAll(cnpjSelectors);
             companyCnpjElements.forEach(element => {
                 if (element) {
                     const cnpj = spedData.dadosEmpresa.cnpj;
@@ -574,15 +595,22 @@ class NavigationManager {
                 }
             });
             
-            // Elementos de período
-            const periodElements = document.querySelectorAll('#company-period, .company-period');
+            // Elementos de período (incluindo seletores específicos por modo)
+            const periodSelectors = activeMode === 'single' ? 
+                '#company-period, .company-period, #single-company-period' :
+                activeMode === 'multi' ?
+                '#company-period, .company-period, #multi-company-period' :
+                '#company-period, .company-period';
+            
+            const periodElements = document.querySelectorAll(periodSelectors);
             periodElements.forEach(element => {
                 if (element) {
                     element.textContent = spedData.periodoApuracao || '-';
                 }
             });
             
-            console.log('✅ Informações da empresa atualizadas');
+            console.log(`✅ Informações da empresa atualizadas (modo: ${activeMode})`);
+            console.log(`📊 Dados atualizados: ${spedData.dadosEmpresa.razaoSocial}, UF: ${spedData.dadosEmpresa.uf}`);
             
         } catch (error) {
             console.error('❌ Erro ao atualizar informações da empresa:', error);

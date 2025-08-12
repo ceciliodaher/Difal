@@ -126,9 +126,14 @@ class UIManager {
             proceedBtn.addEventListener('click', () => this.proceedToCalculation());
         }
 
-        // Calculate DIFAL - abre modal de configuração primeiro
-        const calculateBtn = document.getElementById('calculate-difal');
-        if (calculateBtn) {
+        // Calculate DIFAL - abre modal de configuração primeiro (suporte a IDs genéricos e específicos)
+        const calculateBtns = [
+            document.getElementById('calculate-difal'),
+            document.getElementById('single-calculate-difal'),
+            document.getElementById('multi-calculate-difal')
+        ].filter(btn => btn !== null);
+        
+        calculateBtns.forEach(calculateBtn => {
             calculateBtn.addEventListener('click', () => {
                 if (typeof openConfigModal === 'function') {
                     openConfigModal();
@@ -136,17 +141,22 @@ class UIManager {
                     this.calculateDifal();
                 }
             });
-        }
+        });
 
-        // Botão Prosseguir para Cálculo - navega sem calcular
-        const proceedToCalcBtn = document.getElementById('proceed-to-calculation');
-        if (proceedToCalcBtn) {
+        // Botão Prosseguir para Cálculo - navega sem calcular (suporte a IDs genéricos e específicos)
+        const proceedToCalcBtns = [
+            document.getElementById('proceed-to-calculation'),
+            document.getElementById('single-proceed-to-calculation'),
+            document.getElementById('multi-proceed-to-calculation')
+        ].filter(btn => btn !== null);
+        
+        proceedToCalcBtns.forEach(proceedToCalcBtn => {
             proceedToCalcBtn.addEventListener('click', () => {
                 this.navigationManager.navigateToSection('calculation-section');
                 this.updateCompanyInfo();
                 console.log('📍 Navegado para seção de cálculo sem executar cálculo');
             });
-        }
+        });
 
         // Export buttons - DELEGADOS para ExportManager
         const exportExcel = document.getElementById('export-excel');
