@@ -55,6 +55,11 @@ async function runSinglePeriodWorkflowTest() {
     
     const page = await context.newPage();
     
+    // Limpar localStorage antes de iniciar para garantir estado limpo
+    await page.addInitScript(() => {
+        localStorage.clear();
+    });
+    
     // Capturar logs do console
     page.on('console', msg => {
         logger.log('console', msg.text(), { type: msg.type() });

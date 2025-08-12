@@ -251,6 +251,18 @@ class NavigationManager {
      * @private
      */
     initializeCurrentSection() {
+        // Verificar se a tela de seleção de modo deve ser mostrada
+        const modeSelectionSection = document.getElementById('mode-selection-section');
+        const savedMode = localStorage.getItem('difal_active_mode');
+        
+        // Se não há modo salvo, mostrar tela de seleção
+        if (!savedMode && modeSelectionSection) {
+            this.navigationState.currentSection = 'mode-selection-section';
+            this.showSection('mode-selection-section', false);
+            console.log('🧭 Mostrando tela de seleção de modo');
+            return;
+        }
+        
         // Verificar seção ativa no DOM
         const activeSection = document.querySelector('.section.active');
         if (activeSection) {

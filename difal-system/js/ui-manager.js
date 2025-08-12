@@ -81,7 +81,12 @@ class UIManager {
         this.setupEventListeners();
         // this.setupFileUpload(); // REMOVIDO - já feito no FileUploadManager constructor
         this.setupNavigation();
-        this.navigationManager.navigateToSection('upload-section');
+        
+        // Só navegar para upload-section se já houver modo definido
+        const savedMode = localStorage.getItem('difal_active_mode');
+        if (savedMode) {
+            this.navigationManager.navigateToSection('upload-section');
+        }
         
         console.log('🎭 UI Manager Refatorado inicializado');
         
@@ -1709,15 +1714,63 @@ class UIManager {
     refreshAnalytics() {
         this.generateAnalytics();
     }
+    
+    /**
+     * Manipula seleção de modo
+     * @private
+     * @param {string} mode - Modo selecionado ('single' | 'multi')
+     */
+    handleModeSelection(mode) {
+        console.log(`🎯 Modo selecionado: ${mode}`);
+        
+        // Salvar modo no localStorage
+        localStorage.setItem('difal_active_mode', mode);
+        
+        // Atualizar ModeManager
+        if (this.modeManager) {
+            this.modeManager.setMode(mode, true);
+        }
+        
+        // Atualizar FileUploadManager
+        if (this.fileUploadManager) {
+            this.fileUploadManager.setMultiPeriodMode(mode === 'multi');
+        }
+        
+        // NavigationManager irá automaticamente lidar com a navegação
+        // através do evento mode:changed emitido pelo ModeManager
+    }
 
     /**
      * Configura seletor de modo de processamento
      * @private
      */
     setupModeSelector() {
+        // Configurar cards de seleção de modo
+        const singleModeCard = document.getElementById('single-mode-card');
+        const multiModeCard = document.getElementById('multi-mode-card');
+        
+        if (singleModeCard) {
+            singleModeCard.addEventListener('click', () => {
+                console.log('🎯 Configurando handlers da seleção de modo...');
+                this.handleModeSelection('single');
+            });
+        }
+        
+        if (multiModeCard) {
+            multiModeCard.addEventListener('click', () => {
+                console.log('🎯 Configurando handlers da seleção de modo...');
+                this.handleModeSelection('multi');
+            });
+        }
+        
+        if (singleModeCard || multiModeCard) {
+            console.log(`✅ ${(singleModeCard ? 1 : 0) + (multiModeCard ? 1 : 0)} botões de seleção de modo configurados`);
+        }
+        
+        // Configurar inputs de modo (caso existam)
         const modeOptions = document.querySelectorAll('input[name="processing-mode"]');
         
-        if (modeOptions.length === 0) {
+        if (modeOptions.length === 0 && !singleModeCard && !multiModeCard) {
             console.warn('⚠️ Seletor de modo não encontrado na interface');
             return;
         }
