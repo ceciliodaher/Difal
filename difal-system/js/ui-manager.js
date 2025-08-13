@@ -592,6 +592,15 @@ class UIManager {
      * @param {Object} spedData - Dados SPED processados
      */
     showMultiPeriodAnalysis(spedData) {
+        // DEPRECATED: Esta função foi substituída por showSpedAnalysis()
+        // que agora funciona com dados consolidados automaticamente
+        console.warn('⚠️ showMultiPeriodAnalysis() is deprecated, use showSpedAnalysis() instead');
+        return this.showSpedAnalysis(spedData);
+    }
+    
+    // OBSOLETE CODE REMOVED - now using showSpedAnalysis() with consolidated data
+    
+    showMultiPeriodAnalysis_OLD_UNUSED(spedData) {
         console.log('🔍 DEBUG showMultiPeriodAnalysis:', {
             hasSpedData: !!spedData,
             dataKeys: spedData ? Object.keys(spedData) : null,
@@ -1368,7 +1377,7 @@ class UIManager {
             }
             
             if (itemsToShow.length > 0) {
-                this.createMultipleDifalTable(tableDiv, itemsToShow);
+                this.createDifalTable(tableDiv, itemsToShow);
             }
         }
     }
@@ -1408,6 +1417,9 @@ class UIManager {
      * @param {Array} items - Itens para exibir
      */
     createMultipleDifalTable(container, items) {
+        // DEPRECATED: Using unified createDifalTable()
+        console.warn('⚠️ createMultipleDifalTable() is deprecated, use createDifalTable() instead');
+        return this.createDifalTable(container, items);
         if (!container || !items?.length) return;
 
         const tableHtml = `
@@ -1628,11 +1640,10 @@ class UIManager {
             this.showProgress('Múltiplos períodos processados com sucesso!', 100);
             this.updatePeriodsDisplay();
             
-            // Obter dados consolidados dos períodos para análise
-            const periodsState = this.stateManager?.getPeriodsState();
-            const consolidatedStats = periodsState?.consolidated;
-            if (consolidatedStats) {
-                this.showMultiPeriodAnalysis(consolidatedStats); // Exibir análise com dados consolidados
+            // StateManager agora retorna dados consolidados automaticamente
+            const spedData = this.stateManager.getSpedData();
+            if (spedData) {
+                this.showSpedAnalysis(spedData); // Usar função unificada
             }
             
             this.updateMultiPeriodUfDisplay(); // Atualizar display da UF extraída
@@ -2347,8 +2358,9 @@ class UIManager {
         // Atualizar seção de analytics se visível
         if (this.navigationState?.currentSection === 'multi-analytics-section') {
             const consolidatedStats = periodsState?.consolidated;
-            if (consolidatedStats) {
-                this.showMultiPeriodAnalysis(consolidatedStats);
+            const spedData = this.stateManager.getSpedData();
+            if (spedData) {
+                this.showSpedAnalysis(spedData); // Usar função unificada
             }
         }
         
