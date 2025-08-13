@@ -8,7 +8,11 @@
       "Bash(where gh)",
       "Bash(start chrome sistema.html)",
       "Bash(node:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(del /f jscoresingle-period-manager.js)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []

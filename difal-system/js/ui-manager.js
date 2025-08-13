@@ -1178,6 +1178,7 @@ class UIManager {
     
     /**
      * Processa um arquivo SPED individual para multi-período
+     * ARQUITETURA LIMPA: Reutiliza FileUploadManager que já funciona no single-period
      * @private
      * @param {File} file - Arquivo SPED
      */
@@ -1185,16 +1186,16 @@ class UIManager {
         try {
             console.log(`📁 Processando arquivo: ${file.name}`);
             
-            // Usar FileUploadManager para processar o arquivo
-            const fileContent = await this.readFileAsText(file);
-            const spedData = await this.spedParser.processarArquivo(fileContent, file.name);
+            // SOLUÇÃO ARQUITETURAL: Delegar para FileUploadManager que já tem SpedParser configurado
+            // Isso mantém consistência com o modo single-period
+            const spedData = await this.fileUploadManager.processFileForMultiPeriod(file);
             
-            // Adicionar período ao PeriodsManager via MultiPeriodManager
-            if (this.multiPeriodManager) {
-                await this.multiPeriodManager.addPeriod(spedData);
+            // Adicionar período ao PeriodsManager
+            if (this.periodsManager) {
+                await this.periodsManager.addPeriod(spedData);
                 console.log(`✅ Período adicionado: ${spedData.periodoApuracao}`);
             } else {
-                console.warn('⚠️ MultiPeriodManager não disponível');
+                console.warn('⚠️ PeriodsManager não disponível');
             }
             
         } catch (error) {
@@ -1203,20 +1204,8 @@ class UIManager {
         }
     }
 
-    /**
-     * Lê arquivo como texto
-     * @private
-     * @param {File} file - Arquivo a ser lido
-     * @returns {Promise<string>} Conteúdo do arquivo
-     */
-    readFileAsText(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = e => resolve(e.target.result);
-            reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
-            reader.readAsText(file);
-        });
-    }
+    // REMOVIDO: readFileAsText() - agora delegamos para FileUploadManager
+    // Isso elimina duplicação de código e mantém single source of truth
 
     /**
      * Atualiza exibição dos períodos

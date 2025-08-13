@@ -672,6 +672,46 @@ class FileUploadManager {
     }
 
     /**
+     * Processa arquivo SPED para modo multi-período
+     * REUTILIZAÇÃO ARQUITETURAL: Usa o mesmo pipeline do single-period
+     * @param {File} file - Arquivo SPED
+     * @returns {Promise<Object>} Dados SPED processados
+     */
+    async processFileForMultiPeriod(file) {
+        try {
+            console.log(`📁 FileUploadManager: Processando arquivo para multi-período: ${file.name}`);
+            
+            // Usar o mesmo método de leitura do single-period
+            const fileContent = await this.readFileAsText(file);
+            
+            // Usar o mesmo método de processamento do single-period
+            const spedData = await this.processWithSpedParser(fileContent, file.name);
+            
+            console.log(`✅ FileUploadManager: Arquivo processado para multi-período: ${file.name}`);
+            return spedData;
+            
+        } catch (error) {
+            console.error(`❌ FileUploadManager: Erro ao processar arquivo para multi-período ${file.name}:`, error);
+            throw error;
+        }
+    }
+
+    /**
+     * Lê arquivo como texto (método auxiliar para multi-período)
+     * @private
+     * @param {File} file - Arquivo a ser lido
+     * @returns {Promise<string>} Conteúdo do arquivo
+     */
+    readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.onerror = () => reject(new Error('Erro ao ler arquivo'));
+            reader.readAsText(file);
+        });
+    }
+
+    /**
      * Limpa arquivo atual
      * @public
      */

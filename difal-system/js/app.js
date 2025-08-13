@@ -16,8 +16,9 @@ class DifalAppModular {
         this.eventBus = null;
         this.modeManager = null;
         this.stateManager = null;
-        this.singlePeriodManager = null;
-        this.multiPeriodManager = null;
+        // REMOVIDO: singlePeriodManager e multiPeriodManager (duplicações deletadas)
+        // this.singlePeriodManager = null; // Era duplicação do StateManager
+        // this.multiPeriodManager = null;  // Era duplicação do PeriodsManager
         this.configurationManager = null;
         
         // Módulos modulares especializados
@@ -87,22 +88,22 @@ class DifalAppModular {
         this.stateManager = new StateManager(this.eventBus);
         this.stateManager.init();
         
-        // Inicializar gerenciadores específicos por modo
-        this.singlePeriodManager = new SinglePeriodManager(this.eventBus);
-        this.multiPeriodManager = new MultiPeriodManager(this.stateManager, this.eventBus);
+        // ARQUITETURA LIMPA: Removidos gerenciadores duplicados
+        // singlePeriodManager era duplicação do StateManager
+        // multiPeriodManager era duplicação do PeriodsManager
         
         // Inicializar ModeManager como coordenador central
         this.modeManager = new ModeManager(this.eventBus);
         this.modeManager.initialize({
-            single: this.singlePeriodManager,
-            multi: this.multiPeriodManager
+            single: this.stateManager,  // StateManager unificado
+            multi: this.stateManager    // StateManager unificado  
         });
         
         // IMPORTANTE: Expor ModeManager globalmente ANTES de inicializar UIManager
         window.modeManager = this.modeManager;
         window.stateManager = this.stateManager;
-        window.singlePeriodManager = this.singlePeriodManager;
-        window.multiPeriodManager = this.multiPeriodManager;
+        // REMOVIDO: window.singlePeriodManager e window.multiPeriodManager
+        // Agora usamos apenas StateManager unificado
         
         this.configurationManager = new ConfigurationManager(this.eventBus, this.stateManager);
         window.configurationManager = this.configurationManager;
