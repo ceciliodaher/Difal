@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Correção - Sistema DIFAL Multi-Período</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        #console-output {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px;
+        }
+        .log-error {
+            color: #ff4444;
+        }
+        .log-success {
+            color: #44ff44;
+        }
+        .log-warning {
+            color: #ffaa44;
+        }
+        .log-info {
+            color: #44aaff;
+        }
+        #file-list {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+        }
+        .file-item {
+            padding: 5px;
+            margin: 3px 0;
+            background: white;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste de Correção - Sistema DIFAL Multi-Período</h1>
+        
+        <div class="test-section">
+            <h2>📊 Status do Sistema</h2>
+            <div id="system-status" class="status info">Aguardando inicialização...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 Teste de Correção do Erro</h2>
+            <p>Este teste verifica se o erro <code>processWithSpedParser is not a function</code> foi corrigido.</p>
+            
+            <button onclick="loadSystem()">1. Carregar Sistema</button>
+            <button onclick="selectMultiMode()" disabled id="btn-multi">2. Selecionar Modo Multi</button>
+            <button onclick="simulateFileUpload()" disabled id="btn-upload">3. Simular Upload</button>
+            <button onclick="checkErrors()" disabled id="btn-check">4. Verificar Erros</button>
+            <button onclick="runFullTest()">🚀 Executar Teste Completo</button>
+            
+            <div id="test-result" class="status info" style="margin-top: 20px;">
+                Teste não iniciado
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📁 Arquivos de Teste</h2>
+            <input type="file" id="test-files" multiple accept=".txt" />
+            <div id="file-list"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Console de Depuração</h2>
+            <button onclick="clearConsole()">Limpar Console</button>
+            <div id="console-output"></div>
+        </div>
+    </div>
+
+    <script>
+        let systemLoaded = false;
+        let errorLog = [];
+        let consoleElement = document.getElementById('console-output');
+        
+        // Capturar erros globais
+        window.addEventListener('error', function(e) {
+            logToConsole(`❌ ERRO: ${e.message}`, 'error');
+            errorLog.push(e.message);
+        });
+        
+        // Override console.error
+        const originalConsoleError = console.error;
+        console.error = function(...args) {
+            const message = args.join(' ');
+            logToConsole(`❌ Console Error: ${message}`, 'error');
+            errorLog.push(message);
+            originalConsoleError.apply(console, args);
+        };
+        
+        function logToConsole(message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            consoleElement.appendChild(entry);
+            consoleElement.scrollTop = consoleElement.scrollHeight;
+        }
+        
+        function clearConsole() {
+            consoleElement.innerHTML = '';
+            errorLog = [];
+            logToConsole('Console limpo', 'info');
+        }
+        
+        async function loadSystem() {
+            logToConsole('📍 Carregando sistema DIFAL...', 'info');
+            
+            try {
+                // Criar iframe para carregar o sistema
+                const iframe = document.createElement('iframe');
+                iframe.src = 'sistema.html';
+                iframe.style.display = 'none';
+                iframe.id = 'system-iframe';
+                document.body.appendChild(iframe);
+                
+                // Aguardar carregamento
+                await new Promise(resolve => {
+                    iframe.onload = resolve;
+                    setTimeout(resolve, 5000); // Timeout de 5 segundos
+                });
+                
+                systemLoaded = true;
+                document.getElementById('system-status').className = 'status success';
+                document.getElementById('system-status').textContent = '✅ Sistema carregado com sucesso';
+                document.getElementById('btn-multi').disabled = false;
+                
+                logToConsole('✅ Sistema carregado', 'success');
+                
+                // Verificar módulos disponíveis
+                const systemFrame = document.getElementById('system-iframe').contentWindow;
+                const modules = {
+                    difalApp: !!systemFrame.difalApp,
+                    modeManager: !!systemFrame.difalApp?.modeManager,
+                    fileUploadManager: !!systemFrame.difalApp?.fileUploadManager,
+                    stateManager: !!systemFrame.difalApp?.stateManager
+                };
+                
+                logToConsole('📊 Módulos disponíveis:', 'info');
+                for (const [module, available] of Object.entries(modules)) {
+                    logToConsole(`  ${module}: ${available ? '✅' : '❌'}`, available ? 'success' : 'error');
+                }
+                
+            } catch (error) {
+                logToConsole(`❌ Erro ao carregar sistema: ${error.message}`, 'error');
+                document.getElementById('system-status').className = 'status error';
+                document.getElementById('system-status').textContent = '❌ Erro ao carregar sistema';
+            }
+        }
+        
+        async function selectMultiMode() {
+            if (!systemLoaded) {
+                logToConsole('⚠️ Sistema não carregado', 'warning');
+                return;
+            }
+            
+            logToConsole('🎯 Selecionando modo multi-período...', 'info');
+            
+            try {
+                const systemFrame = document.getElementById('system-iframe').contentWindow;
+                
+                // Tentar clicar no botão de seleção
+                const selectButton = systemFrame.document.getElementById('select-multi');
+                if (selectButton) {
+                    selectButton.click();
+                    logToConsole('✅ Botão multi-período clicado', 'success');
+                } else {
+                    // Tentar definir diretamente via API
+                    if (systemFrame.difalApp?.modeManager) {
+                        systemFrame.difalApp.modeManager.setMode('multi');
+                        logToConsole('✅ Modo multi definido via API', 'success');
+                    } else {
+                        throw new Error('ModeManager não disponível');
+                    }
+                }
+                
+                document.getElementById('btn-upload').disabled = false;
+                
+                // Verificar modo atual
+                const currentMode = systemFrame.difalApp?.modeManager?.currentMode;
+                logToConsole(`📊 Modo atual: ${currentMode}`, 'info');
+                
+            } catch (error) {
+                logToConsole(`❌ Erro ao selecionar modo: ${error.message}`, 'error');
+            }
+        }
+        
+        async function simulateFileUpload() {
+            if (!systemLoaded) {
+                logToConsole('⚠️ Sistema não carregado', 'warning');
+                return;
+            }
+            
+            logToConsole('📁 Simulando upload de arquivo...', 'info');
+            
+            try {
+                const systemFrame = document.getElementById('system-iframe').contentWindow;
+                
+                // Criar arquivo fake para teste
+                const fakeFile = new File(['conteúdo teste'], 'test.txt', { type: 'text/plain' });
+                
+                // Tentar processar via FileUploadManager
+                if (systemFrame.difalApp?.fileUploadManager) {
+                    logToConsole('🔄 Chamando processFileForMultiPeriod...', 'info');
+                    
+                    // Esta é a chamada que deveria gerar o erro se não estiver corrigido
+                    await systemFrame.difalApp.fileUploadManager.processFileForMultiPeriod(fakeFile);
+                    
+                    logToConsole('✅ processFileForMultiPeriod executado sem erro!', 'success');
+                } else {
+                    logToConsole('⚠️ FileUploadManager não disponível', 'warning');
+                }
+                
+                document.getElementById('btn-check').disabled = false;
+                
+            } catch (error) {
+                logToConsole(`❌ Erro durante upload: ${error.message}`, 'error');
+                document.getElementById('btn-check').disabled = false;
+            }
+        }
+        
+        function checkErrors() {
+            logToConsole('🔍 Verificando erros...', 'info');
+            
+            const hasProcessError = errorLog.some(err => 
+                err.includes('processWithSpedParser is not a function')
+            );
+            
+            const resultDiv = document.getElementById('test-result');
+            
+            if (hasProcessError) {
+                resultDiv.className = 'status error';
+                resultDiv.innerHTML = `
+                    <strong>❌ FALHA: Erro ainda presente!</strong><br>
+                    O erro "processWithSpedParser is not a function" ainda está ocorrendo.<br>
+                    A correção NÃO funcionou.
+                `;
+                logToConsole('❌ TESTE FALHOU: Erro processWithSpedParser ainda presente', 'error');
+            } else if (errorLog.length > 0) {
+                resultDiv.className = 'status warning';
+                resultDiv.innerHTML = `
+                    <strong>⚠️ PARCIAL: Erro corrigido, mas outros erros encontrados</strong><br>
+                    O erro "processWithSpedParser" foi corrigido!<br>
+                    Porém, ${errorLog.length} outro(s) erro(s) foram encontrados.
+                `;
+                logToConsole('⚠️ Erro principal corrigido, mas há outros erros', 'warning');
+            } else {
+                resultDiv.className = 'status success';
+                resultDiv.innerHTML = `
+                    <strong>✅ SUCESSO: Sistema funcionando perfeitamente!</strong><br>
+                    Nenhum erro encontrado.<br>
+                    A correção funcionou com sucesso!
+                `;
+                logToConsole('✅ TESTE PASSOU: Nenhum erro encontrado!', 'success');
+            }
+            
+            // Listar todos os erros
+            if (errorLog.length > 0) {
+                logToConsole('📋 Lista de erros encontrados:', 'info');
+                errorLog.forEach((err, idx) => {
+                    logToConsole(`  ${idx + 1}. ${err}`, 'error');
+                });
+            }
+        }
+        
+        async function runFullTest() {
+            logToConsole('🚀 Iniciando teste completo...', 'info');
+            clearConsole();
+            
+            await loadSystem();
+            await new Promise(r => setTimeout(r, 2000));
+            
+            await selectMultiMode();
+            await new Promise(r => setTimeout(r, 1000));
+            
+            await simulateFileUpload();
+            await new Promise(r => setTimeout(r, 1000));
+            
+            checkErrors();
+            
+            logToConsole('🏁 Teste completo finalizado', 'info');
+        }
+        
+        // Lidar com arquivos reais
+        document.getElementById('test-files').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            const fileList = document.getElementById('file-list');
+            
+            fileList.innerHTML = '<strong>Arquivos selecionados:</strong>';
+            files.forEach(file => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.textContent = `📄 ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+                fileList.appendChild(item);
+            });
+            
+            logToConsole(`📁 ${files.length} arquivo(s) selecionado(s)`, 'info');
+        });
+    </script>
+</body>
+</html>

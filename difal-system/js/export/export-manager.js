@@ -89,7 +89,8 @@ class ExportManager {
         const exportExcelBtns = [
             document.getElementById('export-excel'),
             document.getElementById('single-export-excel'),
-            document.getElementById('multi-export-excel')
+            document.getElementById('multi-export-excel'),
+            document.getElementById('multi-export-analytics-excel')
         ].filter(btn => btn !== null);
         
         exportExcelBtns.forEach(exportExcelBtn => {
@@ -100,7 +101,8 @@ class ExportManager {
         const exportPdfBtns = [
             document.getElementById('export-pdf'),
             document.getElementById('single-export-pdf'),
-            document.getElementById('multi-export-pdf')
+            document.getElementById('multi-export-pdf'),
+            document.getElementById('multi-export-analytics-pdf')
         ].filter(btn => btn !== null);
         
         exportPdfBtns.forEach(exportPdfBtn => {
@@ -697,11 +699,25 @@ class ExportManager {
     // ========== MÉTODOS UTILITÁRIOS ==========
 
     /**
-     * Obtém resultados do cálculo
+     * Obtém resultados do cálculo (suporte single/multi-period)
      * @private
      * @returns {Object|null} Resultados do cálculo
      */
     getCalculationResults() {
+        const activeMode = window.modeManager?.activeMode || 'single';
+        
+        if (activeMode === 'multi') {
+            return this.getMultiPeriodResults();
+        } else {
+            return this.getSinglePeriodResults();
+        }
+    }
+
+    /**
+     * Obtém resultados single-period
+     * @private
+     */
+    getSinglePeriodResults() {
         // Primeiro tenta do StateManager
         const stateCalc = this.stateManager?.getState('calculation');
         if (stateCalc && stateCalc.results) {
@@ -710,12 +726,58 @@ class ExportManager {
                 totalizadores: stateCalc.totals,
                 ufOrigem: stateCalc.ufOrigem,
                 ufDestino: stateCalc.ufDestino,
-                calculator: window.difalResults?.calculator
+                calculator: window.difalResults?.calculator,
+                isMultiPeriod: false
             };
         }
         
         // Fallback para window.difalResults
         return window.difalResults;
+    }
+
+    /**
+     * Obtém resultados consolidados multi-period
+     * @private
+     */
+    getMultiPeriodResults() {
+        try {
+            const multiPeriodManager = window.difalApp?.multiPeriodManager;
+            if (!multiPeriodManager || !multiPeriodManager.hasPeriods()) {
+                console.warn('⚠️ MultiPeriodManager não disponível ou sem períodos');
+                return null;
+            }
+
+            // Obter dados consolidados
+            const consolidatedItems = multiPeriodManager.getConsolidatedItems();
+            const consolidatedStats = multiPeriodManager.getConsolidatedStats();
+            
+            // Se temos analytics processadas, usar esses dados
+            const analyticsManager = window.difalApp?.analyticsManager;
+            if (analyticsManager && this.analyticsManager) {
+                console.log('📊 Usando dados de analytics para export multi-período');
+                return {
+                    resultados: consolidatedItems,
+                    totalizadores: consolidatedStats,
+                    analytics: analyticsManager.getLastAnalytics(),
+                    isMultiPeriod: true,
+                    empresa: multiPeriodManager.getCurrentCompany(),
+                    periodos: Array.from(multiPeriodManager.periods.values())
+                };
+            }
+
+            // Dados básicos multi-período
+            return {
+                resultados: consolidatedItems,
+                totalizadores: consolidatedStats,
+                isMultiPeriod: true,
+                empresa: multiPeriodManager.getCurrentCompany(),
+                periodos: Array.from(multiPeriodManager.periods.values())
+            };
+
+        } catch (error) {
+            console.error('❌ Erro ao obter resultados multi-período:', error);
+            return null;
+        }
     }
 
     /**
@@ -966,52 +1028,7 @@ class ExportManager {
         }
     }
 
-    /**
-     * Prepara dados para exportação Excel
-     * @private
-     * @param {Object} results - Resultados do cálculo
-     * @returns {Object} Dados formatados para Excel
-     */
-    prepareExcelData(results) {
-        const cabecalhos = [
-            'Código Item',
-            'Descrição',
-            'NCM',
-            'CFOP',
-            'Base Cálculo',
-            'Metodologia',
-            'Alíq. Origem (%)',
-            'Alíq. Destino (%)',
-            'Alíq. FCP (%)',
-            'Valor DIFAL',
-            'Valor FCP',
-            'Total a Recolher',
-            'Benefício Aplicado'
-        ];
-
-        const dados = results.resultados.map(item => [
-            item.codItem || '',
-            item.descricaoItem || item.descItem || '',
-            item.ncm || 'N/A',
-            item.cfop || '',
-            item.baseCalculo || 0,
-            item.metodoCalculo || '',
-            item.aliqOrigem || 0,
-            item.aliqDestino || 0,
-            item.aliqFcp || 0,
-            item.valorDifal || 0,
-            item.valorFcp || 0,
-            (item.valorDifal || 0) + (item.valorFcp || 0),
-            item.beneficioAplicado?.tipo || ''
-        ]);
-
-        return {
-            cabecalhos,
-            dados,
-            totalRows: dados.length,
-            totalizadores: results.totalizadores
-        };
-    }
+    // Método removido - usando o prepareExcelData da linha 187
 
     /**
      * Prepara dados para exportação PDF
@@ -1047,43 +1064,7 @@ class ExportManager {
         };
     }
 
-    /**
-     * Exporta usando XlsxPopulate (se disponível)
-     * @private
-     * @param {Object} exportData - Dados preparados
-     */
-    async exportWithXlsxPopulate(exportData) {
-        if (!window.XlsxPopulate) {
-            throw new Error('XlsxPopulate não está disponível');
-        }
-
-        const workbook = await window.XlsxPopulate.fromBlankAsync();
-        const sheet = workbook.sheet(0);
-
-        // Adicionar cabeçalhos
-        exportData.cabecalhos.forEach((header, index) => {
-            sheet.cell(1, index + 1).value(header);
-        });
-
-        // Adicionar dados
-        exportData.dados.forEach((row, rowIndex) => {
-            row.forEach((value, colIndex) => {
-                sheet.cell(rowIndex + 2, colIndex + 1).value(value);
-            });
-        });
-
-        // Gerar arquivo
-        const filename = this.generateExcelFilename(exportData);
-        const blob = await workbook.outputAsync();
-        
-        // Download
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(new Blob([blob]));
-        link.download = filename;
-        link.click();
-        
-        URL.revokeObjectURL(link.href);
-    }
+    // Método removido - usando o exportWithXlsxPopulate da linha 254
 
     /**
      * Exporta como CSV (fallback)
