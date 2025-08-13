@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx playwright:*)",
+      "Bash(npm install:*)",
+      "Bash(winget install:*)",
+      "Bash(gh:*)",
+      "Bash(where gh)",
+      "Bash(start chrome sistema.html)",
+      "Bash(node:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

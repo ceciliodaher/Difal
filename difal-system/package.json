@@ -1,0 +1,30 @@
+{
+  "name": "difal-system",
+  "version": "1.0.0",
+  "description": "Sistema DIFAL - Cálculo automatizado de Diferencial de Alíquota do ICMS",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8080",
+    "test": "playwright test",
+    "test:firefox": "playwright test --project=firefox",
+    "test:headed": "playwright test --headed --project=firefox",
+    "test:debug": "playwright test --debug --project=firefox",
+    "install-browsers": "playwright install firefox chromium webkit",
+    "install-firefox": "playwright install firefox"
+  },
+  "keywords": [
+    "difal",
+    "icms",
+    "sped",
+    "fiscal",
+    "tributario"
+  ],
+  "author": "Expertzy",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.54.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

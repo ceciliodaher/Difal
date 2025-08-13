@@ -1,0 +1,249 @@
+/* Expertzy Theme - Core Variables and Branding */
+
+:root {
+    /* Cores Expertzy */
+    --expertzy-red: #FF1744;
+    --expertzy-pink: #E91E63;
+    --expertzy-dark: #1a1a1a;
+    --expertzy-gray: #6b7280;
+    --expertzy-light: #f9fafb;
+    --expertzy-white: #ffffff;
+    
+    /* Gradientes */
+    --expertzy-gradient: linear-gradient(135deg, var(--expertzy-red) 0%, var(--expertzy-pink) 100%);
+    --expertzy-gradient-light: linear-gradient(135deg, rgba(255, 23, 68, 0.1) 0%, rgba(233, 30, 99, 0.1) 100%);
+    
+    /* Tipografia */
+    --font-primary: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    
+    /* Tamanhos */
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    
+    /* Espaçamentos */
+    --spacing-1: 0.25rem;
+    --spacing-2: 0.5rem;
+    --spacing-3: 0.75rem;
+    --spacing-4: 1rem;
+    --spacing-6: 1.5rem;
+    --spacing-8: 2rem;
+    --spacing-12: 3rem;
+    --spacing-16: 4rem;
+    
+    /* Bordas */
+    --border-radius-sm: 0.375rem;
+    --border-radius-md: 0.5rem;
+    --border-radius-lg: 0.75rem;
+    --border-radius-xl: 1rem;
+    --border-radius-2xl: 1.25rem;
+    
+    /* Sombras */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    
+    /* Transições */
+    --transition-fast: 150ms ease-in-out;
+    --transition-normal: 300ms ease-in-out;
+    --transition-slow: 500ms ease-in-out;
+}
+
+/* Reset e Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background: var(--expertzy-gradient);
+    min-height: 100vh;
+    color: var(--expertzy-dark);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tipografia Expertzy */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-4);
+}
+
+h1 {
+    font-size: var(--font-size-4xl);
+    color: var(--expertzy-dark);
+}
+
+h2 {
+    font-size: var(--font-size-3xl);
+    color: var(--expertzy-dark);
+}
+
+h3 {
+    font-size: var(--font-size-2xl);
+    color: var(--expertzy-dark);
+}
+
+p {
+    margin-bottom: var(--spacing-4);
+    color: var(--expertzy-gray);
+}
+
+/* Links */
+a {
+    color: var(--expertzy-red);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--expertzy-pink);
+}
+
+/* Scrollbar Personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--expertzy-light);
+    border-radius: var(--border-radius-md);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--expertzy-gradient);
+    border-radius: var(--border-radius-md);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--expertzy-pink) 0%, var(--expertzy-red) 100%);
+}
+
+/* Estados de Foco */
+*:focus {
+    outline: 2px solid var(--expertzy-red);
+    outline-offset: 2px;
+}
+
+/* Animações Expertzy */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Classes Utilitárias Expertzy */
+.expertzy-gradient-bg {
+    background: var(--expertzy-gradient);
+}
+
+.expertzy-gradient-text {
+    background: var(--expertzy-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-expertzy-red {
+    color: var(--expertzy-red);
+}
+
+.text-expertzy-pink {
+    color: var(--expertzy-pink);
+}
+
+.text-expertzy-dark {
+    color: var(--expertzy-dark);
+}
+
+.text-expertzy-gray {
+    color: var(--expertzy-gray);
+}
+
+.bg-expertzy-red {
+    background-color: var(--expertzy-red);
+}
+
+.bg-expertzy-pink {
+    background-color: var(--expertzy-pink);
+}
+
+.bg-white {
+    background-color: var(--expertzy-white);
+}
+
+/* Animações de Entrada */
+.animate-slideUp {
+    animation: slideUp 0.6s ease-out;
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.4s ease-out;
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    :root {
+        --font-size-4xl: 1.875rem;
+        --font-size-3xl: 1.5rem;
+        --font-size-2xl: 1.25rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
