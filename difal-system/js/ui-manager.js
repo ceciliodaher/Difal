@@ -1835,17 +1835,17 @@ class UIManager {
             
             tableHTML += `
                 <tr>
-                    <td>${period.dtInicio}-${period.dtFim}</td>
-                    <td>${this.formatDate(period.dtInicio)}</td>
-                    <td>${this.formatDate(period.dtFim)}</td>
+                    <td>${period.id}</td>
+                    <td>${this.formatDate(period.periodo.inicio)}</td>
+                    <td>${this.formatDate(period.periodo.fim)}</td>
                     <td>${period.dados.itensDifal.length}</td>
                     <td>${this.formatCurrency(totalValue)}</td>
                     <td><span class="status-badge status-success">✅ Processado</span></td>
                     <td>
-                        <button class="btn btn-sm btn-secondary" onclick="window.uiManager.viewPeriodDetails('${period.dtInicio}-${period.dtFim}')">
+                        <button class="btn btn-sm btn-secondary" onclick="window.uiManager.viewPeriodDetails('${period.id}')">
                             👁️ Ver
                         </button>
-                        <button class="btn btn-sm btn-danger" onclick="window.uiManager.removePeriod('${period.dtInicio}-${period.dtFim}')">
+                        <button class="btn btn-sm btn-danger" onclick="window.uiManager.removePeriod('${period.id}')"
                             🗑️ Remover
                         </button>
                     </td>
