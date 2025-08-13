@@ -68,6 +68,10 @@
                 <span class="nav-icon">📊</span>
                 <span class="nav-label">Analytics</span>
             </button>
+            <button class="nav-btn mode-multi hidden" data-section="multi-calculation-section">
+                <span class="nav-icon">🧮</span>
+                <span class="nav-label">Cálculo DIFAL</span>
+            </button>
             <button class="nav-btn mode-multi hidden" data-section="multi-reports-section">
                 <span class="nav-icon">📈</span>
                 <span class="nav-label">Relatórios</span>
@@ -505,6 +509,93 @@
                         </button>
                         <button class="btn btn-secondary nav-btn" data-section="multi-periods-section">
                             ← Voltar para Períodos
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Multi-Period: Cálculo DIFAL -->
+            <section id="multi-calculation-section" class="section mode-multi hidden">
+                <div class="section-card">
+                    <h2 class="section-title">🧮 Cálculo DIFAL Multi-Período</h2>
+                    
+                    <!-- Resumo Consolidado -->
+                    <div id="multi-calculation-summary" class="calculation-summary">
+                        <div class="summary-grid">
+                            <div class="summary-item">
+                                <div class="summary-value" id="multi-total-periods">-</div>
+                                <div class="summary-label">Períodos</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="multi-total-items">-</div>
+                                <div class="summary-label">Itens DIFAL</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-value" id="multi-total-value">R$ -</div>
+                                <div class="summary-label">Valor Total</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Configuração DIFAL -->
+                    <div class="config-section">
+                        <h3>⚙️ Configuração DIFAL</h3>
+                        <div class="config-grid">
+                            <div class="config-item">
+                                <label for="multi-uf-destino">UF Destino:</label>
+                                <select id="multi-uf-destino" class="form-control">
+                                    <option value="">Selecione a UF</option>
+                                    <option value="SP">São Paulo</option>
+                                    <option value="RJ">Rio de Janeiro</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="RS">Rio Grande do Sul</option>
+                                    <!-- Adicionar outras UFs -->
+                                </select>
+                            </div>
+                            <div class="config-item">
+                                <label for="multi-aliquota-interna">Alíquota Interna (%):</label>
+                                <input type="number" id="multi-aliquota-interna" class="form-control" 
+                                       value="18" min="0" max="25" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botão de Cálculo -->
+                    <div class="calculation-actions">
+                        <button id="multi-calculate-difal-btn" class="btn btn-primary btn-lg">
+                            🧮 Calcular DIFAL Multi-Período
+                        </button>
+                    </div>
+
+                    <!-- Tabela de Resultados -->
+                    <div id="multi-calculation-results" class="results-section hidden">
+                        <h3>📊 Resultados do Cálculo DIFAL</h3>
+                        <div class="table-container">
+                            <table id="multi-difal-results-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>NCM</th>
+                                        <th>Descrição</th>
+                                        <th>Valor Base</th>
+                                        <th>Alíq. Origem</th>
+                                        <th>Alíq. Destino</th>
+                                        <th>DIFAL</th>
+                                        <th>FCP</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Navegação -->
+                    <div class="section-nav">
+                        <button class="btn btn-secondary nav-btn" data-section="multi-analytics-section">
+                            ← Analytics
+                        </button>
+                        <button class="btn btn-secondary nav-btn" data-section="multi-reports-section">
+                            Relatórios →
                         </button>
                     </div>
                 </div>

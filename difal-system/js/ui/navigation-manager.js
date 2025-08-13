@@ -49,6 +49,7 @@ class NavigationManager {
                 'multi-upload-section',
                 'multi-periods-section',
                 'multi-analytics-section',
+                'multi-calculation-section',
                 'multi-reports-section'
             ],
             transitions: {
@@ -356,15 +357,15 @@ class NavigationManager {
                 updateCompanyInfo = true
             } = options;
             
-            // Mapear seção para o modo ativo
-            const activeMode = this.navigationState.activeMode;
-            const mappedSectionId = this.mapSectionForMode(sectionId, activeMode);
-            
-            // Validar seção
-            if (!skipValidation && !this.validateSectionNavigation(mappedSectionId)) {
-                console.error(`❌ Navegação bloqueada para: ${mappedSectionId} (original: ${sectionId})`);
+            // Validar seção (validação faz o mapeamento internamente)
+            if (!skipValidation && !this.validateSectionNavigation(sectionId)) {
+                console.error(`❌ Navegação bloqueada para: ${sectionId}`);
                 return false;
             }
+            
+            // Mapear seção para o modo ativo após validação
+            const activeMode = this.navigationState.activeMode;
+            const mappedSectionId = this.mapSectionForMode(sectionId, activeMode);
             
             console.log(`🧭 Navegando para: ${mappedSectionId} (original: ${sectionId})`);
             
@@ -781,6 +782,11 @@ class NavigationManager {
      * @returns {boolean} True se navegação é válida
      */
     validateSectionNavigation(sectionId) {
+        // Seção de seleção de modo sempre é válida
+        if (sectionId === 'mode-selection-section') {
+            return true;
+        }
+        
         const activeMode = this.navigationState.activeMode;
         
         // Mapear seções genéricas para específicas do modo

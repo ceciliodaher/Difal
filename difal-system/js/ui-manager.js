@@ -1068,6 +1068,12 @@ class UIManager {
         if (proceedToAnalyticsBtn) {
             proceedToAnalyticsBtn.addEventListener('click', () => this.proceedToAnalytics());
         }
+        
+        // Botão de cálculo DIFAL multi-período
+        const calculateMultiBtn = document.getElementById('multi-calculate-difal-btn');
+        if (calculateMultiBtn) {
+            calculateMultiBtn.addEventListener('click', () => this.calculateMultiPeriodDifal());
+        }
     }
     
     /**
@@ -1079,10 +1085,12 @@ class UIManager {
         console.log('📊 Exibindo análise multi-período');
         
         const periodsState = this.stateManager.getPeriodsState();
-        const summaryDiv = this.getElementByMode('sped-summary', 'multi');
+        
+        // Buscar elemento correto para multi-período
+        const summaryDiv = document.getElementById('sped-summary');
         
         if (!summaryDiv) {
-            console.warn('⚠️ Elemento sped-summary não encontrado para modo multi');
+            console.warn('⚠️ Elemento sped-summary não encontrado');
             return;
         }
         
@@ -1100,7 +1108,7 @@ class UIManager {
             <div class="summary-item">
                 <h3>Empresa</h3>
                 <div class="summary-value">${currentCompany.razaoSocial || 'N/A'}</div>
-                <div class="summary-label">CNPJ: ${Utils.formatarCNPJ(currentCompany.cnpj || '')}</div>
+                <div class="summary-label">CNPJ: ${this.formatCNPJ(currentCompany.cnpj || '')}</div>
             </div>
             <div class="summary-item">
                 <h3>UF</h3>
@@ -1109,22 +1117,386 @@ class UIManager {
             </div>
             <div class="summary-item">
                 <h3>Registros Consolidados</h3>
-                <div class="summary-value">${Utils.formatarNumero(data.totalRegistros || 0)}</div>
+                <div class="summary-value">${this.formatNumber(data.totalRegistros || 0)}</div>
                 <div class="summary-label">Todos os períodos</div>
             </div>
             <div class="summary-item">
                 <h3>Itens DIFAL Totais</h3>
-                <div class="summary-value">${Utils.formatarNumero(data.totalItensDifal || 0)}</div>
+                <div class="summary-value">${this.formatNumber(data.totalItensDifal || 0)}</div>
                 <div class="summary-label">Consolidado multi-período</div>
             </div>
             <div class="summary-item">
                 <h3>Valor Total</h3>
-                <div class="summary-value">${Utils.formatarMoeda(data.totalValorItens || 0)}</div>
+                <div class="summary-value">${this.formatCurrency(data.totalValorItens || 0)}</div>
                 <div class="summary-label">Base para cálculo DIFAL</div>
             </div>
         `;
         
+        // Exibir tabela de itens DIFAL consolidados
+        this.showMultiPeriodItemsTable(periodsState);
+        
         console.log('✅ Análise multi-período exibida com sucesso');
+    }
+    
+    /**
+     * Exibe tabela de itens DIFAL consolidados de todos os períodos
+     * @private
+     * @param {Object} periodsState - Estado dos períodos
+     */
+    showMultiPeriodItemsTable(periodsState) {
+        console.log('📋 Exibindo tabela de itens multi-período');
+        
+        const tableDiv = document.getElementById('single-difal-items-table');
+        if (!tableDiv) {
+            console.warn('⚠️ Tabela de itens não encontrada');
+            return;
+        }
+        
+        // Consolidar itens de todos os períodos
+        const consolidatedItems = this.consolidateItemsFromPeriods(periodsState.periods || []);
+        
+        if (consolidatedItems.length === 0) {
+            tableDiv.innerHTML = `
+                <div class="no-data">
+                    <p>Nenhum item DIFAL encontrado nos períodos carregados.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Renderizar tabela
+        let tableHTML = `
+            <h3>📦 Itens DIFAL Consolidados (${consolidatedItems.length} itens)</h3>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Período</th>
+                            <th>NCM</th>
+                            <th>Descrição</th>
+                            <th>CFOP</th>
+                            <th>Valor</th>
+                            <th>CST</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+        
+        consolidatedItems.forEach((item, index) => {
+            tableHTML += `
+                <tr>
+                    <td>${item._periodo || 'N/A'}</td>
+                    <td>${item.ncm || 'N/A'}</td>
+                    <td>${item.descricaoItem || item.descItem || 'N/A'}</td>
+                    <td>${item.cfop || 'N/A'}</td>
+                    <td>${this.formatCurrency(item.valor || 0)}</td>
+                    <td>${item.cst || 'N/A'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info" onclick="window.uiManager.viewItemDetails('${item.codigo}')">
+                            👁️ Ver
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        tableHTML += `
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        tableDiv.innerHTML = tableHTML;
+        tableDiv.classList.remove('hidden');
+    }
+    
+    /**
+     * Consolida itens DIFAL de todos os períodos
+     * @private
+     * @param {Array} periods - Lista de períodos
+     * @returns {Array} Itens consolidados
+     */
+    consolidateItemsFromPeriods(periods) {
+        const consolidatedItems = [];
+        
+        periods.forEach(period => {
+            const items = period.dados?.itensDifal || [];
+            items.forEach(item => {
+                consolidatedItems.push({
+                    ...item,
+                    _periodo: period.periodo?.label || 'N/A',
+                    _periodId: period.id
+                });
+            });
+        });
+        
+        return consolidatedItems;
+    }
+    
+    /**
+     * Calcula DIFAL para múltiplos períodos consolidados
+     * @public
+     */
+    async calculateMultiPeriodDifal() {
+        console.log('🧮 Iniciando cálculo DIFAL multi-período');
+        
+        try {
+            // Obter configuração
+            const ufDestino = document.getElementById('multi-uf-destino')?.value;
+            const aliquotaInterna = parseFloat(document.getElementById('multi-aliquota-interna')?.value || 18);
+            
+            if (!ufDestino) {
+                this.showError('Selecione a UF de destino para o cálculo DIFAL');
+                return;
+            }
+            
+            // Obter dados dos períodos
+            const periodsState = this.stateManager.getPeriodsState();
+            if (!periodsState.periods || periodsState.periods.length === 0) {
+                this.showError('Nenhum período carregado para cálculo');
+                return;
+            }
+            
+            // Consolidar itens de todos os períodos
+            const consolidatedItems = this.consolidateItemsFromPeriods(periodsState.periods);
+            
+            if (consolidatedItems.length === 0) {
+                this.showError('Nenhum item DIFAL encontrado para cálculo');
+                return;
+            }
+            
+            this.showProgress('Calculando DIFAL para múltiplos períodos...', 0);
+            
+            // Preparar dados para o calculador
+            const calculationData = {
+                itensDifal: consolidatedItems,
+                empresa: periodsState.currentCompany,
+                configuracao: {
+                    ufDestino: ufDestino,
+                    aliquotaInterna: aliquotaInterna,
+                    calcularFcp: true, // Sempre calcular FCP para multi-período
+                    metodologia: 'base_dupla' // Usar metodologia mais abrangente
+                }
+            };
+            
+            // Executar cálculo usando o DifalCalculator
+            const results = await this.executeDifalCalculation(calculationData);
+            
+            this.showProgress('Cálculo DIFAL concluído!', 100);
+            
+            // Exibir resultados
+            this.showMultiPeriodCalculationResults(results);
+            
+            // Navegar para seção de resultados
+            this.navigationManager.navigateToSection('multi-reports-section');
+            
+            console.log('✅ Cálculo DIFAL multi-período concluído');
+            
+        } catch (error) {
+            console.error('❌ Erro no cálculo DIFAL multi-período:', error);
+            this.showError(`Erro no cálculo: ${error.message}`);
+        }
+    }
+    
+    /**
+     * Executa o cálculo DIFAL usando o calculador existente
+     * @private
+     * @param {Object} calculationData - Dados para cálculo
+     * @returns {Promise<Object>} Resultados do cálculo
+     */
+    async executeDifalCalculation(calculationData) {
+        // Usar o mesmo calculador do single-period
+        if (!window.difalCalculator) {
+            throw new Error('Calculador DIFAL não disponível');
+        }
+        
+        // Simular o processo de cálculo do single-period
+        const results = {
+            resultados: [],
+            totalizadores: {
+                totalItems: calculationData.itensDifal.length,
+                valorTotalBase: 0,
+                valorTotalDifal: 0,
+                valorTotalFcp: 0,
+                valorTotalRecolher: 0
+            },
+            configuracao: calculationData.configuracao,
+            empresa: calculationData.empresa,
+            periodos: calculationData.itensDifal.map(item => item._periodo).filter((v, i, a) => a.indexOf(v) === i)
+        };
+        
+        // Processar cada item
+        for (let i = 0; i < calculationData.itensDifal.length; i++) {
+            const item = calculationData.itensDifal[i];
+            
+            // Calcular DIFAL para o item
+            const itemResult = this.calculateItemDifal(item, calculationData.configuracao);
+            results.resultados.push(itemResult);
+            
+            // Atualizar totalizadores
+            results.totalizadores.valorTotalBase += itemResult.baseCalculo || 0;
+            results.totalizadores.valorTotalDifal += itemResult.valorDifal || 0;
+            results.totalizadores.valorTotalFcp += itemResult.valorFcp || 0;
+            results.totalizadores.valorTotalRecolher += (itemResult.valorDifal || 0) + (itemResult.valorFcp || 0);
+            
+            // Atualizar progresso
+            const progress = Math.round(((i + 1) / calculationData.itensDifal.length) * 80) + 20;
+            this.showProgress(`Calculando item ${i + 1}/${calculationData.itensDifal.length}...`, progress);
+        }
+        
+        return results;
+    }
+    
+    /**
+     * Calcula DIFAL para um item específico
+     * @private
+     * @param {Object} item - Item para cálculo
+     * @param {Object} config - Configuração do cálculo
+     * @returns {Object} Resultado do cálculo para o item
+     */
+    calculateItemDifal(item, config) {
+        const baseCalculo = item.valor || 0;
+        const aliqOrigem = this.getAliquotaOrigem(item);
+        const aliqDestino = config.aliquotaInterna;
+        const aliqFcp = this.getAliquotaFcp(config.ufDestino);
+        
+        // Cálculo DIFAL
+        const valorDifal = baseCalculo * Math.max(0, (aliqDestino - aliqOrigem)) / 100;
+        const valorFcp = config.calcularFcp ? (baseCalculo * aliqFcp / 100) : 0;
+        
+        return {
+            ...item,
+            baseCalculo: baseCalculo,
+            aliqOrigem: aliqOrigem,
+            aliqDestino: aliqDestino,
+            aliqFcp: aliqFcp,
+            valorDifal: valorDifal,
+            valorFcp: valorFcp,
+            valorTotal: valorDifal + valorFcp,
+            metodoCalculo: config.metodologia
+        };
+    }
+    
+    /**
+     * Obtém alíquota de origem baseada no item
+     * @private
+     * @param {Object} item - Item SPED
+     * @returns {number} Alíquota de origem
+     */
+    getAliquotaOrigem(item) {
+        // Usar mesma lógica do calculador principal
+        const cst = item.cst || '00';
+        const aliqNominal = item.aliqIcms || 18;
+        
+        // CST 00, 90: usar alíquota nominal
+        if (['00', '90'].includes(cst.slice(-2))) {
+            return aliqNominal;
+        }
+        
+        // CST 10, 30, 60: substituição tributária = 0
+        if (['10', '30', '60'].includes(cst.slice(-2))) {
+            return 0;
+        }
+        
+        // CST 20, 70: calcular alíquota efetiva
+        if (['20', '70'].includes(cst.slice(-2))) {
+            const vlItem = item.valor || 0;
+            const vlIcms = item.vlIcms || 0;
+            return vlItem > 0 ? (vlIcms / vlItem * 100) : 0;
+        }
+        
+        // CST 40, 41, 50, 51: isento/suspenso = 0
+        if (['40', '41', '50', '51'].includes(cst.slice(-2))) {
+            return 0;
+        }
+        
+        return aliqNominal;
+    }
+    
+    /**
+     * Obtém alíquota FCP baseada na UF
+     * @private
+     * @param {string} uf - UF de destino
+     * @returns {number} Alíquota FCP
+     */
+    getAliquotaFcp(uf) {
+        const aliquotasFcp = {
+            'SP': 1.0,
+            'RJ': 2.0,
+            'MG': 1.0,
+            'RS': 1.0,
+            'PR': 1.0,
+            'SC': 1.0
+        };
+        
+        return aliquotasFcp[uf] || 0;
+    }
+    
+    /**
+     * Exibe resultados do cálculo DIFAL multi-período
+     * @private
+     * @param {Object} results - Resultados do cálculo
+     */
+    showMultiPeriodCalculationResults(results) {
+        console.log('📊 Exibindo resultados do cálculo multi-período');
+        
+        // Atualizar resumo da seção de cálculo
+        this.updateMultiCalculationSummary(results);
+        
+        // Exibir tabela de resultados
+        this.showMultiCalculationResultsTable(results);
+        
+        // Salvar resultados no state para exportação
+        this.stateManager.updateCalculationResults(results);
+    }
+    
+    /**
+     * Atualiza resumo da seção de cálculo
+     * @private
+     * @param {Object} results - Resultados do cálculo
+     */
+    updateMultiCalculationSummary(results) {
+        document.getElementById('multi-total-periods').textContent = results.periodos.length;
+        document.getElementById('multi-total-items').textContent = results.totalizadores.totalItems;
+        document.getElementById('multi-total-value').textContent = this.formatCurrency(results.totalizadores.valorTotalRecolher);
+    }
+    
+    /**
+     * Exibe tabela de resultados do cálculo
+     * @private
+     * @param {Object} results - Resultados do cálculo
+     */
+    showMultiCalculationResultsTable(results) {
+        const resultsDiv = document.getElementById('multi-calculation-results');
+        const tableBody = document.getElementById('multi-difal-results-table')?.querySelector('tbody');
+        
+        if (!resultsDiv || !tableBody) {
+            console.warn('⚠️ Elementos da tabela de resultados não encontrados');
+            return;
+        }
+        
+        // Limpar tabela
+        tableBody.innerHTML = '';
+        
+        // Preencher tabela com resultados
+        results.resultados.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${item.ncm || 'N/A'}</td>
+                <td>${item.descricaoItem || item.descItem || 'N/A'}</td>
+                <td>${this.formatCurrency(item.baseCalculo || 0)}</td>
+                <td>${(item.aliqOrigem || 0).toFixed(2)}%</td>
+                <td>${(item.aliqDestino || 0).toFixed(2)}%</td>
+                <td>${this.formatCurrency(item.valorDifal || 0)}</td>
+                <td>${this.formatCurrency(item.valorFcp || 0)}</td>
+                <td><strong>${this.formatCurrency(item.valorTotal || 0)}</strong></td>
+            `;
+            tableBody.appendChild(row);
+        });
+        
+        // Mostrar seção de resultados
+        resultsDiv.classList.remove('hidden');
     }
 
     /**
@@ -1154,6 +1526,7 @@ class UIManager {
             this.showProgress('Múltiplos períodos processados com sucesso!', 100);
             this.updatePeriodsDisplay();
             this.showMultiPeriodAnalysis(); // Exibir análise após processamento
+            this.navigationManager.navigateToSection('multi-analytics-section'); // Navegar automaticamente
             
         } catch (error) {
             console.error('❌ Erro ao processar múltiplos períodos:', error);
