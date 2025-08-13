@@ -1242,13 +1242,31 @@ class UIManager {
         console.log('🧮 Iniciando cálculo DIFAL multi-período');
         
         try {
-            // Obter configuração
-            const ufDestino = document.getElementById('multi-uf-destino')?.value;
+            // Configuração automática da UF se não estiver definida
+            let ufDestino = document.getElementById('multi-uf-destino')?.value;
             const aliquotaInterna = parseFloat(document.getElementById('multi-aliquota-interna')?.value || 18);
             
+            // Se UF não foi selecionada, tentar configuração automática
             if (!ufDestino) {
-                this.showError('Selecione a UF de destino para o cálculo DIFAL');
-                return;
+                console.log('🎯 UF de destino não selecionada, tentando configuração automática...');
+                
+                const autoConfigured = this.autoConfigureUfFromPeriods();
+                if (autoConfigured) {
+                    ufDestino = document.getElementById('multi-uf-destino')?.value;
+                    this.showSuccess(`UF configurada automaticamente: ${ufDestino}`);
+                } else {
+                    this.showError('UF de destino não pode ser determinada automaticamente. Por favor, selecione manualmente.');
+                    return;
+                }
+            }
+            
+            // Validar consistência de UF entre períodos
+            const ufValidation = this.validateUfConsistency();
+            if (!ufValidation.isConsistent) {
+                console.warn('⚠️ Inconsistência de UF detectada:', ufValidation.message);
+                if (!confirm(`${ufValidation.message}\n\nDeseja continuar com o cálculo?`)) {
+                    return;
+                }
             }
             
             // Obter dados dos períodos
@@ -1849,6 +1867,575 @@ class UIManager {
             style: 'currency',
             currency: 'BRL'
         }).format(value || 0);
+    }
+    
+    /**
+     * Formata CNPJ - delega para Utils.js
+     * @private
+     * @param {string} cnpj - CNPJ para formatar
+     * @returns {string} CNPJ formatado
+     */
+    formatCNPJ(cnpj) {
+        return window.Utils ? window.Utils.formatarCNPJ(cnpj) : (cnpj || 'N/A');
+    }
+    
+    /**
+     * Formata número - delega para Utils.js
+     * @private
+     * @param {number} number - Número para formatar
+     * @param {number} decimals - Casas decimais (padrão: 0)
+     * @returns {string} Número formatado
+     */
+    formatNumber(number, decimals = 0) {
+        return window.Utils ? window.Utils.formatarNumero(number, decimals) : (number || 0).toString();
+    }
+    
+    /**
+     * Formata porcentagem - delega para Utils.js
+     * @private
+     * @param {number} value - Valor para formatar como porcentagem
+     * @param {number} decimals - Casas decimais (padrão: 2)
+     * @returns {string} Porcentagem formatada
+     */
+    formatPercentage(value, decimals = 2) {
+        return window.Utils ? window.Utils.formatarPorcentagem(value, decimals) : (value || 0) + '%';
+    }
+    
+    // ========== MULTI-PERIOD SPECIFIC FUNCTIONS ==========
+    
+    /**
+     * Exibe detalhes de um período específico
+     * @public
+     * @param {string} periodKey - Chave do período (formato: YYYYMM-YYYYMM)
+     */
+    viewPeriodDetails(periodKey) {
+        console.log(`🔍 Visualizando detalhes do período: ${periodKey}`);
+        
+        const periodsState = this.stateManager?.getPeriodsState();
+        if (!periodsState || !periodsState.periods) {
+            console.error('❌ Nenhum período carregado');
+            this.showError('Nenhum período carregado para visualização');
+            return;
+        }
+        
+        const period = periodsState.periods.find(p => p.id === periodKey);
+        if (!period) {
+            console.error(`❌ Período não encontrado: ${periodKey}`);
+            this.showError('Período não encontrado');
+            return;
+        }
+        
+        // Criar modal com detalhes do período
+        const modalHTML = `
+            <div class="modal-overlay" id="period-details-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>📊 Detalhes do Período - ${period.periodo.label}</h3>
+                        <button class="btn-close" onclick="window.uiManager.closePeriodDetailsModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="period-info">
+                            <div class="info-row">
+                                <span class="label">📅 Período:</span>
+                                <span class="value">${period.periodo.label}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📁 Arquivo:</span>
+                                <span class="value">${period.fileName}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">🏢 Empresa:</span>
+                                <span class="value">${period.empresa.razaoSocial}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">🆔 CNPJ:</span>
+                                <span class="value">${this.formatCNPJ(period.empresa.cnpj)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📍 UF:</span>
+                                <span class="value">${period.empresa.uf}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📦 Total de Itens:</span>
+                                <span class="value">${this.formatNumber(period.estatisticas.totalItens)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">🏷️ NCMs Únicos:</span>
+                                <span class="value">${this.formatNumber(period.estatisticas.ncmsUnicos)}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="period-actions">
+                            <button class="btn btn-primary" onclick="window.uiManager.exportPeriodData('${periodKey}')">
+                                📊 Exportar Dados do Período
+                            </button>
+                            <button class="btn btn-secondary" onclick="window.uiManager.showPeriodItems('${periodKey}')">
+                                📋 Ver Itens DIFAL
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Adicionar modal ao DOM
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Mostrar modal
+        const modal = document.getElementById('period-details-modal');
+        modal.style.display = 'flex';
+        
+        console.log(`✅ Modal de detalhes do período ${periodKey} exibido`);
+    }
+    
+    /**
+     * Fecha modal de detalhes do período
+     * @public
+     */
+    closePeriodDetailsModal() {
+        const modal = document.getElementById('period-details-modal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+    
+    /**
+     * Remove um período do sistema
+     * @public
+     * @param {string} periodKey - Chave do período para remover
+     */
+    removePeriod(periodKey) {
+        console.log(`🗑️ Removendo período: ${periodKey}`);
+        
+        // Confirmar remoção
+        if (!confirm(`Tem certeza que deseja remover o período ${periodKey}?\n\nEsta ação não pode ser desfeita.`)) {
+            return;
+        }
+        
+        // Delegar para PeriodsManager
+        if (window.periodsManager) {
+            const success = window.periodsManager.removePeriod(periodKey);
+            
+            if (success) {
+                this.showSuccess(`Período ${periodKey} removido com sucesso`);
+                
+                // Atualizar display dos períodos
+                this.updateMultiPeriodDisplay();
+                
+                console.log(`✅ Período ${periodKey} removido com sucesso`);
+            } else {
+                this.showError('Erro ao remover período');
+            }
+        } else {
+            console.error('❌ PeriodsManager não disponível');
+            this.showError('Sistema de períodos não disponível');
+        }
+    }
+    
+    /**
+     * Exibe detalhes de um item específico
+     * @public
+     * @param {string} itemCode - Código do item
+     */
+    viewItemDetails(itemCode) {
+        console.log(`🔍 Visualizando detalhes do item: ${itemCode}`);
+        
+        // Buscar item nos períodos carregados
+        const periodsState = this.stateManager?.getPeriodsState();
+        let foundItem = null;
+        let foundPeriod = null;
+        
+        if (periodsState && periodsState.periods) {
+            for (const period of periodsState.periods) {
+                const item = period.dados.itensDifal.find(item => item.codigo === itemCode);
+                if (item) {
+                    foundItem = { ...item, _periodo: period.periodo.label };
+                    foundPeriod = period.periodo.label;
+                    break;
+                }
+            }
+        }
+        
+        if (!foundItem) {
+            console.error(`❌ Item não encontrado: ${itemCode}`);
+            this.showError('Item não encontrado');
+            return;
+        }
+        
+        // Criar modal com detalhes do item
+        const modalHTML = `
+            <div class="modal-overlay" id="item-details-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>🏷️ Detalhes do Item - ${itemCode}</h3>
+                        <button class="btn-close" onclick="window.uiManager.closeItemDetailsModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="item-info">
+                            <div class="info-row">
+                                <span class="label">📅 Período:</span>
+                                <span class="value">${foundPeriod}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">🏷️ NCM:</span>
+                                <span class="value">${foundItem.ncm || 'N/A'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📝 Descrição:</span>
+                                <span class="value">${foundItem.descricaoItem || foundItem.descItem || 'N/A'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">🔢 CFOP:</span>
+                                <span class="value">${foundItem.cfop || 'N/A'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">💰 Valor:</span>
+                                <span class="value">${this.formatCurrency(foundItem.valor || 0)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📊 CST:</span>
+                                <span class="value">${foundItem.cst || 'N/A'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📦 Quantidade:</span>
+                                <span class="value">${this.formatNumber(foundItem.quantidade || 0, 3)}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📏 Unidade:</span>
+                                <span class="value">${foundItem.unidade || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Adicionar modal ao DOM
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Mostrar modal
+        const modal = document.getElementById('item-details-modal');
+        modal.style.display = 'flex';
+        
+        console.log(`✅ Modal de detalhes do item ${itemCode} exibido`);
+    }
+    
+    /**
+     * Fecha modal de detalhes do item
+     * @public
+     */
+    closeItemDetailsModal() {
+        const modal = document.getElementById('item-details-modal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+    
+    // ========== UF EXTRACTION & AUTO-CONFIGURATION ==========
+    
+    /**
+     * Extrai UF dos dados SPED consolidados
+     * @public
+     * @returns {string|null} UF da empresa ou null se não encontrado
+     */
+    extractUfFromCurrentData() {
+        // Tentar StateManager primeiro (single-period)
+        const spedData = this.stateManager?.getSpedData();
+        if (spedData && spedData.dadosEmpresa && spedData.dadosEmpresa.uf) {
+            return spedData.dadosEmpresa.uf;
+        }
+        
+        // Tentar PeriodsManager (multi-period)
+        const periodsState = this.stateManager?.getPeriodsState();
+        if (periodsState && periodsState.currentCompany && periodsState.currentCompany.uf) {
+            return periodsState.currentCompany.uf;
+        }
+        
+        // Tentar extrair do primeiro período disponível
+        if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+            const firstPeriod = periodsState.periods[0];
+            if (firstPeriod.empresa && firstPeriod.empresa.uf) {
+                return firstPeriod.empresa.uf;
+            }
+        }
+        
+        console.warn('⚠️ UF não encontrada nos dados carregados');
+        return null;
+    }
+    
+    /**
+     * Configura automaticamente UF no campo de cálculo
+     * @public
+     * @returns {boolean} True se configuração foi realizada
+     */
+    autoConfigureUfFromPeriods() {
+        const uf = this.extractUfFromCurrentData();
+        
+        if (!uf) {
+            console.warn('⚠️ Não foi possível extrair UF para configuração automática');
+            return false;
+        }
+        
+        // Configurar UF no campo single-period
+        const singleUfField = document.getElementById('uf-destino');
+        if (singleUfField) {
+            singleUfField.value = uf;
+            console.log(`✅ UF origem configurada automaticamente (single): ${uf}`);
+        }
+        
+        // Configurar UF no campo multi-period
+        const multiUfField = document.getElementById('multi-uf-destino');
+        if (multiUfField) {
+            multiUfField.value = uf;
+            console.log(`✅ UF origem configurada automaticamente (multi): ${uf}`);
+        }
+        
+        return true;
+    }
+    
+    /**
+     * Valida consistência de UF entre períodos
+     * @public
+     * @returns {Object} Resultado da validação
+     */
+    validateUfConsistency() {
+        const periodsState = this.stateManager?.getPeriodsState();
+        
+        if (!periodsState || !periodsState.periods || periodsState.periods.length <= 1) {
+            return { isConsistent: true, message: 'Menos de 2 períodos para validação' };
+        }
+        
+        const ufs = new Set();
+        const details = [];
+        
+        periodsState.periods.forEach(period => {
+            const uf = period.empresa.uf;
+            if (uf) {
+                ufs.add(uf);
+                details.push({
+                    period: period.periodo.label,
+                    uf: uf,
+                    fileName: period.fileName
+                });
+            }
+        });
+        
+        const isConsistent = ufs.size <= 1;
+        
+        if (!isConsistent) {
+            const message = `Inconsistência encontrada: ${ufs.size} UFs diferentes (${Array.from(ufs).join(', ')})`;
+            console.warn('⚠️', message);
+            return { isConsistent: false, message, ufs: Array.from(ufs), details };
+        }
+        
+        console.log('✅ UF consistente entre todos os períodos:', Array.from(ufs)[0]);
+        return { isConsistent: true, message: 'UF consistente', uf: Array.from(ufs)[0], details };
+    }
+    
+    // ========== ADDITIONAL SUPPORT FUNCTIONS ==========
+    
+    /**
+     * Atualiza display dos períodos multi-período
+     * @public
+     */
+    updateMultiPeriodDisplay() {
+        console.log('🔄 Atualizando display multi-período');
+        
+        const periodsState = this.stateManager?.getPeriodsState();
+        if (!periodsState) {
+            console.warn('⚠️ Nenhum estado de períodos disponível');
+            return;
+        }
+        
+        // Atualizar seção de períodos se visível
+        if (this.navigationState?.currentSection === 'multi-periods-section') {
+            this.showMultiPeriodManagement();
+        }
+        
+        // Atualizar seção de analytics se visível
+        if (this.navigationState?.currentSection === 'multi-analytics-section') {
+            this.showMultiPeriodAnalysis();
+        }
+        
+        // Atualizar estatísticas consolidadas
+        this.updateConsolidatedStats(periodsState);
+        
+        console.log('✅ Display multi-período atualizado');
+    }
+    
+    /**
+     * Exporta dados de um período específico
+     * @public
+     * @param {string} periodKey - Chave do período para exportar
+     */
+    exportPeriodData(periodKey) {
+        console.log(`📊 Exportando dados do período: ${periodKey}`);
+        
+        const periodsState = this.stateManager?.getPeriodsState();
+        if (!periodsState || !periodsState.periods) {
+            this.showError('Nenhum período carregado para exportação');
+            return;
+        }
+        
+        const period = periodsState.periods.find(p => p.id === periodKey);
+        if (!period) {
+            this.showError('Período não encontrado para exportação');
+            return;
+        }
+        
+        try {
+            // Preparar dados para exportação
+            const exportData = {
+                empresa: period.empresa,
+                periodo: period.periodo,
+                estatisticas: period.estatisticas,
+                itensDifal: period.dados.itensDifal,
+                metadata: {
+                    fileName: period.fileName,
+                    exportedAt: new Date().toISOString(),
+                    exportedBy: 'Sistema DIFAL Multi-Período'
+                }
+            };
+            
+            // Usar ExportManager se disponível
+            if (window.exportManager) {
+                window.exportManager.exportPeriodData(exportData);
+            } else {
+                // Fallback: exportar como JSON
+                const jsonData = JSON.stringify(exportData, null, 2);
+                const fileName = `difal_periodo_${periodKey}_${new Date().toISOString().slice(0, 10)}.json`;
+                
+                if (window.Utils) {
+                    window.Utils.downloadArquivo(jsonData, fileName, 'application/json');
+                } else {
+                    console.error('❌ Sistema de exportação não disponível');
+                    this.showError('Sistema de exportação não disponível');
+                }
+            }
+            
+            console.log(`✅ Dados do período ${periodKey} exportados com sucesso`);
+            this.showSuccess(`Dados do período ${periodKey} exportados com sucesso`);
+            
+        } catch (error) {
+            console.error('❌ Erro na exportação:', error);
+            this.showError('Erro ao exportar dados do período');
+        }
+    }
+    
+    /**
+     * Exibe itens DIFAL de um período específico
+     * @public
+     * @param {string} periodKey - Chave do período
+     */
+    showPeriodItems(periodKey) {
+        console.log(`📋 Exibindo itens do período: ${periodKey}`);
+        
+        const periodsState = this.stateManager?.getPeriodsState();
+        if (!periodsState || !periodsState.periods) {
+            this.showError('Nenhum período carregado');
+            return;
+        }
+        
+        const period = periodsState.periods.find(p => p.id === periodKey);
+        if (!period) {
+            this.showError('Período não encontrado');
+            return;
+        }
+        
+        const items = period.dados.itensDifal || [];
+        if (items.length === 0) {
+            this.showError('Nenhum item DIFAL encontrado neste período');
+            return;
+        }
+        
+        // Criar modal com tabela de itens
+        const modalHTML = `
+            <div class="modal-overlay" id="period-items-modal">
+                <div class="modal-content large">
+                    <div class="modal-header">
+                        <h3>📋 Itens DIFAL - ${period.periodo.label}</h3>
+                        <button class="btn-close" onclick="window.uiManager.closePeriodItemsModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="items-stats">
+                            <span class="stat">📦 Total: ${this.formatNumber(items.length)} itens</span>
+                            <span class="stat">💰 Valor Total: ${this.formatCurrency(items.reduce((sum, item) => sum + (item.valor || 0), 0))}</span>
+                        </div>
+                        
+                        <div class="items-table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>NCM</th>
+                                        <th>Descrição</th>
+                                        <th>CFOP</th>
+                                        <th>Valor</th>
+                                        <th>CST</th>
+                                        <th>Quantidade</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${items.map(item => `
+                                        <tr>
+                                            <td>${item.ncm || 'N/A'}</td>
+                                            <td title="${item.descricaoItem || item.descItem || 'N/A'}">${this.truncateText(item.descricaoItem || item.descItem || 'N/A', 40)}</td>
+                                            <td>${item.cfop || 'N/A'}</td>
+                                            <td>${this.formatCurrency(item.valor || 0)}</td>
+                                            <td>${item.cst || 'N/A'}</td>
+                                            <td>${this.formatNumber(item.quantidade || 0, 3)}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-info" onclick="window.uiManager.viewItemDetails('${item.codigo}')">
+                                                    👁️ Ver
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="modal-actions">
+                            <button class="btn btn-primary" onclick="window.uiManager.exportPeriodData('${periodKey}')">
+                                📊 Exportar Este Período
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Adicionar modal ao DOM
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // Mostrar modal
+        const modal = document.getElementById('period-items-modal');
+        modal.style.display = 'flex';
+        
+        console.log(`✅ Modal de itens do período ${periodKey} exibido (${items.length} itens)`);
+    }
+    
+    /**
+     * Fecha modal de itens do período
+     * @public
+     */
+    closePeriodItemsModal() {
+        const modal = document.getElementById('period-items-modal');
+        if (modal) {
+            modal.remove();
+        }
+    }
+    
+    /**
+     * Trunca texto para exibição em tabelas
+     * @private
+     * @param {string} text - Texto para truncar
+     * @param {number} maxLength - Comprimento máximo
+     * @returns {string} Texto truncado
+     */
+    truncateText(text, maxLength = 50) {
+        if (!text || text.length <= maxLength) return text || '';
+        return text.substring(0, maxLength - 3) + '...';
     }
     
     // ========== SECTION CHANGE HANDLERS ==========
