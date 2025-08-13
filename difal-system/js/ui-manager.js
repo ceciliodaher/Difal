@@ -1242,23 +1242,14 @@ class UIManager {
         console.log('🧮 Iniciando cálculo DIFAL multi-período');
         
         try {
-            // Configuração automática da UF se não estiver definida
-            let ufDestino = document.getElementById('multi-uf-destino')?.value;
-            const aliquotaInterna = parseFloat(document.getElementById('multi-aliquota-interna')?.value || 18);
-            
-            // Se UF não foi selecionada, tentar configuração automática
-            if (!ufDestino) {
-                console.log('🎯 UF de destino não selecionada, tentando configuração automática...');
-                
-                const autoConfigured = this.autoConfigureUfFromPeriods();
-                if (autoConfigured) {
-                    ufDestino = document.getElementById('multi-uf-destino')?.value;
-                    this.showSuccess(`UF configurada automaticamente: ${ufDestino}`);
-                } else {
-                    this.showError('UF de destino não pode ser determinada automaticamente. Por favor, selecione manualmente.');
-                    return;
-                }
+            // Extrair UF automaticamente dos dados SPED (como no single-period)
+            const ufOrigemExtraida = this.extractUfFromCurrentData();
+            if (!ufOrigemExtraida) {
+                this.showError('UF não pode ser determinada dos dados SPED carregados');
+                return;
             }
+            
+            const aliquotaInterna = parseFloat(document.getElementById('multi-aliquota-interna')?.value || 18);
             
             // Validar consistência de UF entre períodos
             const ufValidation = this.validateUfConsistency();
@@ -1268,6 +1259,8 @@ class UIManager {
                     return;
                 }
             }
+            
+            console.log(`🎯 Calculando DIFAL multi-período para UF: ${ufOrigemExtraida}`);
             
             // Obter dados dos períodos
             const periodsState = this.stateManager.getPeriodsState();
@@ -1291,7 +1284,7 @@ class UIManager {
                 itensDifal: consolidatedItems,
                 empresa: periodsState.currentCompany,
                 configuracao: {
-                    ufDestino: ufDestino,
+                    ufDestino: ufOrigemExtraida,
                     aliquotaInterna: aliquotaInterna,
                     calcularFcp: true, // Sempre calcular FCP para multi-período
                     metodologia: 'base_dupla' // Usar metodologia mais abrangente
@@ -1544,6 +1537,7 @@ class UIManager {
             this.showProgress('Múltiplos períodos processados com sucesso!', 100);
             this.updatePeriodsDisplay();
             this.showMultiPeriodAnalysis(); // Exibir análise após processamento
+            this.updateMultiPeriodUfDisplay(); // Atualizar display da UF extraída
             this.navigationManager.navigateToSection('multi-analytics-section'); // Navegar automaticamente
             
         } catch (error) {
@@ -2183,11 +2177,11 @@ class UIManager {
             console.log(`✅ UF origem configurada automaticamente (single): ${uf}`);
         }
         
-        // Configurar UF no campo multi-period
-        const multiUfField = document.getElementById('multi-uf-destino');
-        if (multiUfField) {
-            multiUfField.value = uf;
-            console.log(`✅ UF origem configurada automaticamente (multi): ${uf}`);
+        // Configurar UF no display multi-period
+        const multiUfDisplay = document.getElementById('multi-uf-display');
+        if (multiUfDisplay) {
+            multiUfDisplay.textContent = uf;
+            console.log(`✅ UF origem exibida automaticamente (multi): ${uf}`);
         }
         
         return true;
@@ -2436,6 +2430,27 @@ class UIManager {
     truncateText(text, maxLength = 50) {
         if (!text || text.length <= maxLength) return text || '';
         return text.substring(0, maxLength - 3) + '...';
+    }
+    
+    /**
+     * Atualiza display da UF extraída automaticamente
+     * @public
+     */
+    updateMultiPeriodUfDisplay() {
+        const uf = this.extractUfFromCurrentData();
+        const multiUfDisplay = document.getElementById('multi-uf-display');
+        
+        if (multiUfDisplay) {
+            if (uf) {
+                multiUfDisplay.textContent = uf;
+                multiUfDisplay.parentElement.classList.remove('error');
+                console.log(`🎯 UF exibida automaticamente: ${uf}`);
+            } else {
+                multiUfDisplay.textContent = 'UF não encontrada';
+                multiUfDisplay.parentElement.classList.add('error');
+                console.warn('⚠️ UF não pôde ser extraída dos dados');
+            }
+        }
     }
     
     // ========== SECTION CHANGE HANDLERS ==========

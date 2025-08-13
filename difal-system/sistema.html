@@ -542,15 +542,10 @@
                         <h3>⚙️ Configuração DIFAL</h3>
                         <div class="config-grid">
                             <div class="config-item">
-                                <label for="multi-uf-destino">UF Destino:</label>
-                                <select id="multi-uf-destino" class="form-control">
-                                    <option value="">Selecione a UF</option>
-                                    <option value="SP">São Paulo</option>
-                                    <option value="RJ">Rio de Janeiro</option>
-                                    <option value="MG">Minas Gerais</option>
-                                    <option value="RS">Rio Grande do Sul</option>
-                                    <!-- Adicionar outras UFs -->
-                                </select>
+                                <label for="multi-uf-origem">UF da Empresa (extraída do SPED):</label>
+                                <div id="multi-uf-origem" class="form-control readonly">
+                                    <span id="multi-uf-display" class="uf-display">-</span>
+                                </div>
                             </div>
                             <div class="config-item">
                                 <label for="multi-aliquota-interna">Alíquota Interna (%):</label>
