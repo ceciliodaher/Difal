@@ -751,6 +751,7 @@ class UIManager {
      * @param {Object} config - Configurações do modal (opcional)
      */
     async calculateDifal(config = {}) {
+        // StateManager agora retorna dados consolidados automaticamente
         const spedData = this.stateManager.getSpedData();
         if (!spedData || !spedData.itensDifal) {
             this.showError('Dados SPED não disponíveis');
@@ -1184,7 +1185,7 @@ class UIManager {
         // Botão de cálculo DIFAL multi-período
         const calculateMultiBtn = document.getElementById('multi-calculate-difal-btn');
         if (calculateMultiBtn) {
-            calculateMultiBtn.addEventListener('click', () => this.calculateMultipleDifal());
+            calculateMultiBtn.addEventListener('click', () => this.calculateDifal());
         }
     }
     
@@ -1372,84 +1373,9 @@ class UIManager {
         }
     }
     
-    /**
-     * Calcula DIFAL para múltiplos períodos - MULTI-PERIOD VERSION
-     * @public
-     * @param {Object} config - Configurações do modal (opcional)
-     */
-    async calculateMultipleDifal(config = {}) {
-        const spedData = this.stateManager.getSpedData();
-        if (!spedData || !spedData.itensDifal) {
-            this.showError('Dados SPED não disponíveis');
-            return;
-        }
+    // REMOVED: calculateMultipleDifal() - Now using unified calculateDifal()
 
-        if (!spedData.dadosEmpresa?.uf) {
-            this.showError('UF da empresa não identificada no SPED');
-            return;
-        }
-
-        const ufDestino = spedData.dadosEmpresa.uf;
-        console.log(`Calculando DIFAL multi-período para empresa em ${ufDestino}`);
-        console.log('Configurações recebidas para cálculo multi-período:', config);
-        
-        this.showProgress('Calculando DIFAL multi-período...', 20);
-        
-        try {
-            // Usar DifalAppModular para cálculo
-            if (!window.difalApp) {
-                throw new Error('DifalApp não disponível');
-            }
-            
-            // Preparar configuração para o app modular
-            const configApp = {
-                ufOrigem: config.ufOrigem || (ufDestino === 'SP' ? 'MG' : 'SP'),
-                metodologia: config.metodologia,
-                percentualDestinatario: config.percentualDestinatario,
-                beneficiosGlobais: config.beneficiosGlobais
-            };
-            
-            this.showProgress('Processando cálculos multi-período...', 60);
-            
-            const { resultados, totalizadores } = await window.difalApp.calculateDifal(configApp);
-            
-            this.showProgress('Cálculo multi-período concluído!', 100);
-            
-            // Armazenar resultados
-            window.difalResults = {
-                resultados,
-                totalizadores
-            };
-            
-            // Mostrar resultados - DELEGADO para ResultsRenderer
-            this.showMultipleCalculationResults(resultados, totalizadores);
-            
-        } catch (error) {
-            console.error('Erro no cálculo DIFAL multi-período:', error);
-            this.showError(`Erro no cálculo multi-período: ${error.message}`);
-        }
-    }
-
-    /**
-     * Mostra resultados do cálculo multi-período - MULTI-PERIOD VERSION
-     * @public
-     * @param {Array} resultados - Resultados do cálculo
-     * @param {Object} totalizadores - Totalizadores
-     */
-    showMultipleCalculationResults(resultados, totalizadores) {
-        console.log('🎭 UI Manager.showMultipleCalculationResults chamado:', { 
-            resultados: resultados?.length || 0, 
-            totalizadores: totalizadores || 'undefined',
-            resultsRenderer: !!this.resultsRenderer 
-        });
-        
-        if (!this.resultsRenderer) {
-            console.error('❌ ResultsRenderer não inicializado no UI Manager');
-            return;
-        }
-        
-        return this.resultsRenderer.showCalculationResults(resultados, totalizadores);
-    }
+    // REMOVED: showMultipleCalculationResults() - Now using unified showCalculationResults()
 
     /**
      * Atualiza informações da empresa - MULTI-PERIOD VERSION  

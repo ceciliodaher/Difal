@@ -227,6 +227,67 @@ class PeriodsManager {
     }
 
     /**
+     * Obtém dados SPED consolidados (formato compatível com single-period)
+     * @returns {Object|null} Dados consolidados no formato SPED tradicional
+     */
+    getConsolidatedSpedData() {
+        if (this.periods.size === 0) {
+            return null;
+        }
+        
+        console.log(`🔄 Consolidando dados de ${this.periods.size} períodos...`);
+        
+        // Consolidar todos os itens DIFAL
+        const allItems = this.getConsolidatedItems();
+        
+        // Consolidar catálogo de produtos
+        const consolidatedCatalog = {};
+        for (const [periodId, periodData] of this.periods) {
+            Object.assign(consolidatedCatalog, periodData.dados.catalogoProdutos || {});
+        }
+        
+        // Período consolidado
+        const sortedPeriods = Array.from(this.periods.values()).sort((a, b) => {
+            const dateA = new Date(a.periodo.inicioDate);
+            const dateB = new Date(b.periodo.inicioDate);
+            return dateA - dateB;
+        });
+        
+        const firstPeriod = sortedPeriods[0];
+        const lastPeriod = sortedPeriods[sortedPeriods.length - 1];
+        
+        // Estrutura consolidada idêntica ao single-period
+        const consolidatedData = {
+            dadosEmpresa: {
+                ...this.currentCompany,
+                dtInicio: firstPeriod.periodo.inicio,
+                dtFim: lastPeriod.periodo.fim
+            },
+            itensDifal: allItems,
+            catalogoProdutos: consolidatedCatalog,
+            periodoApuracao: `${firstPeriod.periodo.label} a ${lastPeriod.periodo.label}`,
+            estatisticasDifal: {
+                totalItens: allItems.length,
+                totalPeriodos: this.periods.size,
+                ncmsUnicos: new Set(allItems.map(item => item.ncm)).size,
+                cfopsUnicos: new Set(allItems.map(item => item.cfop)).size,
+                valorTotal: allItems.reduce((sum, item) => sum + (parseFloat(item.valor) || 0), 0)
+            },
+            registros: {
+                // Consolidar registros de todos os períodos se necessário
+            },
+            metadata: {
+                type: 'consolidated',
+                totalPeriods: this.periods.size,
+                consolidatedAt: new Date().toISOString()
+            }
+        };
+        
+        console.log(`✅ Dados consolidados: ${allItems.length} itens de ${this.periods.size} períodos`);
+        return consolidatedData;
+    }
+
+    /**
      * Obtém estatísticas consolidadas
      * @returns {Object} Estatísticas de todos os períodos
      */

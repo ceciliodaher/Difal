@@ -675,6 +675,17 @@ class StateManager {
      * @returns {Object|null}
      */
     getSpedData() {
+        // Modo inteligente: detectar se há múltiplos períodos carregados
+        const periodsState = this.getPeriodsState();
+        
+        // Se há múltiplos períodos, retornar dados consolidados
+        if (periodsState && periodsState.totalPeriods > 0 && window.periodsManager) {
+            console.log('📊 StateManager: Retornando dados consolidados de múltiplos períodos');
+            return window.periodsManager.getConsolidatedSpedData();
+        }
+        
+        // Senão, retornar dados SPED tradicionais (single-period)
+        console.log('📊 StateManager: Retornando dados SPED single-period');
         return this.getState('sped.data');
     }
 
