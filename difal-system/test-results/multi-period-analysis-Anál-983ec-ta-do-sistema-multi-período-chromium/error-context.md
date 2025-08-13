@@ -1,0 +1,43 @@
+# Page snapshot
+
+```yaml
+- banner:
+  - img "Expertzy Logo"
+  - text: EXPERTZY
+  - heading "Sistema de Cálculo DIFAL" [level=1]
+  - paragraph: Diferencial de Alíquota do ICMS - Operações Interestaduais
+- main:
+  - heading "🚀 Sistema DIFAL" [level=2]
+  - paragraph: Escolha o modo de processamento para começar
+  - text: 📄
+  - heading "Período Único" [level=3]
+  - paragraph: Upload e análise de um arquivo SPED
+  - list:
+    - listitem: ✅ Upload de arquivo SPED único
+    - listitem: ✅ Análise básica de itens DIFAL
+    - listitem: ✅ Configuração e cálculo tradicional
+    - listitem: ✅ Exportação Excel/PDF
+  - button "Selecionar Período Único"
+  - text: 📅
+  - heading "Múltiplos Períodos" [level=3]
+  - paragraph: Upload de vários arquivos da mesma empresa
+  - list:
+    - listitem: ✅ Upload sequencial de múltiplos SPEDs
+    - listitem: ✅ Consolidação automática de dados
+    - listitem: ✅ Análise de Pareto (80/20)
+    - listitem: ✅ Relatórios executivos avançados
+  - button "Selecionar Múltiplos Períodos"
+  - heading "💡 Como escolher?" [level=4]
+  - paragraph:
+    - strong: "Período Único:"
+    - text: Ideal para análise pontual de um arquivo SPED específico
+  - paragraph:
+    - strong: "Múltiplos Períodos:"
+    - text: Ideal para análise temporal e insights estratégicos consolidados
+- contentinfo:
+  - paragraph: © 2025 Expertzy - Sistema de Cálculo DIFAL v3.0
+  - paragraph: Cálculo conforme legislação vigente - EC 87/2015
+- heading "❌ Erro ao inicializar aplicação" [level=2]
+- paragraph: UIManager is not defined
+- button "Recarregar"
+```

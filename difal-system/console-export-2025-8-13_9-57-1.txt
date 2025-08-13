@@ -1,0 +1,1234 @@
+🎯 Processando itens para cálculo DIFAL... sped-parser.js:429:17
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true 2 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 38 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true 5 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 2 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2922: DIFAL=false, Valor=true, CST=true 2 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2116: DIFAL=false, Valor=true, CST=true 3 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true 2 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 7 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true 4 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 52 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1403: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 30 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1403: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 35 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true 6 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 8 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true 17 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 20 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1551: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+✅ Itens DIFAL processados: 243 → 25 (filtrados) sped-parser.js:474:17
+📊 NCMs únicos encontrados (14): 
+Array(10) [ "SEM NCM", "85177091", "85177900", "85447010", "39269090", "90303319", "85369090", "96082000", "94037000", "39191090" ]
+sped-parser.js:478:17
+📊 Parsing concluído (evento coordenado): 
+Object { totalLinhas: 972, totalRegistros: 48, itensDifal: 25 }
+app.js:237:17
+📊 Progresso: 80% - Extraindo itens DIFAL... file-upload-manager.js:562:17
+✅ FileUploadManager: Arquivo processado para multi-período: 13158698000110-106379704-20250301-20250331-1-1EA5501D977648A39FFBA5985863BCB3F00C7B56-SPED-EFD.txt file-upload-manager.js:687:21
+📅 Adicionando período: 13158698000110-106379704-20250301-20250331-1-1EA5501D977648A39FFBA5985863BCB3F00C7B56-SPED-EFD.txt periods-manager.js:47:21
+📊 Parsing concluído (evento coordenado): 
+Object { currentCompany: {…}, periods: (9) […], totalPeriods: 9, consolidated: {…} }
+app.js:237:17
+📅 Periods state updated: 
+Object { currentCompany: {…}, periods: (9) […], totalPeriods: 9, consolidated: {…} }
+state-manager.js:740:17
+✅ Período 202503-202503 adicionado com sucesso periods-manager.js:133:21
+✅ Período adicionado: 01/03/2025 a 31/03/2025 ui-manager.js:1587:25
+📊 Progresso: 83% - Processando arquivo 10/12: 13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt 2 progress-manager.js:256:21
+📁 Processando arquivo: 13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt ui-manager.js:1578:21
+📁 FileUploadManager: Processando arquivo para multi-período: 13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt file-upload-manager.js:682:21
+📄 SPED Parser Modular initialized sped-parser.js:18:17
+📊 Progresso: 20% - Analisando registros SPED... file-upload-manager.js:562:17
+📂 Processando arquivo SPED: 13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt sped-parser.js:28:21
+📊 Parsing concluído (evento coordenado): 
+Object { fileName: "13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt", fileSize: 39100 }
+app.js:237:17
+📊 450 linhas encontradas no arquivo sped-parser.js:40:21
+🔄 Iniciando processamento das linhas... sped-parser.js:92:17
+🔍 DEBUG 0000 - Campos recebidos: 
+Array(12) [ "0000", "019", "1", "01042025", "30042025", "THE FIBER PROVEDORA DE INTERNET LTDA", "13158698000110", "", "GO", "106379704", … ]
+sped-parser.js:225:21
+🏢 Empresa identificada: 
+Object { razaoSocial: "THE FIBER PROVEDORA DE INTERNET LTDA", cnpj: "13158698000110", uf: "GO", ie: "106379704", dtInicio: "01042025", dtFim: "30042025", debug_campo_0: "0000", debug_campo_1: "019", debug_campo_2: "1", debug_campo_3: "01042025", … }
+sped-parser.js:248:21
+🔍 DEBUG C170 - Linha 129 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "83", "65", "2481,7", "0", "0", "102", … ]
+sped-parser.js:270:21
+📦 Item 1: 
+Object { codigo: "SEM GTIN", ncm: "SEM GTIN", cfop: "1556", valor: 2481, linha: 129 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 132 - Campos: 
+Array(15) [ "C170", "1", "2203", "", "500", "1", "115055", "0", "0", "400", … ]
+sped-parser.js:270:21
+📦 Item 2: 
+Object { codigo: "2203", ncm: "2203", cfop: "2551", valor: 115055, linha: 132 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 135 - Campos: 
+Array(15) [ "C170", "1", "0000000040556", "", "7", "75", "164,9", "0", "0", "000", … ]
+sped-parser.js:270:21
+📦 Item 3: 
+Object { codigo: "0000000040556", ncm: "0000000040556", cfop: "1556", valor: 164, linha: 135 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 136 - Campos: 
+Array(15) [ "C170", "2", "7898512073598", "", "3", "75", "186,64", "0", "0", "000", … ]
+sped-parser.js:270:21
+📦 Item 4: 
+Object { codigo: "7898512073598", ncm: "7898512073598", cfop: "1556", valor: 186, linha: 136 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 139 - Campos: 
+Array(15) [ "C170", "1", "7898938362726", "", "1", "1", "25", "0", "0", "102", … ]
+sped-parser.js:270:21
+📦 Item 5: 
+Object { codigo: "7898938362726", ncm: "7898938362726", cfop: "1556", valor: 25, linha: 139 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 140 - Campos: 
+Array(15) [ "C170", "2", "7891455372438", "", "1", "1", "20", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 144 - Campos: 
+Array(15) [ "C170", "1", "7893137211264", "", "300", "64", "2186,37", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 148 - Campos: 
+Array(15) [ "C170", "1", "505", "", "300", "10", "5581,38", "0", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 152 - Campos: 
+Array(15) [ "C170", "1", "7893137342968", "", "300", "10", "32093,04", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 155 - Campos: 
+Array(15) [ "C170", "1", "07895999089067", "", "5", "1", "7463,37", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 156 - Campos: 
+Array(15) [ "C170", "2", "07895999044752", "", "5", "1", "621,79", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 161 - Campos: 
+Array(15) [ "C170", "1", "939", "", "2", "10", "439,84", "0,35", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 162 - Campos: 
+Array(15) [ "C170", "2", "8124", "", "2", "10", "534", "0,42", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 163 - Campos: 
+Array(15) [ "C170", "3", "8115", "", "2", "10", "631,58", "0,51", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 164 - Campos: 
+Array(15) [ "C170", "4", "SEM GTIN", "", "2", "10", "2498", "2,14", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 168 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "6", "10", "8126,1", "0,1", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 172 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "10", "1354", "0", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 175 - Campos: 
+Array(15) [ "C170", "1", "991", "", "42,68", "17", "166,02", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 179 - Campos: 
+Array(15) [ "C170", "1", "991", "", "43,98", "17", "171,08", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 183 - Campos: 
+Array(15) [ "C170", "1", "987", "", "69,1358", "17", "407,21", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 184 - Campos: 
+Array(15) [ "C170", "2", "991", "", "406,0617", "17", "1579,58", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 189 - Campos: 
+Array(15) [ "C170", "1", "991", "", "70,403", "17", "266,82", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 193 - Campos: 
+Array(15) [ "C170", "1", "991", "", "322,72", "17", "1223,14", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 194 - Campos: 
+Array(15) [ "C170", "2", "980", "", "124,72", "17", "722,13", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 198 - Campos: 
+Array(15) [ "C170", "1", "987", "", "14,468", "17", "83,77", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 199 - Campos: 
+Array(15) [ "C170", "2", "991", "", "264,2665", "17", "1001,57", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 204 - Campos: 
+Array(15) [ "C170", "1", "980", "", "47,4938", "17", "305,86", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 205 - Campos: 
+Array(15) [ "C170", "2", "991", "", "410,343", "17", "1986,06", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 210 - Campos: 
+Array(15) [ "C170", "1", "991", "", "53,4277", "17", "258,59", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 215 - Campos: 
+Array(15) [ "C170", "1", "7899644582705", "", "1", "1", "115,9", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 218 - Campos: 
+Array(15) [ "C170", "1", "509273", "", "4", "61", "540", "0", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 219 - Campos: 
+Array(15) [ "C170", "2", "507741", "", "3", "15", "297", "0", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 220 - Campos: 
+Array(15) [ "C170", "3", "509275", "", "5", "1", "655", "0", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 223 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "0,504", "8", "44,7", "2,28", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 224 - Campos: 
+Array(15) [ "C170", "2", "114", "", "1,094", "8", "97,03", "4,94", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 225 - Campos: 
+Array(15) [ "C170", "3", "37897534831704", "", "2", "1", "5,58", "0,28", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 226 - Campos: 
+Array(15) [ "C170", "4", "SEM GTIN", "", "2", "1", "7,74", "0,39", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 227 - Campos: 
+Array(15) [ "C170", "5", "37897534831698", "", "4", "1", "33,56", "1,71", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 228 - Campos: 
+Array(15) [ "C170", "6", "SEM GTIN", "", "4", "1", "23,92", "1,22", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 229 - Campos: 
+Array(15) [ "C170", "7", "SEM GTIN", "", "1", "1", "11,9", "0,61", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 232 - Campos: 
+Array(15) [ "C170", "1", "7891435936810", "", "3", "1", "13,95", "3,47", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 233 - Campos: 
+Array(15) [ "C170", "2", "7891435933550", "", "7", "1", "31,5", "7,85", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 234 - Campos: 
+Array(15) [ "C170", "3", "7891435932560", "", "21", "1", "96,39", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 238 - Campos: 
+Array(15) [ "C170", "1", "F129", "", "5000", "14", "2750", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 242 - Campos: 
+Array(15) [ "C170", "1", "AGG0001", "", "3000", "140", "1650", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 243 - Campos: 
+Array(15) [ "C170", "2", "FA0001", "", "100", "61", "2350", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 244 - Campos: 
+Array(15) [ "C170", "3", "N1033", "", "1500", "140", "465", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 247 - Campos: 
+Array(15) [ "C170", "1", "78989184006244", "", "29", "65", "232", "0,03", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 248 - Campos: 
+Array(15) [ "C170", "2", "78989184006245", "", "29", "65", "0,03", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 251 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "2", "1", "160", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 252 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "2", "1", "80", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 255 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "2", "1", "3400", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 258 - Campos: 
+Array(15) [ "C170", "1", "87899028801263", "", "5", "1", "450", "0", "0", "040", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 262 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "1", "17900", "0", "0", "620", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 265 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "100", "1", "3200", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 268 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "3", "1", "3750", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 271 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "91", "7", "0", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 272 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "1", "12", "26", "0", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 275 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "2", "134", "87,12", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 278 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "40", "1", "28", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 279 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "40", "1", "40", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 283 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "1", "300", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 286 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "131", "150", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 290 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "10", "46752,9", "0", "0", "540", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 294 - Campos: 
+Array(15) [ "C170", "1", "7898943566928", "", "1", "1", "59,99", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 295 - Campos: 
+Array(15) [ "C170", "2", "7908466009342", "", "1", "1", "49,99", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 296 - Campos: 
+Array(15) [ "C170", "3", "7898139873267", "", "1", "1", "24,99", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 297 - Campos: 
+Array(15) [ "C170", "4", "7908466009328", "", "2", "1", "99,98", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 298 - Campos: 
+Array(15) [ "C170", "5", "7908466009441", "", "2", "1", "159,98", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 299 - Campos: 
+Array(15) [ "C170", "6", "7908466009465", "", "1", "1", "79,99", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 300 - Campos: 
+Array(15) [ "C170", "7", "7897807485207", "", "3", "1", "104,97", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 301 - Campos: 
+Array(15) [ "C170", "8", "7908122204067", "", "6", "1", "89,94", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 306 - Campos: 
+Array(15) [ "C170", "1", "7898139631935", "", "8,08", "8", "152,55", "3,92", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 307 - Campos: 
+Array(15) [ "C170", "2", "7898357411050", "", "5,185", "8", "107,49", "2,76", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 308 - Campos: 
+Array(15) [ "C170", "3", "SEM GTIN", "", "1", "104", "77,34", "1,98", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 311 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "3", "14", "936", "0", "0", "102", … ]
+sped-parser.js:270:21
+✅ Processamento concluído: 412 processadas, 10 ignoradas sped-parser.js:133:17
+📚 Criando catálogo de produtos do registro 0200... sped-parser.js:344:17
+📦 Processando 44 registros 0200 sped-parser.js:348:17
+✅ Catálogo criado: 44 produtos sped-parser.js:382:17
+🔗 Enriquecendo itens C170 com dados do catálogo... sped-parser.js:389:17
+✅ 76 itens enriquecidos com dados do catálogo sped-parser.js:413:17
+🎯 Processando itens para cálculo DIFAL... sped-parser.js:429:17
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 4 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true 3 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true 2 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 18 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1403: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 13 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 4 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true 3 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 4 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 4 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 12 sped-parser.js:451:25
+✅ Itens DIFAL processados: 76 → 13 (filtrados) sped-parser.js:474:17
+📊 NCMs únicos encontrados (7): 
+Array(7) [ "SEM NCM", "85447010", "85177091", "85177900", "85176234", "39172900", "56079010" ]
+sped-parser.js:478:17
+📊 Parsing concluído (evento coordenado): 
+Object { totalLinhas: 450, totalRegistros: 48, itensDifal: 13 }
+app.js:237:17
+📊 Progresso: 80% - Extraindo itens DIFAL... file-upload-manager.js:562:17
+✅ FileUploadManager: Arquivo processado para multi-período: 13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt file-upload-manager.js:687:21
+📅 Adicionando período: 13158698000110-106379704-20250401-20250430-1-03D99627A94945C9AF64C38A3A038FCC8EF950DF-SPED-EFD.txt periods-manager.js:47:21
+📊 Parsing concluído (evento coordenado): 
+Object { currentCompany: {…}, periods: (10) […], totalPeriods: 10, consolidated: {…} }
+app.js:237:17
+📅 Periods state updated: 
+Object { currentCompany: {…}, periods: (10) […], totalPeriods: 10, consolidated: {…} }
+state-manager.js:740:17
+✅ Período 202504-202504 adicionado com sucesso periods-manager.js:133:21
+✅ Período adicionado: 01/04/2025 a 30/04/2025 ui-manager.js:1587:25
+📊 Progresso: 92% - Processando arquivo 11/12: 13158698000110-106379704-20250501-20250531-0-2E0202E8E74254E4063B129D724FA677BC4375D6-SPED-EFD.txt 2 progress-manager.js:256:21
+📁 Processando arquivo: 13158698000110-106379704-20250501-20250531-0-2E0202E8E74254E4063B129D724FA677BC4375D6-SPED-EFD.txt ui-manager.js:1578:21
+📁 FileUploadManager: Processando arquivo para multi-período: 13158698000110-106379704-20250501-20250531-0-2E0202E8E74254E4063B129D724FA677BC4375D6-SPED-EFD.txt file-upload-manager.js:682:21
+📄 SPED Parser Modular initialized sped-parser.js:18:17
+📊 Progresso: 20% - Analisando registros SPED... file-upload-manager.js:562:17
+📂 Processando arquivo SPED: 13158698000110-106379704-20250501-20250531-0-2E0202E8E74254E4063B129D724FA677BC4375D6-SPED-EFD.txt sped-parser.js:28:21
+📊 Parsing concluído (evento coordenado): 
+Object { fileName: "13158698000110-106379704-20250501-20250531-0-2E0202E8E74254E4063B129D724FA677BC4375D6-SPED-EFD.txt", fileSize: 15831 }
+app.js:237:17
+📊 198 linhas encontradas no arquivo sped-parser.js:40:21
+🔄 Iniciando processamento das linhas... sped-parser.js:92:17
+🔍 DEBUG 0000 - Campos recebidos: 
+Array(12) [ "0000", "019", "0", "01052025", "31052025", "THE FIBER PROVEDORA DE INTERNET LTDA", "13158698000110", "", "GO", "106379704", … ]
+sped-parser.js:225:21
+🏢 Empresa identificada: 
+Object { razaoSocial: "THE FIBER PROVEDORA DE INTERNET LTDA", cnpj: "13158698000110", uf: "GO", ie: "106379704", dtInicio: "01052025", dtFim: "31052025", debug_campo_0: "0000", debug_campo_1: "019", debug_campo_2: "0", debug_campo_3: "01052025", … }
+sped-parser.js:248:21
+🔍 DEBUG C170 - Linha 36 - Campos: 
+Array(15) [ "C170", "1", "2203", "", "600", "1", "138066", "0", "0", "400", … ]
+sped-parser.js:270:21
+📦 Item 1: 
+Object { codigo: "2203", ncm: "2203", cfop: "2551", valor: 138066, linha: 36 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 37 - Campos: 
+Array(15) [ "C170", "2", "7908414470279", "", "100", "1", "16546", "0", "0", "400", … ]
+sped-parser.js:270:21
+📦 Item 2: 
+Object { codigo: "7908414470279", ncm: "7908414470279", cfop: "2556", valor: 16546, linha: 37 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 42 - Campos: 
+Array(15) [ "C170", "1", "505", "", "300", "10", "5581,38", "0", "0", "500", … ]
+sped-parser.js:270:21
+📦 Item 3: 
+Object { codigo: "505", ncm: "505", cfop: "2556", valor: 5581, linha: 42 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 45 - Campos: 
+Array(15) [ "C170", "1", "987", "", "96,941", "17", "624,3", "0", "0", "061", … ]
+sped-parser.js:270:21
+📦 Item 4: 
+Object { codigo: "987", ncm: "987", cfop: "1556", valor: 624, linha: 45 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 49 - Campos: 
+Array(15) [ "C170", "1", "987", "", "14,301", "17", "92,09", "0", "0", "061", … ]
+sped-parser.js:270:21
+📦 Item 5: 
+Object { codigo: "987", ncm: "987", cfop: "1556", valor: 92, linha: 49 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 50 - Campos: 
+Array(15) [ "C170", "2", "991", "", "256,7169", "17", "1242,51", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 55 - Campos: 
+Array(15) [ "C170", "1", "987", "", "47,4286", "17", "305,44", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 56 - Campos: 
+Array(15) [ "C170", "2", "991", "", "254,9979", "17", "1234,19", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 61 - Campos: 
+Array(15) [ "C170", "1", "7890000011075", "", "34", "1", "5678", "0", "0", "220", … ]
+sped-parser.js:270:21
+✅ Processamento concluído: 159 processadas, 10 ignoradas sped-parser.js:133:17
+📚 Criando catálogo de produtos do registro 0200... sped-parser.js:344:17
+📦 Processando 6 registros 0200 sped-parser.js:348:17
+✅ Catálogo criado: 6 produtos sped-parser.js:382:17
+🔗 Enriquecendo itens C170 com dados do catálogo... sped-parser.js:389:17
+✅ 9 itens enriquecidos com dados do catálogo sped-parser.js:413:17
+🎯 Processando itens para cálculo DIFAL... sped-parser.js:429:17
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true 2 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 6 sped-parser.js:451:25
+✅ Itens DIFAL processados: 9 → 3 (filtrados) sped-parser.js:474:17
+📊 NCMs únicos encontrados (3): 
+Array(3) [ "SEM NCM", "85176241", "85177091" ]
+sped-parser.js:478:17
+📊 Parsing concluído (evento coordenado): 
+Object { totalLinhas: 198, totalRegistros: 48, itensDifal: 3 }
+app.js:237:17
+📊 Progresso: 80% - Extraindo itens DIFAL... file-upload-manager.js:562:17
+✅ FileUploadManager: Arquivo processado para multi-período: 13158698000110-106379704-20250501-20250531-0-2E0202E8E74254E4063B129D724FA677BC4375D6-SPED-EFD.txt file-upload-manager.js:687:21
+📅 Adicionando período: 13158698000110-106379704-20250501-20250531-0-2E0202E8E74254E4063B129D724FA677BC4375D6-SPED-EFD.txt periods-manager.js:47:21
+📊 Parsing concluído (evento coordenado): 
+Object { currentCompany: {…}, periods: (11) […], totalPeriods: 11, consolidated: {…} }
+app.js:237:17
+📅 Periods state updated: 
+Object { currentCompany: {…}, periods: (11) […], totalPeriods: 11, consolidated: {…} }
+state-manager.js:740:17
+✅ Período 202505-202505 adicionado com sucesso periods-manager.js:133:21
+✅ Período adicionado: 01/05/2025 a 31/05/2025 ui-manager.js:1587:25
+📊 Progresso: 100% - Processando arquivo 12/12: 13158698000110-106379704-20250601-20250630-0-7B5FA06225FCE679AE41163E5B244D58B263E721-SPED-EFD.txt 2 progress-manager.js:256:21
+📁 Processando arquivo: 13158698000110-106379704-20250601-20250630-0-7B5FA06225FCE679AE41163E5B244D58B263E721-SPED-EFD.txt ui-manager.js:1578:21
+📁 FileUploadManager: Processando arquivo para multi-período: 13158698000110-106379704-20250601-20250630-0-7B5FA06225FCE679AE41163E5B244D58B263E721-SPED-EFD.txt file-upload-manager.js:682:21
+📄 SPED Parser Modular initialized sped-parser.js:18:17
+📊 Progresso: 20% - Analisando registros SPED... file-upload-manager.js:562:17
+📂 Processando arquivo SPED: 13158698000110-106379704-20250601-20250630-0-7B5FA06225FCE679AE41163E5B244D58B263E721-SPED-EFD.txt sped-parser.js:28:21
+📊 Parsing concluído (evento coordenado): 
+Object { fileName: "13158698000110-106379704-20250601-20250630-0-7B5FA06225FCE679AE41163E5B244D58B263E721-SPED-EFD.txt", fileSize: 64747 }
+app.js:237:17
+📊 747 linhas encontradas no arquivo sped-parser.js:40:21
+🔄 Iniciando processamento das linhas... sped-parser.js:92:17
+🔍 DEBUG 0000 - Campos recebidos: 
+Array(12) [ "0000", "019", "0", "01062025", "30062025", "THE FIBER PROVEDORA DE INTERNET LTDA", "13158698000110", "", "GO", "106379704", … ]
+sped-parser.js:225:21
+🏢 Empresa identificada: 
+Object { razaoSocial: "THE FIBER PROVEDORA DE INTERNET LTDA", cnpj: "13158698000110", uf: "GO", ie: "106379704", dtInicio: "01062025", dtFim: "30062025", debug_campo_0: "0000", debug_campo_1: "019", debug_campo_2: "0", debug_campo_3: "01062025", … }
+sped-parser.js:248:21
+🔍 DEBUG C170 - Linha 248 - Campos: 
+Array(15) [ "C170", "1", "07897476677446", "", "5", "UNID", "39,5", "0", "0", "102", … ]
+sped-parser.js:270:21
+📦 Item 1: 
+Object { codigo: "07897476677446", ncm: "07897476677446", cfop: "1556", valor: 39, linha: 248 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 249 - Campos: 
+Array(15) [ "C170", "2", "07897975066130", "", "5", "UNID", "29,5", "0", "0", "102", … ]
+sped-parser.js:270:21
+📦 Item 2: 
+Object { codigo: "07897975066130", ncm: "07897975066130", cfop: "1556", valor: 29, linha: 249 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 250 - Campos: 
+Array(15) [ "C170", "3", "07897975066161", "", "5", "UNID", "34,5", "0", "0", "102", … ]
+sped-parser.js:270:21
+📦 Item 3: 
+Object { codigo: "07897975066161", ncm: "07897975066161", cfop: "1556", valor: 34, linha: 250 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 251 - Campos: 
+Array(15) [ "C170", "4", "07898457749381", "", "1", "UNID", "5,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+📦 Item 4: 
+Object { codigo: "07898457749381", ncm: "07898457749381", cfop: "1556", valor: 5, linha: 251 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 252 - Campos: 
+Array(15) [ "C170", "5", "07898457749374", "", "1", "UNID", "5,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+📦 Item 5: 
+Object { codigo: "07898457749374", ncm: "07898457749374", cfop: "1556", valor: 5, linha: 252 }
+sped-parser.js:325:25
+🔍 DEBUG C170 - Linha 253 - Campos: 
+Array(15) [ "C170", "6", "07898457749367", "", "1", "UNID", "5,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 254 - Campos: 
+Array(15) [ "C170", "7", "07897975018412", "", "5", "UNID", "34,5", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 255 - Campos: 
+Array(15) [ "C170", "8", "1396", "", "12", "UNID", "54", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 256 - Campos: 
+Array(15) [ "C170", "9", "1394", "", "12", "UNID", "54", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 257 - Campos: 
+Array(15) [ "C170", "10", "1395", "", "12", "UNID", "54", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 258 - Campos: 
+Array(15) [ "C170", "11", "07898033750749", "", "1", "UNID", "14,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 259 - Campos: 
+Array(15) [ "C170", "12", "07898033750749", "", "1", "UNID", "14,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 260 - Campos: 
+Array(15) [ "C170", "13", "1393", "", "2", "UNID", "29,8", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 261 - Campos: 
+Array(15) [ "C170", "14", "1359", "", "2", "UNID", "29,8", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 262 - Campos: 
+Array(15) [ "C170", "15", "07897237310421", "", "2", "PT", "19,8", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 263 - Campos: 
+Array(15) [ "C170", "16", "07909107791824", "", "3", "UNID", "47,7", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 266 - Campos: 
+Array(15) [ "C170", "1", "14447", "", "30", "M", "473,09", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 267 - Campos: 
+Array(15) [ "C170", "2", "18363", "", "30", "M", "473,09", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 268 - Campos: 
+Array(15) [ "C170", "3", "7894171981465", "", "1", "PC", "46,45", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 269 - Campos: 
+Array(15) [ "C170", "4", "8227", "", "2", "PC", "77,33", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 270 - Campos: 
+Array(15) [ "C170", "5", "SEM GTIN", "", "2", "PC", "28,53", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 271 - Campos: 
+Array(15) [ "C170", "6", "17832", "", "2", "PC", "18,53", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 272 - Campos: 
+Array(15) [ "C170", "7", "17833", "", "2", "PC", "22,1", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 273 - Campos: 
+Array(15) [ "C170", "8", "0000000003650", "", "4", "PC", "35,01", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 274 - Campos: 
+Array(15) [ "C170", "9", "SEM GTIN", "", "1", "RL", "16,98", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 275 - Campos: 
+Array(15) [ "C170", "10", "3796", "", "2", "RL", "15,91", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 276 - Campos: 
+Array(15) [ "C170", "11", "29067", "", "1", "BR", "17,62", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 277 - Campos: 
+Array(15) [ "C170", "12", "2423", "", "4", "PC", "5,48", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 278 - Campos: 
+Array(15) [ "C170", "13", "7898962750391", "", "5", "M", "5,8", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 279 - Campos: 
+Array(15) [ "C170", "14", "SEM GTIN", "", "2", "M", "34,01", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 280 - Campos: 
+Array(15) [ "C170", "15", "SEM GTIN", "", "2", "M", "34,01", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 281 - Campos: 
+Array(15) [ "C170", "16", "0000000034494", "", "50", "PC", "11,11", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 282 - Campos: 
+Array(15) [ "C170", "17", "26265", "", "50", "PC", "5,47", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 286 - Campos: 
+Array(15) [ "C170", "1", "7894171981458", "", "2", "PC", "62,21", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 287 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "2", "PC", "28,53", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 288 - Campos: 
+Array(15) [ "C170", "3", "8227", "", "4", "PC", "154,67", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 289 - Campos: 
+Array(15) [ "C170", "4", "SEM GTIN", "", "2", "BR", "17,16", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 290 - Campos: 
+Array(15) [ "C170", "5", "SEM GTIN", "", "2", "BR", "24,52", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 291 - Campos: 
+Array(15) [ "C170", "6", "7891435030693", "", "16", "PC", "19,68", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 292 - Campos: 
+Array(15) [ "C170", "7", "7891435030662", "", "3", "PC", "16,42", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 293 - Campos: 
+Array(15) [ "C170", "8", "7891435020816", "", "6", "PC", "15,33", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 294 - Campos: 
+Array(15) [ "C170", "9", "SEM GTIN", "", "4", "PC", "2,53", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 295 - Campos: 
+Array(15) [ "C170", "10", "SEM GTIN", "", "2", "BR", "63,51", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 296 - Campos: 
+Array(15) [ "C170", "11", "4494", "", "2", "PC", "18,57", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 297 - Campos: 
+Array(15) [ "C170", "12", "0000000034494", "", "40", "PC", "8,88", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 298 - Campos: 
+Array(15) [ "C170", "13", "26265", "", "40", "PC", "4,38", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 299 - Campos: 
+Array(15) [ "C170", "14", "389", "", "12", "M", "122,15", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 300 - Campos: 
+Array(15) [ "C170", "15", "388", "", "12", "M", "122,15", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 301 - Campos: 
+Array(15) [ "C170", "16", "390", "", "20", "M", "203,58", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 305 - Campos: 
+Array(15) [ "C170", "1", "7891252798196", "", "1", "JG", "343", "7,2", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 306 - Campos: 
+Array(15) [ "C170", "2", "7891344015798", "", "3", "LT", "179,7", "0", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 307 - Campos: 
+Array(15) [ "C170", "3", "7898173503434", "", "4", "UN", "18", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 308 - Campos: 
+Array(15) [ "C170", "4", "7898173501881", "", "2", "LT", "21,8", "1,8", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 309 - Campos: 
+Array(15) [ "C170", "5", "7891200341368", "", "1", "UN", "82,9", "4,3", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 310 - Campos: 
+Array(15) [ "C170", "6", "7892415460462", "", "1", "UN", "17,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 314 - Campos: 
+Array(15) [ "C170", "1", "800", "", "1", "JG", "378,9", "39,9", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 315 - Campos: 
+Array(15) [ "C170", "2", "798", "", "2", "LT", "107,2", "0,2", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 316 - Campos: 
+Array(15) [ "C170", "3", "804", "", "1", "UN", "33,6", "3,6", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 317 - Campos: 
+Array(15) [ "C170", "4", "7898507317249", "", "1", "UN", "65", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 318 - Campos: 
+Array(15) [ "C170", "5", "SEM GTIN", "", "2", "UN", "418,84", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 319 - Campos: 
+Array(15) [ "C170", "6", "7890903026565", "", "2", "JG", "45,34", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 320 - Campos: 
+Array(15) [ "C170", "7", "7892166005783", "", "1", "UN", "56,29", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 321 - Campos: 
+Array(15) [ "C170", "8", "7891252052458", "", "1", "UN", "160,33", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 322 - Campos: 
+Array(15) [ "C170", "9", "797", "", "3", "LT", "102,6", "0", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 323 - Campos: 
+Array(15) [ "C170", "10", "7892415460516", "", "1", "UN", "17,1", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 324 - Campos: 
+Array(15) [ "C170", "11", "7899013331071", "", "1", "UN", "60,42", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 325 - Campos: 
+Array(15) [ "C170", "12", "7897068800139", "", "1", "UN", "37,08", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 331 - Campos: 
+Array(15) [ "C170", "1", "505", "", "300", "PC", "5274,27", "0", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 332 - Campos: 
+Array(15) [ "C170", "2", "7893137342968", "", "300", "PC", "30327,06", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 336 - Campos: 
+Array(15) [ "C170", "1", "825.8039.00", "", "5", "PC", "1005,98", "0", "0", "600", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 339 - Campos: 
+Array(15) [ "C170", "1", "7896243129737", "", "4", "PC", "97,96", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 342 - Campos: 
+Array(15) [ "C170", "1", "7898901478423", "", "1", "UN", "6,49", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 343 - Campos: 
+Array(15) [ "C170", "2", "7896243129720", "", "1", "PC", "24,49", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 344 - Campos: 
+Array(15) [ "C170", "3", "7896243109234", "", "1", "PC", "22,99", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 345 - Campos: 
+Array(15) [ "C170", "4", "789886990840", "", "1", "UN", "4,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 346 - Campos: 
+Array(15) [ "C170", "5", "789886990147", "", "1", "UN", "4,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 347 - Campos: 
+Array(15) [ "C170", "6", "7893198211197", "", "1", "UN", "4,99", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 348 - Campos: 
+Array(15) [ "C170", "7", "7899394704822", "", "10", "UN", "49,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 349 - Campos: 
+Array(15) [ "C170", "8", "7899900100087", "", "8", "UN", "79,92", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 352 - Campos: 
+Array(15) [ "C170", "1", "987", "", "34,062", "LT", "219,35", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 353 - Campos: 
+Array(15) [ "C170", "2", "991", "", "31,838", "LT", "154,09", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 358 - Campos: 
+Array(15) [ "C170", "1", "987", "", "48,601", "LT", "312,99", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 362 - Campos: 
+Array(15) [ "C170", "1", "991", "", "0,414", "LT", "2", "1,38", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 366 - Campos: 
+Array(15) [ "C170", "1", "991", "", "26,191", "LT", "121,52", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 370 - Campos: 
+Array(15) [ "C170", "1", "980", "", "9,707", "LT", "61,54", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 374 - Campos: 
+Array(15) [ "C170", "1", "987", "", "1,578", "LT", "10", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 378 - Campos: 
+Array(15) [ "C170", "1", "991", "", "37,385", "LT", "173,46", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 382 - Campos: 
+Array(15) [ "C170", "1", "980", "", "162,262", "LT", "1015,76", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 386 - Campos: 
+Array(15) [ "C170", "1", "37897534831722", "", "1", "UN", "40", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 387 - Campos: 
+Array(15) [ "C170", "2", "37897534831721", "", "1", "UN", "8", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 388 - Campos: 
+Array(15) [ "C170", "3", "1451", "", "1", "UN", "35", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 389 - Campos: 
+Array(15) [ "C170", "4", "87899028801298", "", "1", "UN", "35", "0", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 390 - Campos: 
+Array(15) [ "C170", "5", "37897534831607", "", "1", "UN", "155", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 394 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "2", "PCT", "65,8", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 395 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "1", "PCT", "19,95", "0", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 396 - Campos: 
+Array(15) [ "C170", "3", "SEM GTIN", "", "10", "UN", "129", "0", "0", "200", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 401 - Campos: 
+Array(15) [ "C170", "1", "610", "", "3", "UND", "2100", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 404 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "0,415", "KG", "36,81", "0,28", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 405 - Campos: 
+Array(15) [ "C170", "2", "114", "", "0,265", "KG", "23,5", "0,18", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 406 - Campos: 
+Array(15) [ "C170", "3", "SEM GTIN", "", "2", "UN", "11,38", "0,09", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 407 - Campos: 
+Array(15) [ "C170", "4", "SEM GTIN", "", "1", "UN", "24,9", "0,19", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 408 - Campos: 
+Array(15) [ "C170", "5", "SEM GTIN", "", "1", "UN", "2,96", "0,02", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 409 - Campos: 
+Array(15) [ "C170", "6", "37897534831704", "", "1", "UN", "2,79", "0,02", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 410 - Campos: 
+Array(15) [ "C170", "7", "SEM GTIN", "", "1", "UN", "2,9", "0,02", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 411 - Campos: 
+Array(15) [ "C170", "8", "37897534831700", "", "1", "UN", "5,6", "0,04", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 415 - Campos: 
+Array(15) [ "C170", "1", "7890203320752", "", "5", "CT", "53", "0", "0", "120", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 418 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "Combo", "59,99", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 419 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "1", "Combo", "59,99", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 420 - Campos: 
+Array(15) [ "C170", "3", "SEM GTIN", "", "1", "Combo", "59,99", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 421 - Campos: 
+Array(15) [ "C170", "4", "SEM GTIN", "", "1", "Combo", "59,99", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 422 - Campos: 
+Array(15) [ "C170", "5", "SEM GTIN", "", "1", "Combo", "59,99", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 423 - Campos: 
+Array(15) [ "C170", "6", "51", "", "1", "Unid.", "17", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 426 - Campos: 
+Array(15) [ "C170", "1", "637", "", "35", "PC", "814,8", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 427 - Campos: 
+Array(15) [ "C170", "2", "N2002", "", "2000", "PC", "3600", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 430 - Campos: 
+Array(15) [ "C170", "1", "7896353821958", "", "5", "PAR", "13,5", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 433 - Campos: 
+Array(15) [ "C170", "1", "7898606609917", "", "1", "PAR", "73", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 434 - Campos: 
+Array(15) [ "C170", "2", "7898606609900", "", "2", "PAR", "146", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 435 - Campos: 
+Array(15) [ "C170", "3", "7898606609894", "", "3", "PAR", "219", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 436 - Campos: 
+Array(15) [ "C170", "4", "7898606609863", "", "1", "PAR", "73", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 437 - Campos: 
+Array(15) [ "C170", "5", "7898606609870", "", "2", "PAR", "146", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 438 - Campos: 
+Array(15) [ "C170", "6", "7898606609887", "", "5", "PAR", "365", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 442 - Campos: 
+Array(15) [ "C170", "1", "CLP0002", "", "120", "UN", "1740", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 443 - Campos: 
+Array(15) [ "C170", "2", "CB20002", "", "750", "P�", "4275", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 444 - Campos: 
+Array(15) [ "C170", "3", "CB30001", "", "500", "P�", "3550", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 445 - Campos: 
+Array(15) [ "C170", "4", "AGG0001", "", "8000", "P�", "4400", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 446 - Campos: 
+Array(15) [ "C170", "5", "SOG0001", "", "1500", "UND", "4725", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 450 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "800", "UN", "4696", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 451 - Campos: 
+Array(15) [ "C170", "2", "SOG0001", "", "800", "UND", "2520", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 452 - Campos: 
+Array(15) [ "C170", "3", "CLP0002", "", "80", "UN", "1160", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 455 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "2", "UN", "4000", "35,28", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 456 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "1", "UN", "2900", "25,58", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 457 - Campos: 
+Array(15) [ "C170", "3", "SEM GTIN", "", "6", "UN", "3300", "29,11", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 458 - Campos: 
+Array(15) [ "C170", "4", "SEM GTIN", "", "3", "UN", "285", "2,51", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 459 - Campos: 
+Array(15) [ "C170", "5", "SEM GTIN", "", "4", "UN", "520", "4,59", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 460 - Campos: 
+Array(15) [ "C170", "6", "SEM GTIN", "", "4", "UN", "580", "5,12", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 461 - Campos: 
+Array(15) [ "C170", "7", "SEM GTIN", "", "4", "UN", "320", "2,81", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 464 - Campos: 
+Array(15) [ "C170", "1", "264", "", "1", "PC", "450", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 467 - Campos: 
+Array(15) [ "C170", "1", "7909569410318", "", "1", "PC", "698", "0", "0", "400", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 472 - Campos: 
+Array(15) [ "C170", "1", "7898303862257", "", "1", "CJ", "1812,85", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 473 - Campos: 
+Array(15) [ "C170", "2", "7898303862240", "", "1", "CJ", "976,15", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 476 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "UN", "1200", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 479 - Campos: 
+Array(15) [ "C170", "1", "7899963002861", "", "4", "UN", "1316", "0", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 483 - Campos: 
+Array(15) [ "C170", "1", "7908213501525", "", "1", "UN", "202,92", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 487 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "UN", "59,89", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 491 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "50", "UNI", "155", "0", "0", "500", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 494 - Campos: 
+Array(15) [ "C170", "1", "17898994012044", "", "1", "CX", "149,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 495 - Campos: 
+Array(15) [ "C170", "2", "2017300013003", "", "1", "PCT", "22", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 496 - Campos: 
+Array(15) [ "C170", "3", "7896030892905", "", "2", "PCT", "23,8", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 497 - Campos: 
+Array(15) [ "C170", "4", "SEM GTIN", "", "2", "CX", "13,8", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 498 - Campos: 
+Array(15) [ "C170", "5", "7898921912020", "", "8", "PCT", "14,4", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 499 - Campos: 
+Array(15) [ "C170", "6", "2001300004505", "", "2", "PCT", "16", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 500 - Campos: 
+Array(15) [ "C170", "7", "2001300004505", "", "1", "PCT", "8", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 501 - Campos: 
+Array(15) [ "C170", "8", "SEM GTIN", "", "1", "ROL", "16", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 502 - Campos: 
+Array(15) [ "C170", "9", "SEM GTIN", "", "1", "PCT", "16,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 503 - Campos: 
+Array(15) [ "C170", "10", "7896030800153", "", "6", "PCT", "11,94", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 504 - Campos: 
+Array(15) [ "C170", "11", "SEM GTIN", "", "1", "CX", "79,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 508 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "UND", "28,9", "0", "0", "201", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 509 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "2", "MT", "50", "0", "0", "201", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 512 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "4", "KG", "28,24", "0", "0", "000", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 515 - Campos: 
+Array(15) [ "C170", "1", "7892509118910", "", "6", "UN", "3294", "0", "0", "420", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 516 - Campos: 
+Array(15) [ "C170", "2", "7892509120364", "", "4", "UN", "2996", "0", "0", "420", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 517 - Campos: 
+Array(15) [ "C170", "3", "4711421945899", "", "1", "UN", "69,9", "0", "0", "100", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 518 - Campos: 
+Array(15) [ "C170", "4", "4711421957793", "", "1", "UN", "69,9", "0", "0", "100", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 519 - Campos: 
+Array(15) [ "C170", "5", "7898996101725", "", "1", "UN", "399", "0", "0", "120", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 524 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "0,488", "KG", "24,89", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 525 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "1,054", "KG", "63,13", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 528 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "2", "CX", "4,8", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 531 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "15,7", "METRO", "186,83", "0", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 534 - Campos: 
+Array(15) [ "C170", "1", "987", "", "6,4", "LT", "40,12", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 535 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "419,1616", "LT", "1789,82", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 540 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "53,78", "LT", "240,39", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 544 - Campos: 
+Array(15) [ "C170", "1", "987", "", "89,4584", "LT", "569,85", "0", "0", "061", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 545 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "362,2519", "LT", "1438,14", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 551 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "UN", "26,9", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 554 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "30", "MT", "84", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 557 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "UN", "26", "0", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 560 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "UN", "150", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 561 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "10", "UN", "10", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 564 - Campos: 
+Array(15) [ "C170", "1", "7898728891955", "", "1", "UNIDAD", "25,63", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 565 - Campos: 
+Array(15) [ "C170", "2", "7898728893546", "", "1", "PACOTE", "11,4", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 566 - Campos: 
+Array(15) [ "C170", "3", "7899995388896", "", "1", "PACOTE", "14,12", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 567 - Campos: 
+Array(15) [ "C170", "4", "7898728893232", "", "1", "DUZ", "14,19", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 568 - Campos: 
+Array(15) [ "C170", "5", "7898728890453", "", "1", "UNIDAD", "13,6", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 569 - Campos: 
+Array(15) [ "C170", "6", "7897413691238", "", "1", "DUZIA", "23,55", "0", "0", "020", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 570 - Campos: 
+Array(15) [ "C170", "7", "7908486124841", "", "1", "PACOTE", "12,12", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 571 - Campos: 
+Array(15) [ "C170", "8", "7898728895847", "", "1", "UN", "54,12", "0", "0", "720", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 572 - Campos: 
+Array(15) [ "C170", "9", "7897839700972", "", "1", "UNIDAD", "13,73", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 573 - Campos: 
+Array(15) [ "C170", "10", "7898728892594", "", "1", "UN", "13,55", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 574 - Campos: 
+Array(15) [ "C170", "11", "7898929813015", "", "1", "PACOTE", "3,83", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 575 - Campos: 
+Array(15) [ "C170", "12", "7898728896066", "", "1", "KIT", "16,4", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 576 - Campos: 
+Array(15) [ "C170", "13", "7899768013475", "", "1", "UNIDAD", "18,17", "0", "0", "220", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 581 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "HR", "670", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 584 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "1", "UN", "300", "0", "0", "101", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 587 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "5", "UNID", "100", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 588 - Campos: 
+Array(15) [ "C170", "2", "SEM GTIN", "", "11", "UNID", "88", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 589 - Campos: 
+Array(15) [ "C170", "3", "8751505651328", "", "2", "UNID", "120", "0", "0", "102", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 592 - Campos: 
+Array(15) [ "C170", "1", "SEM GTIN", "", "480,824", "L", "1889,64", "0", "0", "060", … ]
+sped-parser.js:270:21
+🔍 DEBUG C170 - Linha 593 - Campos: 
+Array(15) [ "C170", "2", "987", "", "22,72", "L", "132,46", "0", "0", "061", … ]
+sped-parser.js:270:21
+✅ Processamento concluído: 709 processadas, 10 ignoradas sped-parser.js:133:17
+📚 Criando catálogo de produtos do registro 0200... sped-parser.js:344:17
+📦 Processando 125 registros 0200 sped-parser.js:348:17
+✅ Catálogo criado: 125 produtos sped-parser.js:382:17
+🔗 Enriquecendo itens C170 com dados do catálogo... sped-parser.js:389:17
+✅ 198 itens enriquecidos com dados do catálogo sped-parser.js:413:17
+🎯 Processando itens para cálculo DIFAL... sped-parser.js:429:17
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 63 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1403: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 3 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true 3 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 26 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 32 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2551: DIFAL=true, Valor=true, CST=true 7 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 5 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1403: DIFAL=false, Valor=true, CST=true sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 2556: DIFAL=true, Valor=true, CST=true 3 sped-parser.js:451:25
+🔍 Filtro DIFAL - CFOP 1556: DIFAL=false, Valor=true, CST=true 53 sped-parser.js:451:25
+✅ Itens DIFAL processados: 198 → 14 (filtrados) sped-parser.js:474:17
+📊 NCMs únicos encontrados (6): 
+Array(6) [ "85177091", "85177900", "85176259", "84261100", "44111210", "73261900" ]
+sped-parser.js:478:17
+📊 Parsing concluído (evento coordenado): 
+Object { totalLinhas: 747, totalRegistros: 48, itensDifal: 14 }
+app.js:237:17
+📊 Progresso: 80% - Extraindo itens DIFAL... file-upload-manager.js:562:17
+✅ FileUploadManager: Arquivo processado para multi-período: 13158698000110-106379704-20250601-20250630-0-7B5FA06225FCE679AE41163E5B244D58B263E721-SPED-EFD.txt file-upload-manager.js:687:21
+📅 Adicionando período: 13158698000110-106379704-20250601-20250630-0-7B5FA06225FCE679AE41163E5B244D58B263E721-SPED-EFD.txt periods-manager.js:47:21
+📊 Parsing concluído (evento coordenado): 
+Object { currentCompany: {…}, periods: (12) […], totalPeriods: 12, consolidated: {…} }
+app.js:237:17
+📅 Periods state updated: 
+Object { currentCompany: {…}, periods: (12) […], totalPeriods: 12, consolidated: {…} }
+state-manager.js:740:17
+✅ Período 202506-202506 adicionado com sucesso periods-manager.js:133:21
+✅ Período adicionado: 01/06/2025 a 30/06/2025 ui-manager.js:1587:25
+📊 Progresso: 100% - Múltiplos períodos processados com sucesso! 2 progress-manager.js:256:21
+📊 Exibindo análise multi-período ui-manager.js:1085:17
+📋 Exibindo tabela de itens multi-período ui-manager.js:1147:17
+✅ Análise multi-período exibida com sucesso ui-manager.js:1138:17
+🧭 Validando navegação para: multi-analytics-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-analytics-section (original: multi-analytics-section) navigation-manager.js:370:21
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-analytics-section concluída navigation-manager.js:411:25
+🧭 Validando navegação para: multi-calculation-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-calculation-section (original: multi-calculation-section) navigation-manager.js:370:21
+🧭 Validando navegação para: multi-calculation-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-calculation-section (original: multi-calculation-section) navigation-manager.js:370:21
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-calculation-section concluída navigation-manager.js:411:25
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-calculation-section concluída navigation-manager.js:411:25
+🧭 Validando navegação para: multi-analytics-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-analytics-section (original: multi-analytics-section) navigation-manager.js:370:21
+🧭 Validando navegação para: multi-analytics-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-analytics-section (original: multi-analytics-section) navigation-manager.js:370:21
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-analytics-section concluída navigation-manager.js:411:25
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-analytics-section concluída navigation-manager.js:411:25
+🧭 Validando navegação para: multi-periods-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-periods-section (original: multi-periods-section) navigation-manager.js:370:21
+🧭 Validando navegação para: multi-periods-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-periods-section (original: multi-periods-section) navigation-manager.js:370:21
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-periods-section concluída navigation-manager.js:411:25
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-periods-section concluída navigation-manager.js:411:25
+🧭 Validando navegação para: multi-analytics-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-analytics-section (original: multi-analytics-section) navigation-manager.js:370:21
+🧭 Validando navegação para: multi-analytics-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-analytics-section (original: multi-analytics-section) navigation-manager.js:370:21
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-analytics-section concluída navigation-manager.js:411:25
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-analytics-section concluída navigation-manager.js:411:25
+🧭 Validando navegação para: multi-calculation-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-calculation-section (original: multi-calculation-section) navigation-manager.js:370:21
+🧭 Validando navegação para: multi-calculation-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-calculation-section (original: multi-calculation-section) navigation-manager.js:370:21
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-calculation-section concluída navigation-manager.js:411:25
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-calculation-section concluída navigation-manager.js:411:25
+🧮 Iniciando cálculo DIFAL multi-período ui-manager.js:1242:17
+🎯 UF de destino não selecionada, tentando configuração automática... ui-manager.js:1251:25
+✅ UF origem configurada automaticamente (multi): GO ui-manager.js:2190:21
+✅ UF configurada automaticamente: progress-manager.js:511:21
+✅ UF consistente entre todos os períodos: GO ui-manager.js:2231:17
+📊 Progresso: 0% - Calculando DIFAL para múltiplos períodos... 2 progress-manager.js:256:21
+❌ Erro no cálculo DIFAL multi-período: Error: Calculador DIFAL não disponível
+    executeDifalCalculation file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1329
+    calculateMultiPeriodDifal file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1302
+    setupMultiPeriodsEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1075
+    setupMultiPeriodsEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:1075
+    setupEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:157
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:127
+    UIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:34
+    initializeModules file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:117
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:53
+    async* file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:301
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:301
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:312
+ui-manager.js:1315:21
+❌ Erro no cálculo: Calculador DIFAL não disponível progress-manager.js:511:21
+🧭 Validando navegação para: multi-reports-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-reports-section (original: multi-reports-section) navigation-manager.js:370:21
+🧭 Validando navegação para: multi-reports-section (modo: multi) navigation-manager.js:806:17
+🧭 Navegando para: multi-reports-section (original: multi-reports-section) navigation-manager.js:370:21
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-reports-section concluída navigation-manager.js:411:25
+📅 Usando dados do PeriodsManager para atualização da empresa navigation-manager.js:542:29
+✅ Informações da empresa atualizadas (modo: multi) navigation-manager.js:613:21
+📊 Dados atualizados: THE FIBER PROVEDORA DE INTERNET LTDA, UF: GO navigation-manager.js:614:21
+✅ Navegação para multi-reports-section concluída navigation-manager.js:411:25
+📄 Iniciando exportação para PDF... export-manager.js:1141:21
+❌ Erro na exportação PDF: Nenhum resultado de cálculo disponível para exportar Error: Nenhum resultado de cálculo disponível para exportar
+    exportToPdf file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:1146
+    setupEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:109
+    setupEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:109
+    setupEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:108
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:67
+    ExportManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:59
+    initializeModules file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:49
+    UIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:32
+    initializeModules file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:117
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:53
+    async* file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:301
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:301
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:312
+export-manager.js:961:17
+❌ ❌ Erro na exportação PDF: Nenhum resultado de cálculo disponível para exportar progress-manager.js:511:21
+📊 Iniciando exportação para Excel... export-manager.js:149:21
+❌ Erro na exportação Excel: Nenhum resultado de cálculo disponível para exportar Error: Nenhum resultado de cálculo disponível para exportar
+    exportToExcel file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:154
+    setupEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:97
+    setupEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:97
+    setupEventListeners file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:96
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:67
+    ExportManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/export/export-manager.js:59
+    initializeModules file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:49
+    UIManager file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/ui-manager.js:32
+    initializeModules file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:117
+    init file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:53
+    async* file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:301
+    EventListener.handleEvent* file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:301
+    <anonymous> file:///Users/ceciliodaher/Documents/git/difal/difal-system/js/app.js:312
+export-manager.js:961:17
+❌ ❌ Erro na exportação Excel: Nenhum resultado de cálculo disponível para exportar progress-manager.js:511:21

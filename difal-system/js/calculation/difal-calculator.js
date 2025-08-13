@@ -55,11 +55,27 @@ class DifalCalculatorModular {
     }
 
     /**
-     * Carrega itens para cálculo
+     * Carrega itens para cálculo (suporte single/multi-period)
      */
-    carregarItens(itens) {
+    carregarItens(itens, periodMetadata = null) {
         this.itens = itens || [];
-        console.log(`📦 ${this.itens.length} itens carregados para cálculo`);
+        this.periodMetadata = periodMetadata; // Metadados do período para análise multi-período
+        console.log(`📦 ${this.itens.length} itens carregados para cálculo${periodMetadata ? ` (período: ${periodMetadata.periodo})` : ''}`);
+        
+        // Se há metadados de período, adicionar aos itens para rastreabilidade
+        if (periodMetadata && this.itens.length > 0) {
+            this.itens = this.itens.map(item => ({
+                ...item,
+                periodMetadata: {
+                    periodo: periodMetadata.periodo,
+                    empresa: periodMetadata.empresa,
+                    cnpj: periodMetadata.cnpj,
+                    dataInicial: periodMetadata.dataInicial,
+                    dataFinal: periodMetadata.dataFinal
+                }
+            }));
+            console.log(`🏷️ Metadados de período adicionados aos ${this.itens.length} itens`);
+        }
     }
 
     /**
@@ -113,11 +129,26 @@ class DifalCalculatorModular {
             totalFcp,
             totalBase,
             totalRecolher,
-            percentualComDifal: totalItens > 0 ? (itensComDifal / totalItens) * 100 : 0
+            percentualComDifal: totalItens > 0 ? (itensComDifal / totalItens) * 100 : 0,
+            // Metadados do período para análise multi-período
+            periodMetadata: this.periodMetadata || null
         };
 
         console.log('✅ Cálculos concluídos:', this.totalizadores);
         return this.resultados;
+    }
+
+    /**
+     * Retorna resultados formatados para análise multi-período
+     */
+    getResultadosParaMultiPeriodo() {
+        return {
+            resultados: this.resultados,
+            totalizadores: this.totalizadores,
+            periodMetadata: this.periodMetadata,
+            timestamp: new Date().toISOString(),
+            isMultiPeriod: !!this.periodMetadata
+        };
     }
 
     /**

@@ -154,7 +154,7 @@ class UIManager {
         this.setupModeSelector();
         
         // Múltiplos períodos - event listeners
-        this.setupMultiPeriodsEventListeners();
+        this.setupMultiplePeriodsEventListeners();
         
         // Analytics - event listeners  
         this.setupAnalyticsEventListeners();
@@ -1014,11 +1014,13 @@ class UIManager {
     
     // ========== MÚLTIPLOS PERÍODOS - EVENT LISTENERS ==========
     
+    // ========== MULTI-PERIOD EVENT LISTENERS (DUPLICATED FROM SINGLE-PERIOD) ==========
+    
     /**
-     * Configura event listeners para múltiplos períodos
+     * Configura event listeners para modo multi-período - DUPLICATED FROM SINGLE-PERIOD
      * @private
      */
-    setupMultiPeriodsEventListeners() {
+    setupMultiplePeriodsEventListeners() {
         // Drop zone para múltiplos períodos
         const multiDropZone = document.getElementById('multi-period-drop-zone');
         const multiFileInput = document.getElementById('multi-period-file-input');
@@ -1056,459 +1058,509 @@ class UIManager {
         // Botões da seção de períodos
         const clearPeriodsBtn = document.getElementById('clear-all-periods');
         if (clearPeriodsBtn) {
-            clearPeriodsBtn.addEventListener('click', () => this.clearAllPeriods());
+            clearPeriodsBtn.addEventListener('click', () => this.clearAllMultiplePeriods());
         }
         
         const generateAnalyticsBtn = document.getElementById('generate-analytics');
         if (generateAnalyticsBtn) {
-            generateAnalyticsBtn.addEventListener('click', () => this.generateAnalytics());
+            generateAnalyticsBtn.addEventListener('click', () => this.generateMultipleAnalytics());
         }
         
         const proceedToAnalyticsBtn = document.getElementById('proceed-to-analytics');
         if (proceedToAnalyticsBtn) {
-            proceedToAnalyticsBtn.addEventListener('click', () => this.proceedToAnalytics());
+            proceedToAnalyticsBtn.addEventListener('click', () => this.proceedToMultipleAnalytics());
         }
         
         // Botão de cálculo DIFAL multi-período
         const calculateMultiBtn = document.getElementById('multi-calculate-difal-btn');
         if (calculateMultiBtn) {
-            calculateMultiBtn.addEventListener('click', () => this.calculateMultiPeriodDifal());
+            calculateMultiBtn.addEventListener('click', () => this.calculateMultipleDifal());
         }
     }
     
+    // ========== MULTI-PERIOD METHODS (DUPLICATED FROM SINGLE-PERIOD) ==========
+    
     /**
-     * Versão específica do showSpedAnalysis para multi-período
+     * Processa upload de arquivo SPED - MULTI-PERIOD VERSION
      * @public
-     * @param {Object} consolidatedData - Dados consolidados de múltiplos períodos
+     * @param {File} file - Arquivo para upload
      */
-    showMultiPeriodAnalysis(consolidatedData = null) {
-        console.log('📊 Exibindo análise multi-período');
-        
-        const periodsState = this.stateManager.getPeriodsState();
-        
-        // Buscar elemento correto para multi-período
-        const summaryDiv = document.getElementById('sped-summary');
-        
-        if (!summaryDiv) {
-            console.warn('⚠️ Elemento sped-summary não encontrado');
-            return;
+    async handleMultipleFileUpload(file) {
+        try {
+            const resultado = await this.fileUploadManager.handleFileUpload(file);
+            
+            // Após upload bem-sucedido, mostrar análise multi-período
+            if (resultado) {
+                this.showMultipleSpedAnalysis(resultado);
+                this.navigationManager.navigateToSection('multi-analytics-section');
+                this.updateMultipleCompanyInfo();
+                
+                // Modal de configuração agora será aberto apenas quando usuário clicar no botão
+                console.log('✅ Arquivo processado em modo multi-período. Modal de configuração disponível via botão.');
+            }
+            
+            return resultado;
+        } catch (error) {
+            console.error('❌ Erro no upload multi-período via UI Manager:', error);
+            throw error;
         }
-        
-        // Usar dados consolidados ou do state
-        const data = consolidatedData || periodsState.consolidated || {};
-        const currentCompany = periodsState.currentCompany || {};
-        
-        summaryDiv.classList.remove('hidden');
-        summaryDiv.innerHTML = `
-            <div class="summary-item">
-                <h3>Múltiplos Períodos</h3>
-                <div class="summary-value">${periodsState.totalPeriods || 0} período(s)</div>
-                <div class="summary-label">Modo Multi-Período</div>
-            </div>
-            <div class="summary-item">
-                <h3>Empresa</h3>
-                <div class="summary-value">${currentCompany.razaoSocial || 'N/A'}</div>
-                <div class="summary-label">CNPJ: ${this.formatCNPJ(currentCompany.cnpj || '')}</div>
-            </div>
-            <div class="summary-item">
-                <h3>UF</h3>
-                <div class="summary-value">${currentCompany.uf || 'N/A'}</div>
-                <div class="summary-label">Estado da empresa</div>
-            </div>
-            <div class="summary-item">
-                <h3>Registros Consolidados</h3>
-                <div class="summary-value">${this.formatNumber(data.totalRegistros || 0)}</div>
-                <div class="summary-label">Todos os períodos</div>
-            </div>
-            <div class="summary-item">
-                <h3>Itens DIFAL Totais</h3>
-                <div class="summary-value">${this.formatNumber(data.totalItensDifal || 0)}</div>
-                <div class="summary-label">Consolidado multi-período</div>
-            </div>
-            <div class="summary-item">
-                <h3>Valor Total</h3>
-                <div class="summary-value">${this.formatCurrency(data.totalValorItens || 0)}</div>
-                <div class="summary-label">Base para cálculo DIFAL</div>
-            </div>
-        `;
-        
-        // Exibir tabela de itens DIFAL consolidados
-        this.showMultiPeriodItemsTable(periodsState);
-        
-        console.log('✅ Análise multi-período exibida com sucesso');
     }
     
     /**
-     * Exibe tabela de itens DIFAL consolidados de todos os períodos
-     * @private
-     * @param {Object} periodsState - Estado dos períodos
+     * Mostra análise dos dados SPED - MULTI-PERIOD VERSION
+     * @public
+     * @param {Object} spedData - Dados SPED processados
      */
-    showMultiPeriodItemsTable(periodsState) {
-        console.log('📋 Exibindo tabela de itens multi-período');
+    showMultipleSpedAnalysis(spedData) {
+        console.log('🔍 DEBUG showMultipleSpedAnalysis:', {
+            hasSpedData: !!spedData,
+            dataKeys: spedData ? Object.keys(spedData) : null,
+            hasDadosEmpresa: !!(spedData && spedData.dadosEmpresa),
+            empresa: spedData?.dadosEmpresa || null
+        });
         
+        const summaryDiv = document.getElementById('sped-summary');
         const tableDiv = document.getElementById('single-difal-items-table');
-        if (!tableDiv) {
-            console.warn('⚠️ Tabela de itens não encontrada');
+        
+        console.log('🔍 DEBUG DOM elements:', {
+            summaryDiv: !!summaryDiv,
+            summaryDivClasses: summaryDiv?.className,
+            tableDiv: !!tableDiv
+        });
+        
+        if (summaryDiv) {
+            try {
+                console.log('🔍 DEBUG: Dentro do if summaryDiv - iniciando processamento multi-período');
+                
+                // Verificar se estamos em modo multi-período
+                let displayData = spedData;
+                let isMultiplePeriod = true; // Sempre true para métodos multi
+                
+                console.log('🔍 DEBUG: Verificando dados antes do processamento multi:', {
+                    hasSpedData: !!spedData,
+                    hasDadosEmpresa: !!(spedData && spedData.dadosEmpresa)
+                });
+                
+                // Multi-período: tentar obter do PeriodsManager
+                if (!spedData || !spedData.dadosEmpresa) {
+                    console.log('🔍 DEBUG: Entrando na condição de multi-período');
+                    const periodsState = this.stateManager?.getPeriodsState();
+                    if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                        const firstPeriod = periodsState.periods[0];
+                        displayData = firstPeriod.dados;
+                        console.log('📅 Usando dados do modo multi-período para análise');
+                    }
+                } else {
+                    console.log('🔍 DEBUG: Usando dados single-period em modo multi');
+                }
+                
+                // Remover classe hidden e mostrar o div
+                console.log('🔍 DEBUG: Removendo classe hidden do summaryDiv');
+                summaryDiv.classList.remove('hidden');
+                console.log('🔍 DEBUG: Classes após remoção:', summaryDiv.className);
+            
+                const stats = displayData?.estatisticasDifal || {};
+                
+                if (isMultiplePeriod) {
+                    const periodsState = this.stateManager.getPeriodsState();
+                    const consolidated = periodsState.consolidated || {};
+                    
+                    summaryDiv.innerHTML = `
+                        <div class="summary-item">
+                            <h3>Múltiplos Períodos</h3>
+                            <div class="summary-value">${periodsState.totalPeriods || 1} período(s)</div>
+                            <div class="summary-label">Modo Multi-Período</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Empresa</h3>
+                            <div class="summary-value">${periodsState.currentCompany?.razaoSocial || displayData?.dadosEmpresa?.razaoSocial || 'N/A'}</div>
+                            <div class="summary-label">CNPJ: ${Utils.formatarCNPJ(periodsState.currentCompany?.cnpj || displayData?.dadosEmpresa?.cnpj || '')}</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>UF</h3>
+                            <div class="summary-value">${periodsState.currentCompany?.uf || displayData?.dadosEmpresa?.uf || 'N/A'}</div>
+                            <div class="summary-label">Estado da empresa</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Registros Consolidados</h3>
+                            <div class="summary-value">${Utils.formatarNumero(consolidated.totalRegistros || 0)}</div>
+                            <div class="summary-label">Todos os períodos</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Itens DIFAL Totais</h3>
+                            <div class="summary-value">${Utils.formatarNumero(consolidated.totalItensDifal || 0)}</div>
+                            <div class="summary-label">Consolidado multi-período</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Valor Total</h3>
+                            <div class="summary-value">${Utils.formatarMoeda(consolidated.totalValorItens || 0)}</div>
+                            <div class="summary-label">Base para cálculo DIFAL</div>
+                        </div>
+                    `;
+                } else {
+                    summaryDiv.innerHTML = `
+                        <div class="summary-item">
+                            <h3>Arquivo Processado</h3>
+                            <div class="summary-value">${displayData.fileName || 'N/A'}</div>
+                            <div class="summary-label">Arquivo SPED</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Empresa</h3>
+                            <div class="summary-value">${displayData.dadosEmpresa?.razaoSocial || 'N/A'}</div>
+                            <div class="summary-label">CNPJ: ${Utils.formatarCNPJ(displayData.dadosEmpresa?.cnpj || '')}</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Período</h3>
+                            <div class="summary-value">${displayData.periodoApuracao || 'N/A'}</div>
+                            <div class="summary-label">UF: ${displayData.dadosEmpresa?.uf || 'N/A'}</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Registros Totais</h3>
+                            <div class="summary-value">${Utils.formatarNumero(displayData.estatisticas?.totalRegistros || 0)}</div>
+                            <div class="summary-label">${Object.keys(displayData.registros || {}).length} tipos</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Itens DIFAL</h3>
+                            <div class="summary-value">${Utils.formatarNumero(stats.totalItens || 0)}</div>
+                            <div class="summary-label">CFOPs DIFAL identificados</div>
+                        </div>
+                        <div class="summary-item">
+                            <h3>Valor Total</h3>
+                            <div class="summary-value">${Utils.formatarMoeda(stats.estatisticasValores?.totalValorItem || 0)}</div>
+                            <div class="summary-label">Base para cálculo DIFAL</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('❌ Erro ao exibir análise SPED multi-período:', error);
+                if (summaryDiv) {
+                    summaryDiv.innerHTML = '<div class="error-message">Erro ao carregar dados de análise multi-período</div>';
+                }
+            }
+        }
+        
+        // Exibir tabela de itens
+        if (tableDiv) {
+            let itemsToShow = [];
+            
+            if (spedData && spedData.itensDifal && spedData.itensDifal.length > 0) {
+                itemsToShow = spedData.itensDifal.slice(0, 10);
+            } else {
+                // Tentar obter itens do primeiro período em modo multi-período
+                const periodsState = this.stateManager?.getPeriodsState();
+                if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                    const firstPeriod = periodsState.periods[0];
+                    if (firstPeriod.dados && firstPeriod.dados.itensDifal) {
+                        itemsToShow = firstPeriod.dados.itensDifal.slice(0, 10);
+                    }
+                }
+            }
+            
+            if (itemsToShow.length > 0) {
+                this.createMultipleDifalTable(tableDiv, itemsToShow);
+            }
+        }
+    }
+    
+    /**
+     * Calcula DIFAL para múltiplos períodos - MULTI-PERIOD VERSION
+     * @public
+     * @param {Object} config - Configurações do modal (opcional)
+     */
+    async calculateMultipleDifal(config = {}) {
+        const spedData = this.stateManager.getSpedData();
+        if (!spedData || !spedData.itensDifal) {
+            this.showError('Dados SPED não disponíveis');
+            return;
+        }
+
+        if (!spedData.dadosEmpresa?.uf) {
+            this.showError('UF da empresa não identificada no SPED');
+            return;
+        }
+
+        const ufDestino = spedData.dadosEmpresa.uf;
+        console.log(`Calculando DIFAL multi-período para empresa em ${ufDestino}`);
+        console.log('Configurações recebidas para cálculo multi-período:', config);
+        
+        this.showProgress('Calculando DIFAL multi-período...', 20);
+        
+        try {
+            // Usar DifalAppModular para cálculo
+            if (!window.difalApp) {
+                throw new Error('DifalApp não disponível');
+            }
+            
+            // Preparar configuração para o app modular
+            const configApp = {
+                ufOrigem: config.ufOrigem || (ufDestino === 'SP' ? 'MG' : 'SP'),
+                metodologia: config.metodologia,
+                percentualDestinatario: config.percentualDestinatario,
+                beneficiosGlobais: config.beneficiosGlobais
+            };
+            
+            this.showProgress('Processando cálculos multi-período...', 60);
+            
+            const { resultados, totalizadores } = await window.difalApp.calculateDifal(configApp);
+            
+            this.showProgress('Cálculo multi-período concluído!', 100);
+            
+            // Armazenar resultados
+            window.difalResults = {
+                resultados,
+                totalizadores
+            };
+            
+            // Mostrar resultados - DELEGADO para ResultsRenderer
+            this.showMultipleCalculationResults(resultados, totalizadores);
+            
+        } catch (error) {
+            console.error('Erro no cálculo DIFAL multi-período:', error);
+            this.showError(`Erro no cálculo multi-período: ${error.message}`);
+        }
+    }
+
+    /**
+     * Mostra resultados do cálculo multi-período - MULTI-PERIOD VERSION
+     * @public
+     * @param {Array} resultados - Resultados do cálculo
+     * @param {Object} totalizadores - Totalizadores
+     */
+    showMultipleCalculationResults(resultados, totalizadores) {
+        console.log('🎭 UI Manager.showMultipleCalculationResults chamado:', { 
+            resultados: resultados?.length || 0, 
+            totalizadores: totalizadores || 'undefined',
+            resultsRenderer: !!this.resultsRenderer 
+        });
+        
+        if (!this.resultsRenderer) {
+            console.error('❌ ResultsRenderer não inicializado no UI Manager');
             return;
         }
         
-        // Consolidar itens de todos os períodos
-        const consolidatedItems = this.consolidateItemsFromPeriods(periodsState.periods || []);
-        
-        if (consolidatedItems.length === 0) {
-            tableDiv.innerHTML = `
-                <div class="no-data">
-                    <p>Nenhum item DIFAL encontrado nos períodos carregados.</p>
-                </div>
-            `;
-            return;
+        return this.resultsRenderer.showCalculationResults(resultados, totalizadores);
+    }
+
+    /**
+     * Atualiza informações da empresa - MULTI-PERIOD VERSION  
+     * @public
+     */
+    updateMultipleCompanyInfo() {
+        const spedData = this.stateManager.getSpedData();
+        if (spedData?.dadosEmpresa) {
+            const empresa = spedData.dadosEmpresa;
+            
+            // Atualizar elementos multi-período específicos
+            this.setElementText('multi-current-company-name', empresa.razaoSocial || 'N/A');
+            this.setElementText('multi-current-company-cnpj', Utils.formatarCNPJ(empresa.cnpj || ''));
+            this.setElementText('multi-current-company-uf', empresa.uf || 'N/A');
+            
+            // Mostrar info da empresa
+            const companyInfo = document.getElementById('multi-current-company-info');
+            if (companyInfo) {
+                companyInfo.classList.remove('hidden');
+            }
+            
+            console.log('✅ Informações da empresa atualizadas em modo multi-período:', empresa.razaoSocial);
         }
-        
-        // Renderizar tabela
-        let tableHTML = `
-            <h3>📦 Itens DIFAL Consolidados (${consolidatedItems.length} itens)</h3>
+    }
+    
+    /**
+     * Cria tabela de itens DIFAL - MULTI-PERIOD VERSION
+     * @private
+     * @param {HTMLElement} container - Container da tabela
+     * @param {Array} items - Itens para exibir
+     */
+    createMultipleDifalTable(container, items) {
+        if (!container || !items?.length) return;
+
+        const tableHtml = `
+            <div class="table-header">
+                <h3>📦 Itens DIFAL Identificados (${items.length} primeiros)</h3>
+                <p class="table-subtitle">Itens sujeitos ao DIFAL encontrados nos arquivos SPED multi-período</p>
+            </div>
             <div class="table-container">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Período</th>
                             <th>NCM</th>
                             <th>Descrição</th>
                             <th>CFOP</th>
-                            <th>Valor</th>
+                            <th>Valor (R$)</th>
                             <th>CST</th>
-                            <th>Ações</th>
+                            <th>Alíquota (%)</th>
                         </tr>
                     </thead>
                     <tbody>
-        `;
-        
-        consolidatedItems.forEach((item, index) => {
-            tableHTML += `
-                <tr>
-                    <td>${item._periodo || 'N/A'}</td>
-                    <td>${item.ncm || 'N/A'}</td>
-                    <td>${item.descricaoItem || item.descItem || 'N/A'}</td>
-                    <td>${item.cfop || 'N/A'}</td>
-                    <td>${this.formatCurrency(item.valor || 0)}</td>
-                    <td>${item.cst || 'N/A'}</td>
-                    <td>
-                        <button class="btn btn-sm btn-info" onclick="window.uiManager.viewItemDetails('${item.codigo}')">
-                            👁️ Ver
-                        </button>
-                    </td>
-                </tr>
-            `;
-        });
-        
-        tableHTML += `
+                        ${items.map(item => `
+                            <tr>
+                                <td>${item.ncm || 'N/A'}</td>
+                                <td class="desc-cell" title="${item.descricaoItem || item.descItem || 'N/A'}">
+                                    ${(item.descricaoItem || item.descItem || 'N/A').substring(0, 40)}${(item.descricaoItem || item.descItem || '').length > 40 ? '...' : ''}
+                                </td>
+                                <td>${item.cfop || 'N/A'}</td>
+                                <td>${Utils.formatarMoeda(item.valor || 0)}</td>
+                                <td>${item.cst || 'N/A'}</td>
+                                <td>${(item.aliqIcms || 0).toFixed(1)}%</td>
+                            </tr>
+                        `).join('')}
                     </tbody>
                 </table>
             </div>
         `;
-        
-        tableDiv.innerHTML = tableHTML;
-        tableDiv.classList.remove('hidden');
+
+        container.innerHTML = tableHtml;
+        container.classList.remove('hidden');
     }
     
     /**
-     * Consolida itens DIFAL de todos os períodos
+     * Processa múltiplos arquivos de períodos - MULTI-PERIOD VERSION
      * @private
-     * @param {Array} periods - Lista de períodos
-     * @returns {Array} Itens consolidados
      */
-    consolidateItemsFromPeriods(periods) {
-        const consolidatedItems = [];
+    async handleMultiplePeriodFiles(files) {
+        if (!files || files.length === 0) return;
         
-        periods.forEach(period => {
-            const items = period.dados?.itensDifal || [];
-            items.forEach(item => {
-                consolidatedItems.push({
-                    ...item,
-                    _periodo: period.periodo?.label || 'N/A',
-                    _periodId: period.id
-                });
-            });
-        });
-        
-        return consolidatedItems;
-    }
-    
-    /**
-     * Calcula DIFAL para múltiplos períodos consolidados
-     * @public
-     */
-    async calculateMultiPeriodDifal() {
-        console.log('🧮 Iniciando cálculo DIFAL multi-período');
+        console.log(`📁 Processando ${files.length} arquivos SPED para múltiplos períodos`);
         
         try {
-            // Extrair UF automaticamente dos dados SPED (como no single-period)
-            const ufOrigemExtraida = this.extractUfFromCurrentData();
-            if (!ufOrigemExtraida) {
-                this.showError('UF não pode ser determinada dos dados SPED carregados');
-                return;
+            this.showProgress('Processando múltiplos períodos...', 0);
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const progress = Math.round(((i + 1) / files.length) * 100);
+                
+                this.showProgress(`Processando arquivo ${i + 1}/${files.length}: ${file.name}`, progress);
+                
+                await this.processMultiplePeriodsFile(file);
+                
+                // Pequena pausa para atualização da UI
+                await new Promise(resolve => setTimeout(resolve, 100));
             }
             
-            const aliquotaInterna = parseFloat(document.getElementById('multi-aliquota-interna')?.value || 18);
-            
-            // Validar consistência de UF entre períodos
-            const ufValidation = this.validateUfConsistency();
-            if (!ufValidation.isConsistent) {
-                console.warn('⚠️ Inconsistência de UF detectada:', ufValidation.message);
-                if (!confirm(`${ufValidation.message}\n\nDeseja continuar com o cálculo?`)) {
-                    return;
-                }
-            }
-            
-            console.log(`🎯 Calculando DIFAL multi-período para UF: ${ufOrigemExtraida}`);
-            
-            // Obter dados dos períodos
-            const periodsState = this.stateManager.getPeriodsState();
-            if (!periodsState.periods || periodsState.periods.length === 0) {
-                this.showError('Nenhum período carregado para cálculo');
-                return;
-            }
-            
-            // Consolidar itens de todos os períodos
-            const consolidatedItems = this.consolidateItemsFromPeriods(periodsState.periods);
-            
-            if (consolidatedItems.length === 0) {
-                this.showError('Nenhum item DIFAL encontrado para cálculo');
-                return;
-            }
-            
-            this.showProgress('Calculando DIFAL para múltiplos períodos...', 0);
-            
-            // Preparar dados para o calculador
-            const calculationData = {
-                itensDifal: consolidatedItems,
-                empresa: periodsState.currentCompany,
-                configuracao: {
-                    ufDestino: ufOrigemExtraida,
-                    aliquotaInterna: aliquotaInterna,
-                    calcularFcp: true, // Sempre calcular FCP para multi-período
-                    metodologia: 'base_dupla' // Usar metodologia mais abrangente
-                }
-            };
-            
-            // Executar cálculo usando o DifalCalculator
-            const results = await this.executeDifalCalculation(calculationData);
-            
-            this.showProgress('Cálculo DIFAL concluído!', 100);
-            
-            // Exibir resultados
-            this.showMultiPeriodCalculationResults(results);
-            
-            // Navegar para seção de resultados
-            this.navigationManager.navigateToSection('multi-reports-section');
-            
-            console.log('✅ Cálculo DIFAL multi-período concluído');
+            this.showProgress('Múltiplos períodos processados com sucesso!', 100);
+            this.updateMultiplePeriodsDisplay();
+            this.showMultipleSpedAnalysis(); // Exibir análise após processamento
+            this.updateMultipleMultiPeriodUfDisplay(); // Atualizar display da UF extraída
+            this.navigationManager.navigateToSection('multi-analytics-section'); // Navegar automaticamente
             
         } catch (error) {
-            console.error('❌ Erro no cálculo DIFAL multi-período:', error);
-            this.showError(`Erro no cálculo: ${error.message}`);
+            console.error('❌ Erro ao processar múltiplos períodos:', error);
+            this.showError(`Erro: ${error.message}`);
         }
     }
     
     /**
-     * Executa o cálculo DIFAL usando o calculador existente
+     * Processa um arquivo individual de período - MULTI-PERIOD VERSION
      * @private
-     * @param {Object} calculationData - Dados para cálculo
-     * @returns {Promise<Object>} Resultados do cálculo
      */
-    async executeDifalCalculation(calculationData) {
-        // Usar o mesmo calculador do single-period
-        if (!window.difalCalculator) {
-            throw new Error('Calculador DIFAL não disponível');
+    async processMultiplePeriodsFile(file) {
+        try {
+            // Usar FileUploadManager que já tem acesso ao spedParser configurado
+            const spedData = await this.fileUploadManager.processFileWithParser(file);
+            await this.periodsManager.addPeriod(spedData);
+            return spedData;
+        } catch (error) {
+            throw new Error(`Erro ao processar arquivo ${file.name}: ${error.message}`);
         }
-        
-        // Simular o processo de cálculo do single-period
-        const results = {
-            resultados: [],
-            totalizadores: {
-                totalItems: calculationData.itensDifal.length,
-                valorTotalBase: 0,
-                valorTotalDifal: 0,
-                valorTotalFcp: 0,
-                valorTotalRecolher: 0
-            },
-            configuracao: calculationData.configuracao,
-            empresa: calculationData.empresa,
-            periodos: calculationData.itensDifal.map(item => item._periodo).filter((v, i, a) => a.indexOf(v) === i)
-        };
-        
-        // Processar cada item
-        for (let i = 0; i < calculationData.itensDifal.length; i++) {
-            const item = calculationData.itensDifal[i];
-            
-            // Calcular DIFAL para o item
-            const itemResult = this.calculateItemDifal(item, calculationData.configuracao);
-            results.resultados.push(itemResult);
-            
-            // Atualizar totalizadores
-            results.totalizadores.valorTotalBase += itemResult.baseCalculo || 0;
-            results.totalizadores.valorTotalDifal += itemResult.valorDifal || 0;
-            results.totalizadores.valorTotalFcp += itemResult.valorFcp || 0;
-            results.totalizadores.valorTotalRecolher += (itemResult.valorDifal || 0) + (itemResult.valorFcp || 0);
-            
-            // Atualizar progresso
-            const progress = Math.round(((i + 1) / calculationData.itensDifal.length) * 80) + 20;
-            this.showProgress(`Calculando item ${i + 1}/${calculationData.itensDifal.length}...`, progress);
-        }
-        
-        return results;
     }
     
     /**
-     * Calcula DIFAL para um item específico
+     * Limpa todos os períodos - MULTI-PERIOD VERSION
      * @private
-     * @param {Object} item - Item para cálculo
-     * @param {Object} config - Configuração do cálculo
-     * @returns {Object} Resultado do cálculo para o item
      */
-    calculateItemDifal(item, config) {
-        const baseCalculo = item.valor || 0;
-        const aliqOrigem = this.getAliquotaOrigem(item);
-        const aliqDestino = config.aliquotaInterna;
-        const aliqFcp = this.getAliquotaFcp(config.ufDestino);
-        
-        // Cálculo DIFAL
-        const valorDifal = baseCalculo * Math.max(0, (aliqDestino - aliqOrigem)) / 100;
-        const valorFcp = config.calcularFcp ? (baseCalculo * aliqFcp / 100) : 0;
-        
-        return {
-            ...item,
-            baseCalculo: baseCalculo,
-            aliqOrigem: aliqOrigem,
-            aliqDestino: aliqDestino,
-            aliqFcp: aliqFcp,
-            valorDifal: valorDifal,
-            valorFcp: valorFcp,
-            valorTotal: valorDifal + valorFcp,
-            metodoCalculo: config.metodologia
-        };
+    clearAllMultiplePeriods() {
+        if (this.periodsManager) {
+            this.periodsManager.clearAllPeriods();
+        }
+        this.updateMultiplePeriodsDisplay();
+        console.log('✅ Todos os períodos multi-período foram limpos');
     }
     
     /**
-     * Obtém alíquota de origem baseada no item
+     * Gera análises para múltiplos períodos - MULTI-PERIOD VERSION
      * @private
-     * @param {Object} item - Item SPED
-     * @returns {number} Alíquota de origem
      */
-    getAliquotaOrigem(item) {
-        // Usar mesma lógica do calculador principal
-        const cst = item.cst || '00';
-        const aliqNominal = item.aliqIcms || 18;
-        
-        // CST 00, 90: usar alíquota nominal
-        if (['00', '90'].includes(cst.slice(-2))) {
-            return aliqNominal;
+    generateMultipleAnalytics() {
+        console.log('📊 Gerando análises para múltiplos períodos');
+        // Delegar para analytics manager
+        if (this.analyticsManager) {
+            this.analyticsManager.generateAnalytics();
         }
-        
-        // CST 10, 30, 60: substituição tributária = 0
-        if (['10', '30', '60'].includes(cst.slice(-2))) {
-            return 0;
-        }
-        
-        // CST 20, 70: calcular alíquota efetiva
-        if (['20', '70'].includes(cst.slice(-2))) {
-            const vlItem = item.valor || 0;
-            const vlIcms = item.vlIcms || 0;
-            return vlItem > 0 ? (vlIcms / vlItem * 100) : 0;
-        }
-        
-        // CST 40, 41, 50, 51: isento/suspenso = 0
-        if (['40', '41', '50', '51'].includes(cst.slice(-2))) {
-            return 0;
-        }
-        
-        return aliqNominal;
     }
     
     /**
-     * Obtém alíquota FCP baseada na UF
+     * Prossegue para análises - MULTI-PERIOD VERSION
      * @private
-     * @param {string} uf - UF de destino
-     * @returns {number} Alíquota FCP
      */
-    getAliquotaFcp(uf) {
-        const aliquotasFcp = {
-            'SP': 1.0,
-            'RJ': 2.0,
-            'MG': 1.0,
-            'RS': 1.0,
-            'PR': 1.0,
-            'SC': 1.0
-        };
-        
-        return aliquotasFcp[uf] || 0;
+    proceedToMultipleAnalytics() {
+        this.navigationManager.navigateToSection('multi-analytics-section');
+        console.log('🔄 Navegando para seção de análises multi-período');
     }
     
     /**
-     * Exibe resultados do cálculo DIFAL multi-período
+     * Atualiza display dos períodos - MULTI-PERIOD VERSION
      * @private
-     * @param {Object} results - Resultados do cálculo
      */
-    showMultiPeriodCalculationResults(results) {
-        console.log('📊 Exibindo resultados do cálculo multi-período');
+    updateMultiplePeriodsDisplay() {
+        const periodsState = this.stateManager?.getPeriodsState() || {};
         
-        // Atualizar resumo da seção de cálculo
-        this.updateMultiCalculationSummary(results);
+        // Atualizar contadores
+        document.getElementById('periods-count')?.textContent = periodsState.totalPeriods || 0;
+        document.getElementById('company-cnpj')?.textContent = 
+            Utils.formatarCNPJ(periodsState.currentCompany?.cnpj || '');
         
-        // Exibir tabela de resultados
-        this.showMultiCalculationResultsTable(results);
-        
-        // Salvar resultados no state para exportação
-        this.stateManager.updateCalculationResults(results);
+        console.log(`📊 Display de períodos multi-período atualizado: ${periodsState.totalPeriods || 0} períodos`);
     }
     
     /**
-     * Atualiza resumo da seção de cálculo
+     * Atualiza display da UF multi-período - MULTI-PERIOD VERSION
      * @private
-     * @param {Object} results - Resultados do cálculo
      */
-    updateMultiCalculationSummary(results) {
-        document.getElementById('multi-total-periods').textContent = results.periodos.length;
-        document.getElementById('multi-total-items').textContent = results.totalizadores.totalItems;
-        document.getElementById('multi-total-value').textContent = this.formatCurrency(results.totalizadores.valorTotalRecolher);
+    updateMultipleMultiPeriodUfDisplay() {
+        const ufExtraida = this.extractMultipleUfFromCurrentData();
+        const ufDisplayElement = document.getElementById('multi-uf-display');
+        
+        if (ufDisplayElement && ufExtraida) {
+            ufDisplayElement.textContent = ufExtraida;
+            console.log(`🎯 UF extraída e exibida em modo multi-período: ${ufExtraida}`);
+        }
     }
     
     /**
-     * Exibe tabela de resultados do cálculo
+     * Extrai UF dos dados atuais - MULTI-PERIOD VERSION
      * @private
-     * @param {Object} results - Resultados do cálculo
+     * @returns {string|null} UF extraída
      */
-    showMultiCalculationResultsTable(results) {
-        const resultsDiv = document.getElementById('multi-calculation-results');
-        const tableBody = document.getElementById('multi-difal-results-table')?.querySelector('tbody');
+    extractMultipleUfFromCurrentData() {
+        const periodsState = this.stateManager?.getPeriodsState();
         
-        if (!resultsDiv || !tableBody) {
-            console.warn('⚠️ Elementos da tabela de resultados não encontrados');
-            return;
+        // Tentar obter UF da empresa atual
+        if (periodsState?.currentCompany?.uf) {
+            return periodsState.currentCompany.uf;
         }
         
-        // Limpar tabela
-        tableBody.innerHTML = '';
+        // Tentar obter do primeiro período
+        if (periodsState?.periods?.length > 0) {
+            const firstPeriod = periodsState.periods[0];
+            return firstPeriod.dados?.dadosEmpresa?.uf || null;
+        }
         
-        // Preencher tabela com resultados
-        results.resultados.forEach(item => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.ncm || 'N/A'}</td>
-                <td>${item.descricaoItem || item.descItem || 'N/A'}</td>
-                <td>${this.formatCurrency(item.baseCalculo || 0)}</td>
-                <td>${(item.aliqOrigem || 0).toFixed(2)}%</td>
-                <td>${(item.aliqDestino || 0).toFixed(2)}%</td>
-                <td>${this.formatCurrency(item.valorDifal || 0)}</td>
-                <td>${this.formatCurrency(item.valorFcp || 0)}</td>
-                <td><strong>${this.formatCurrency(item.valorTotal || 0)}</strong></td>
-            `;
-            tableBody.appendChild(row);
-        });
-        
-        // Mostrar seção de resultados
-        resultsDiv.classList.remove('hidden');
+        return null;
     }
+    
+    // showMultiPeriodAnalysis - REMOVED (will be duplicated from single-period)
+    
+    // showMultiPeriodItemsTable - REMOVED (will be duplicated from single-period)
+    
+    // consolidateItemsFromPeriods - REMOVED (will be duplicated from single-period)
+    
+    // calculateMultiPeriodDifal, executeDifalCalculation, calculateItemDifal, getAliquotaOrigem, getAliquotaFcp - REMOVED (will be duplicated from single-period)
+    
+    // showMultiPeriodCalculationResults - REMOVED (will be duplicated from single-period)
+    
+    // updateMultiCalculationSummary - REMOVED (will be duplicated from single-period)
+    
+    // showMultiCalculationResultsTable - REMOVED (will be duplicated from single-period)
 
     /**
      * Processa múltiplos arquivos de períodos

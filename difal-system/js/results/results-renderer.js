@@ -176,21 +176,8 @@ class ResultsRenderer {
                 console.log('⚠️ Nenhum resultado para renderizar detalhes');
             }
             
-            // Também popular container da aba Results dedicada (fix mínimo)
-            const finalResultsDiv = document.getElementById('single-final-results');
-            if (finalResultsDiv && totalizadores) {
-                const simpleHTML = `
-                    <div class="simple-results">
-                        <h3>💰 Resumo do Cálculo DIFAL</h3>
-                        <div class="total-difal">
-                            <strong>Total DIFAL a Recolher: R$ ${this.formatCurrency(totalizadores.totalRecolher || 0)}</strong>
-                        </div>
-                        <p>Cálculo realizado para ${totalizadores.totalItens || 0} itens (${totalizadores.itensComDifal || 0} com DIFAL)</p>
-                    </div>
-                `;
-                finalResultsDiv.innerHTML = simpleHTML;
-                console.log('✅ Resultados copiados para aba Results dedicada');
-            }
+            // Popular containers de resultados baseado no modo ativo
+            this.renderModeSpecificResults(totalizadores, resultados);
             
             // Emitir evento de resultados exibidos
             if (this.eventBus) {
@@ -202,6 +189,95 @@ class ResultsRenderer {
         } catch (error) {
             console.error('❌ Erro ao exibir resultados:', error);
             this.handleError('Erro ao exibir resultados', error);
+        }
+    }
+
+    /**
+     * Renderiza resultados específicos do modo (single/multi-period)
+     * @private
+     */
+    renderModeSpecificResults(totalizadores, resultados) {
+        const activeMode = window.modeManager?.activeMode || 'single';
+        
+        if (activeMode === 'single') {
+            this.renderSinglePeriodResults(totalizadores, resultados);
+        } else {
+            this.renderMultiPeriodResults(totalizadores, resultados);
+        }
+    }
+
+    /**
+     * Renderiza resultados para modo período único
+     * @private
+     */
+    renderSinglePeriodResults(totalizadores, resultados) {
+        const finalResultsDiv = document.getElementById('single-final-results');
+        if (finalResultsDiv && totalizadores) {
+            const simpleHTML = `
+                <div class="simple-results">
+                    <h3>💰 Resumo do Cálculo DIFAL</h3>
+                    <div class="total-difal">
+                        <strong>Total DIFAL a Recolher: R$ ${this.formatCurrency(totalizadores.totalRecolher || 0)}</strong>
+                    </div>
+                    <p>Cálculo realizado para ${totalizadores.totalItens || 0} itens (${totalizadores.itensComDifal || 0} com DIFAL)</p>
+                </div>
+            `;
+            finalResultsDiv.innerHTML = simpleHTML;
+            console.log('✅ Resultados single-period renderizados na aba Results');
+        }
+    }
+
+    /**
+     * Renderiza resultados para modo múltiplos períodos
+     * @private
+     */
+    renderMultiPeriodResults(totalizadores, resultados) {
+        // Renderizar na seção de Analytics multi-período
+        const analyticsDiv = document.getElementById('multi-analytics-content');
+        if (analyticsDiv && totalizadores) {
+            let periodInfo = '';
+            if (totalizadores.periodMetadata) {
+                periodInfo = `
+                    <div class="period-info">
+                        <h4>📅 Período: ${totalizadores.periodMetadata.periodo}</h4>
+                        <p>Empresa: ${totalizadores.periodMetadata.empresa} (CNPJ: ${totalizadores.periodMetadata.cnpj})</p>
+                        <p>Data: ${totalizadores.periodMetadata.dataInicial} a ${totalizadores.periodMetadata.dataFinal}</p>
+                    </div>
+                `;
+            }
+
+            const multiHTML = `
+                <div class="multi-period-results">
+                    <h3>📊 Resultados DIFAL - Período Individual</h3>
+                    ${periodInfo}
+                    
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <span class="result-value">${this.formatCurrency(totalizadores.totalRecolher || 0)}</span>
+                            <span class="result-label">Total a Recolher</span>
+                        </div>
+                        <div class="result-card">
+                            <span class="result-value">${this.formatNumber(totalizadores.totalItens || 0)}</span>
+                            <span class="result-label">Total de Itens</span>
+                        </div>
+                        <div class="result-card">
+                            <span class="result-value">${this.formatNumber(totalizadores.itensComDifal || 0)}</span>
+                            <span class="result-label">Itens com DIFAL</span>
+                        </div>
+                        <div class="result-card">
+                            <span class="result-value">${this.formatCurrency(totalizadores.totalDifal || 0)}</span>
+                            <span class="result-label">DIFAL Total</span>
+                        </div>
+                    </div>
+
+                    <div class="multi-period-notice">
+                        <p>💡 Este resultado será consolidado com outros períodos para análise integrada</p>
+                        <p>📈 Navegue para <strong>Relatórios</strong> para ver análise consolidada completa</p>
+                    </div>
+                </div>
+            `;
+            analyticsDiv.innerHTML = multiHTML;
+            console.log('✅ Resultados multi-period renderizados na seção Analytics');
         }
     }
 

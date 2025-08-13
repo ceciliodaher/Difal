@@ -159,9 +159,7 @@ class DifalAppModular {
      */
     async checkModularDependencies(maxRetries = 10, retryDelay = 100) {
         const required = [
-            'StateManager', 'ConfigurationManager', 'UIManager',
-            'SpedParserModular', 'DifalCalculatorSimple', 
-            'Utils', 'EstadosUtil'
+            'StateManager', 'Utils', 'EstadosUtil'
         ];
         
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
