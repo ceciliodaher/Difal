@@ -66,10 +66,56 @@ class UIManager {
             this.fileUploadManager.setPeriodsManager(this.periodsManager);
             this.exportManager.setAnalyticsManagers(this.analyticsManager, this.paretoAnalyzer);
             
+            // Integrar módulos multi-período ao DifalApp para acesso global
+            this.integrateWithDifalApp();
+            
             console.log('🎯 Módulos especializados inicializados com sucesso');
         } catch (error) {
             console.error('❌ Erro ao inicializar módulos:', error);
             throw error;
+        }
+    }
+
+    /**
+     * Mapeia ID de elemento baseado no modo ativo
+     * @param {string} baseId - ID base do elemento
+     * @param {string} mode - Modo ativo ('single' | 'multi')
+     * @returns {HTMLElement|null} Elemento encontrado ou null
+     */
+    getElementByMode(baseId, mode = null) {
+        // Se não especificado, usar modo atual
+        if (!mode) {
+            mode = this.stateManager?.getState('app.currentMode') || 'single';
+        }
+        
+        // Tentar diferentes variações do ID
+        const variations = [
+            `${mode}-${baseId}`,
+            baseId,
+            `${baseId}-${mode}`
+        ];
+        
+        for (const id of variations) {
+            const element = document.getElementById(id);
+            if (element) {
+                return element;
+            }
+        }
+        
+        console.warn(`⚠️ Elemento não encontrado para baseId: ${baseId}, modo: ${mode}`);
+        return null;
+    }
+
+    /**
+     * Define texto de elemento de forma segura
+     * @param {string} baseId - ID base do elemento
+     * @param {string} text - Texto a definir
+     * @param {string} mode - Modo ativo
+     */
+    setElementText(baseId, text, mode = null) {
+        const element = this.getElementByMode(baseId, mode);
+        if (element) {
+            element.textContent = text;
         }
     }
 
@@ -873,6 +919,23 @@ class UIManager {
         
         console.log('🔗 UI Manager integrado com Configuration Manager');
     }
+
+    /**
+     * Integra módulos multi-período ao DifalApp para acesso global
+     * @private
+     */
+    integrateWithDifalApp() {
+        if (window.difalApp) {
+            // Registrar managers multi-período no DifalApp
+            window.difalApp.analyticsManager = this.analyticsManager;
+            window.difalApp.chartsManager = this.chartsManager;
+            window.difalApp.paretoAnalyzer = this.paretoAnalyzer;
+            
+            console.log('🌐 Módulos multi-período integrados ao DifalApp global');
+        } else {
+            console.warn('⚠️ DifalApp não disponível para integração');
+        }
+    }
     
     /**
      * Coleta configuração geral do modal
@@ -1008,6 +1071,63 @@ class UIManager {
     }
     
     /**
+     * Versão específica do showSpedAnalysis para multi-período
+     * @public
+     * @param {Object} consolidatedData - Dados consolidados de múltiplos períodos
+     */
+    showMultiPeriodAnalysis(consolidatedData = null) {
+        console.log('📊 Exibindo análise multi-período');
+        
+        const periodsState = this.stateManager.getPeriodsState();
+        const summaryDiv = this.getElementByMode('sped-summary', 'multi');
+        
+        if (!summaryDiv) {
+            console.warn('⚠️ Elemento sped-summary não encontrado para modo multi');
+            return;
+        }
+        
+        // Usar dados consolidados ou do state
+        const data = consolidatedData || periodsState.consolidated || {};
+        const currentCompany = periodsState.currentCompany || {};
+        
+        summaryDiv.classList.remove('hidden');
+        summaryDiv.innerHTML = `
+            <div class="summary-item">
+                <h3>Múltiplos Períodos</h3>
+                <div class="summary-value">${periodsState.totalPeriods || 0} período(s)</div>
+                <div class="summary-label">Modo Multi-Período</div>
+            </div>
+            <div class="summary-item">
+                <h3>Empresa</h3>
+                <div class="summary-value">${currentCompany.razaoSocial || 'N/A'}</div>
+                <div class="summary-label">CNPJ: ${Utils.formatarCNPJ(currentCompany.cnpj || '')}</div>
+            </div>
+            <div class="summary-item">
+                <h3>UF</h3>
+                <div class="summary-value">${currentCompany.uf || 'N/A'}</div>
+                <div class="summary-label">Estado da empresa</div>
+            </div>
+            <div class="summary-item">
+                <h3>Registros Consolidados</h3>
+                <div class="summary-value">${Utils.formatarNumero(data.totalRegistros || 0)}</div>
+                <div class="summary-label">Todos os períodos</div>
+            </div>
+            <div class="summary-item">
+                <h3>Itens DIFAL Totais</h3>
+                <div class="summary-value">${Utils.formatarNumero(data.totalItensDifal || 0)}</div>
+                <div class="summary-label">Consolidado multi-período</div>
+            </div>
+            <div class="summary-item">
+                <h3>Valor Total</h3>
+                <div class="summary-value">${Utils.formatarMoeda(data.totalValorItens || 0)}</div>
+                <div class="summary-label">Base para cálculo DIFAL</div>
+            </div>
+        `;
+        
+        console.log('✅ Análise multi-período exibida com sucesso');
+    }
+
+    /**
      * Processa múltiplos arquivos de períodos
      * @private
      */
@@ -1033,6 +1153,7 @@ class UIManager {
             
             this.showProgress('Múltiplos períodos processados com sucesso!', 100);
             this.updatePeriodsDisplay();
+            this.showMultiPeriodAnalysis(); // Exibir análise após processamento
             
         } catch (error) {
             console.error('❌ Erro ao processar múltiplos períodos:', error);
@@ -1056,21 +1177,52 @@ class UIManager {
     }
     
     /**
+     * Processa um arquivo SPED individual para multi-período
+     * ARQUITETURA LIMPA: Reutiliza FileUploadManager que já funciona no single-period
+     * @private
+     * @param {File} file - Arquivo SPED
+     */
+    async processPeriodsFile(file) {
+        try {
+            console.log(`📁 Processando arquivo: ${file.name}`);
+            
+            // SOLUÇÃO ARQUITETURAL: Delegar para FileUploadManager que já tem SpedParser configurado
+            // Isso mantém consistência com o modo single-period
+            const spedData = await this.fileUploadManager.processFileForMultiPeriod(file);
+            
+            // Adicionar período ao PeriodsManager
+            if (this.periodsManager) {
+                await this.periodsManager.addPeriod(spedData);
+                console.log(`✅ Período adicionado: ${spedData.periodoApuracao}`);
+            } else {
+                console.warn('⚠️ PeriodsManager não disponível');
+            }
+            
+        } catch (error) {
+            console.error(`❌ Erro ao processar arquivo ${file.name}:`, error);
+            throw error;
+        }
+    }
+
+    // REMOVIDO: readFileAsText() - agora delegamos para FileUploadManager
+    // Isso elimina duplicação de código e mantém single source of truth
+
+    /**
      * Atualiza exibição dos períodos
      * @private
      */
     updatePeriodsDisplay() {
         const periodsState = this.stateManager.getPeriodsState();
         
-        // Atualizar informações da empresa atual
-        const currentCompanyInfo = document.getElementById('current-company-info');
+        // Atualizar informações da empresa atual usando mapeamento inteligente
+        const currentCompanyInfo = this.getElementByMode('current-company-info', 'multi');
         if (currentCompanyInfo && periodsState.currentCompany) {
             currentCompanyInfo.classList.remove('hidden');
             
-            document.getElementById('current-company-name').textContent = periodsState.currentCompany.razaoSocial || '-';
-            document.getElementById('current-company-cnpj').textContent = periodsState.currentCompany.cnpj || '-';
-            document.getElementById('current-company-uf').textContent = periodsState.currentCompany.uf || '-';
-            document.getElementById('current-company-periods').textContent = periodsState.totalPeriods;
+            this.setElementText('current-company-name', periodsState.currentCompany.razaoSocial || '-', 'multi');
+            this.setElementText('current-company-cnpj', periodsState.currentCompany.cnpj || '-', 'multi');
+            this.setElementText('current-company-uf', periodsState.currentCompany.uf || '-', 'multi');
+            this.setElementText('current-company-periods', periodsState.totalPeriods, 'multi');
         }
         
         // Atualizar lista de períodos
@@ -1085,10 +1237,16 @@ class UIManager {
      * @private
      */
     renderPeriodsTable() {
-        const periodsTable = document.getElementById('periods-table');
-        const periodsList = document.getElementById('periods-list');
+        const periodsTable = this.getElementByMode('periods-table', 'multi');
+        const periodsList = this.getElementByMode('periods-list', 'multi');
         
-        if (!periodsTable || !periodsList) return;
+        if (!periodsTable || !periodsList) {
+            console.warn('⚠️ Elementos da tabela de períodos não encontrados:', {
+                periodsTable: !!periodsTable,
+                periodsList: !!periodsList
+            });
+            return;
+        }
         
         const periodsState = this.stateManager.getPeriodsState();
         
@@ -1116,14 +1274,14 @@ class UIManager {
         `;
         
         periodsState.periods.forEach(period => {
-            const totalValue = period.itensDifal.reduce((sum, item) => sum + (item.valor || 0), 0);
+            const totalValue = period.dados.itensDifal.reduce((sum, item) => sum + (item.valor || 0), 0);
             
             tableHTML += `
                 <tr>
                     <td>${period.dtInicio}-${period.dtFim}</td>
                     <td>${this.formatDate(period.dtInicio)}</td>
                     <td>${this.formatDate(period.dtFim)}</td>
-                    <td>${period.itensDifal.length}</td>
+                    <td>${period.dados.itensDifal.length}</td>
                     <td>${this.formatCurrency(totalValue)}</td>
                     <td><span class="status-badge status-success">✅ Processado</span></td>
                     <td>
@@ -1157,12 +1315,13 @@ class UIManager {
         
         const stats = periodsState.consolidated;
         
-        document.getElementById('consolidated-total-items').textContent = stats.totalItems || 0;
-        document.getElementById('consolidated-total-value').textContent = this.formatCurrency(stats.totalValue || 0);
-        document.getElementById('consolidated-unique-ncms').textContent = stats.uniqueNCMs || 0;
-        document.getElementById('consolidated-periods-count').textContent = periodsState.totalPeriods || 0;
+        // Usar mapeamento inteligente para atualizar estatísticas
+        this.setElementText('consolidated-total-items', stats.totalItems || 0, 'multi');
+        this.setElementText('consolidated-total-value', this.formatCurrency(stats.totalValue || 0), 'multi');
+        this.setElementText('consolidated-unique-ncms', stats.uniqueNCMs || 0, 'multi');
+        this.setElementText('consolidated-periods-count', periodsState.totalPeriods || 0, 'multi');
         
-        const consolidatedStats = document.getElementById('consolidated-stats');
+        const consolidatedStats = this.getElementByMode('consolidated-stats', 'multi');
         if (consolidatedStats) {
             consolidatedStats.classList.remove('hidden');
         }
