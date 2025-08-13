@@ -67,12 +67,13 @@ class MultiPeriodManager {
         
         this.periods.push(period);
         
-        // Update state manager
+        // Update state manager with consolidated data
         if (this.stateManager) {
             this.stateManager.updatePeriodsState({
                 periods: this.periods,
                 currentCompany: this.currentCompany,
-                totalPeriods: this.periods.length
+                totalPeriods: this.periods.length,
+                consolidated: this.getConsolidatedStats()
             });
         }
         
@@ -161,12 +162,40 @@ class MultiPeriodManager {
     getConsolidatedStats() {
         const consolidatedItems = this.getConsolidatedItems();
         const totalValue = consolidatedItems.reduce((sum, item) => sum + (item.valor || 0), 0);
+        const consolidatedPeriod = this.getConsolidatedPeriod();
         
         return {
             totalPeriods: this.periods.length,
             totalItems: consolidatedItems.length,
             totalValue: totalValue,
-            company: this.currentCompany
+            company: this.currentCompany,
+            consolidatedPeriod: consolidatedPeriod
+        };
+    }
+    
+    /**
+     * Get consolidated period range from first to last period
+     */
+    getConsolidatedPeriod() {
+        if (this.periods.length === 0) return null;
+        
+        // Ordenar períodos por data inicial
+        const sortedPeriods = [...this.periods].sort((a, b) => {
+            const dateA = new Date(a.dados.dataInicial || '1900-01-01');
+            const dateB = new Date(b.dados.dataInicial || '1900-01-01');
+            return dateA - dateB;
+        });
+        
+        const firstPeriod = sortedPeriods[0];
+        const lastPeriod = sortedPeriods[sortedPeriods.length - 1];
+        
+        return {
+            dataInicial: firstPeriod.dados.dataInicial,
+            dataFinal: lastPeriod.dados.dataFinal,
+            label: `${firstPeriod.dados.dataInicial} a ${lastPeriod.dados.dataFinal}`,
+            totalPeriods: this.periods.length,
+            firstPeriodLabel: firstPeriod.periodo.label,
+            lastPeriodLabel: lastPeriod.periodo.label
         };
     }
     

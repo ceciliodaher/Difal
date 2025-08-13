@@ -587,6 +587,116 @@ class UIManager {
     }
 
     /**
+     * Exibe análise SPED para múltiplos períodos - MULTI-PERIOD VERSION
+     * @public
+     * @param {Object} spedData - Dados SPED processados
+     */
+    showMultiPeriodAnalysis(spedData) {
+        console.log('🔍 DEBUG showMultiPeriodAnalysis:', {
+            hasSpedData: !!spedData,
+            dataKeys: spedData ? Object.keys(spedData) : null,
+            hasDadosEmpresa: !!(spedData && spedData.dadosEmpresa),
+            empresa: spedData && spedData.dadosEmpresa
+        });
+        
+        const summaryDiv = document.getElementById('sped-summary');
+        const tableDiv = document.getElementById('single-difal-items-table');
+        
+        console.log('🔍 DEBUG DOM elements:', {
+            summaryDiv: !!summaryDiv,
+            summaryDivClasses: summaryDiv && summaryDiv.className,
+            tableDiv: !!tableDiv
+        });
+        
+        if (summaryDiv) {
+            try {
+                console.log('🔍 DEBUG: Dentro do if summaryDiv - iniciando processamento multi-período');
+                
+                // Para multi-período, sempre usar dados do PeriodsManager
+                const periodsState = (this.stateManager && this.stateManager.getPeriodsState()) || {};
+                let displayData = spedData;
+                
+                if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                    const firstPeriod = periodsState.periods[0];
+                    displayData = firstPeriod.dados;
+                    console.log('📅 Usando dados do modo multi-período para análise');
+                }
+                
+                // Remover classe hidden e mostrar o div
+                summaryDiv.classList.remove('hidden');
+                
+                const stats = (displayData && displayData.estatisticasDifal) || {};
+                const consolidated = periodsState.consolidated || {};
+                
+                // Obter período consolidado
+                const consolidatedPeriod = consolidated.consolidatedPeriod;
+                const periodLabel = consolidatedPeriod ? consolidatedPeriod.label : 'N/A';
+                
+                // Sempre usar layout multi-período
+                summaryDiv.innerHTML = `
+                    <div class="summary-item">
+                        <h3>Múltiplos Períodos</h3>
+                        <div class="summary-value">${periodsState.totalPeriods || 1} período(s)</div>
+                        <div class="summary-label">Período Consolidado: ${periodLabel}</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Empresa</h3>
+                        <div class="summary-value">${(periodsState.currentCompany && periodsState.currentCompany.razaoSocial) || (displayData && displayData.dadosEmpresa && displayData.dadosEmpresa.razaoSocial) || 'N/A'}</div>
+                        <div class="summary-label">CNPJ: ${Utils.formatarCNPJ((periodsState.currentCompany && periodsState.currentCompany.cnpj) || (displayData && displayData.dadosEmpresa && displayData.dadosEmpresa.cnpj) || '')}</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>UF</h3>
+                        <div class="summary-value">${(periodsState.currentCompany && periodsState.currentCompany.uf) || (displayData && displayData.dadosEmpresa && displayData.dadosEmpresa.uf) || 'N/A'}</div>
+                        <div class="summary-label">Estado da empresa</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Registros Consolidados</h3>
+                        <div class="summary-value">${Utils.formatarNumero(consolidated.totalRegistros || 0)}</div>
+                        <div class="summary-label">Todos os períodos</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Itens DIFAL Totais</h3>
+                        <div class="summary-value">${Utils.formatarNumero(consolidated.totalItensDifal || 0)}</div>
+                        <div class="summary-label">Consolidado multi-período</div>
+                    </div>
+                    <div class="summary-item">
+                        <h3>Valor Total</h3>
+                        <div class="summary-value">${Utils.formatarMoeda(consolidated.totalValorItens || 0)}</div>
+                        <div class="summary-label">Base para cálculo DIFAL</div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('❌ Erro ao exibir análise SPED multi-período:', error);
+                if (summaryDiv) {
+                    summaryDiv.innerHTML = '<div class="error-message">Erro ao carregar dados de análise multi-período</div>';
+                }
+            }
+        }
+        
+        // Exibir tabela de itens para multi-período
+        if (tableDiv) {
+            let itemsToShow = [];
+            
+            if (spedData && spedData.itensDifal && spedData.itensDifal.length > 0) {
+                itemsToShow = spedData.itensDifal.slice(0, 10);
+            } else {
+                // Para multi-período, obter itens do primeiro período
+                const periodsState = (this.stateManager && this.stateManager.getPeriodsState());
+                if (periodsState && periodsState.periods && periodsState.periods.length > 0) {
+                    const firstPeriod = periodsState.periods[0];
+                    if (firstPeriod.dados && firstPeriod.dados.itensDifal) {
+                        itemsToShow = firstPeriod.dados.itensDifal.slice(0, 10);
+                    }
+                }
+            }
+            
+            if (itemsToShow.length > 0) {
+                this.createDifalTable(tableDiv, itemsToShow);
+            }
+        }
+    }
+
+    /**
      * Garante que estilos de badge existem
      * @private
      */
@@ -1502,12 +1612,15 @@ class UIManager {
      * @private
      */
     updateMultiplePeriodsDisplay() {
-        const periodsState = this.stateManager?.getPeriodsState() || {};
+        const periodsState = (this.stateManager && this.stateManager.getPeriodsState()) || {};
         
         // Atualizar contadores
-        document.getElementById('periods-count')?.textContent = periodsState.totalPeriods || 0;
-        document.getElementById('company-cnpj')?.textContent = 
-            Utils.formatarCNPJ(periodsState.currentCompany?.cnpj || '');
+        const periodsCountEl = document.getElementById('periods-count');
+        if (periodsCountEl) periodsCountEl.textContent = periodsState.totalPeriods || 0;
+        
+        const companyCnpjEl = document.getElementById('company-cnpj');
+        if (companyCnpjEl) companyCnpjEl.textContent = 
+            Utils.formatarCNPJ((periodsState.currentCompany && periodsState.currentCompany.cnpj) || '');
         
         console.log(`📊 Display de períodos multi-período atualizado: ${periodsState.totalPeriods || 0} períodos`);
     }
@@ -1588,7 +1701,14 @@ class UIManager {
             
             this.showProgress('Múltiplos períodos processados com sucesso!', 100);
             this.updatePeriodsDisplay();
-            this.showMultiPeriodAnalysis(); // Exibir análise após processamento
+            
+            // Obter dados consolidados dos períodos para análise
+            const periodsState = this.stateManager?.getPeriodsState();
+            const consolidatedStats = periodsState?.consolidated;
+            if (consolidatedStats) {
+                this.showMultiPeriodAnalysis(consolidatedStats); // Exibir análise com dados consolidados
+            }
+            
             this.updateMultiPeriodUfDisplay(); // Atualizar display da UF extraída
             this.navigationManager.navigateToSection('multi-analytics-section'); // Navegar automaticamente
             
@@ -2300,7 +2420,10 @@ class UIManager {
         
         // Atualizar seção de analytics se visível
         if (this.navigationState?.currentSection === 'multi-analytics-section') {
-            this.showMultiPeriodAnalysis();
+            const consolidatedStats = periodsState?.consolidated;
+            if (consolidatedStats) {
+                this.showMultiPeriodAnalysis(consolidatedStats);
+            }
         }
         
         // Atualizar estatísticas consolidadas
@@ -2997,6 +3120,26 @@ class UIManager {
         if (multiModeCard) {
             multiModeCard.addEventListener('click', () => {
                 console.log('🎯 Configurando handlers da seleção de modo...');
+                this.handleModeSelection('multi');
+            });
+        }
+        
+        // Also add event listeners to the buttons inside the cards
+        const singlePeriodBtn = document.getElementById('single-period-btn');
+        const multiPeriodBtn = document.getElementById('multi-period-btn');
+        
+        if (singlePeriodBtn) {
+            singlePeriodBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent double triggering from card click
+                console.log('🎯 Botão single-period clicado...');
+                this.handleModeSelection('single');
+            });
+        }
+        
+        if (multiPeriodBtn) {
+            multiPeriodBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent double triggering from card click
+                console.log('🎯 Botão multi-period clicado...');
                 this.handleModeSelection('multi');
             });
         }
